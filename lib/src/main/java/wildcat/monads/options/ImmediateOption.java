@@ -6,6 +6,10 @@ import java.util.Optional;
 
 abstract sealed class ImmediateOption<T> extends Option<T> 
   permits ImmediateOption.Some, ImmediateOption.None {
+    
+    static final OptionFactory factory() {
+      return Factory.instance();
+    }
   
   static final class Some<T> extends ImmediateOption<T> {
     private final T value;
@@ -49,6 +53,11 @@ abstract sealed class ImmediateOption<T> extends Option<T>
   
   static final class Factory implements OptionFactory {
     
+    private static final Factory instance = new Factory();
+    
+    static OptionFactory instance() {
+      return instance;
+    }
   
     public <T> Option<T> none() {
       return None.instance();
