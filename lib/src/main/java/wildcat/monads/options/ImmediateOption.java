@@ -28,6 +28,11 @@ abstract sealed class ImmediateOption<T> extends Option<T>
     public <U> Option<U> flatMap(final Function<T, Option<U>> mapping) {
       return mapping.apply(value);
     }
+    
+    @Override
+    public <C> C fold(final Supplier<C> onNone, final Function<T, C> onSome) {
+      return onSome.apply(value);
+    }
   }
   
   @SuppressWarnings("unchecked")
@@ -48,6 +53,11 @@ abstract sealed class ImmediateOption<T> extends Option<T>
     @Override
     public <U> Option<U> flatMap(final Function<T, Option<U>> mapping) {
       return (Option<U>) this;
+    }
+    
+    @Override
+    public <C> C fold(final Supplier<C> onNone, final Function<T, C> onSome) {
+      return onNone.get();
     }
   }
   
