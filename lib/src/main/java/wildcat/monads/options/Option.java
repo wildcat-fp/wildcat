@@ -14,5 +14,5 @@ public abstract sealed class Option<T>
  
   public abstract <U> Option<U> flatMap(Function<T, Option<U>> mapping);
   
-  public abstract <C> C fold(Supplier<C> onNone, Function<T, C> onSome);
+  public abstract <C> C fold(Supplier<C> onEmpty, Function<T, C> onPresent);
 }

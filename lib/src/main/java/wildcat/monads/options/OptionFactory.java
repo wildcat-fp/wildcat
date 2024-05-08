@@ -8,10 +8,10 @@ public sealed interface OptionFactory
   permits ImmediateOption.Factory {
   default <T> Option<T> of(T value) {
     if (value == null) {
-      return none();
+      return empty();
     }
     
-    return some(value);
+    return present(value);
   }
 
   default <T> Option<T> of(Supplier<T> supplier) {
@@ -20,14 +20,14 @@ public sealed interface OptionFactory
   
   default <T> Option<T> ofOptional(Optional<T> optional) {
     if (optional.isPresent()) {
-      return some(optional.get());
+      return present(optional.get());
     } else {
-      return none();
+      return empty();
     }
   }
     
-  <T> Option<T> none();
+  <T> Option<T> empty();
   
-  <T> Option<T> some(T value);
+  <T> Option<T> present(T value);
   
 }
