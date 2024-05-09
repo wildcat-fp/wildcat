@@ -2,9 +2,10 @@ package wildcat.monads.options;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.Consumer;
 
 abstract sealed class ImmediateOption<T> extends Option<T> 
-  permits ImmediateOption.Present<T>, ImmediateOption.Empty<T> {
+  permits ImmediateOption.Present, ImmediateOption.Empty {
     
     static final OptionFactory factory() {
       return Factory.instance();
@@ -32,6 +33,17 @@ abstract sealed class ImmediateOption<T> extends Option<T>
     public <C> C fold(final Supplier<C> onEmpty, final Function<T, C> onPresent) {
       return onPresent.apply(value);
     }
+    
+    @Override
+    public Option<T> whenPresent(final Consumer<T> action) {
+      action.accept(value);
+      return this;
+    }
+    
+    @Override
+    public Option<T> whenEmpty(final Runnable action) {
+      return this;
+    }
   }
   
   @SuppressWarnings("unchecked")
@@ -57,6 +69,17 @@ abstract sealed class ImmediateOption<T> extends Option<T>
     @Override
     public <C> C fold(final Supplier<C> onNone, final Function<T, C> onSome) {
       return onNone.get();
+    }
+    
+    @Override
+    public Option<T> whenPresent(final Consumer<T> action) {
+      return this;
+    }
+    
+    @Override
+    public Option<T> whenEmpty(final Runnable action) {
+      action.run();
+      return this;
     }
   }
   

@@ -2,6 +2,7 @@ package wildcat.monads.options;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.Consumer;
 
 public abstract sealed class Option<T>
   permits ImmediateOption {
@@ -15,4 +16,8 @@ public abstract sealed class Option<T>
   public abstract <U> Option<U> flatMap(Function<T, Option<U>> mapping);
   
   public abstract <C> C fold(Supplier<C> onEmpty, Function<T, C> onPresent);
+  
+  public abstract Option<T> whenPresent(Consumer<T> action);
+  
+  public abstract Option<T> whenEmpty(Runnable action);
 }
