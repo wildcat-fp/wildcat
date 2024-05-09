@@ -1,12 +1,13 @@
 package wildcat.monads.options;
 
 import java.util.function.Supplier;
-
 import java.util.Optional;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public sealed interface OptionFactory
   permits ImmediateOption.Factory {
-  default <T> Option<T> of(T value) {
+  default <T> Option<T> of(@Nullable T value) {
     if (value == null) {
       return empty();
     }
