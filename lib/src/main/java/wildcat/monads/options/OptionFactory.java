@@ -1,5 +1,6 @@
 package wildcat.monads.options;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.Optional;
 
@@ -24,6 +25,14 @@ public sealed interface OptionFactory
       return present(optional.get());
     } else {
       return empty();
+    }
+  }
+
+  default <T, U> Option<U> lift(final Function<T, U> function, final @Nullable T value) {
+    if (value == null) {
+      return empty();
+    } else {
+      return of(() -> function.apply(value));
     }
   }
     
