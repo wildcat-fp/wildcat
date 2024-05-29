@@ -3,18 +3,21 @@ package wildcat.monads.trys;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public abstract sealed class ImmediateTry<T> extends Try<T>
-  permits ImmediateTry.Success, ImmediateTry.Failure {
-  
-  static final class Success<T> extends ImmediateTry<T> {
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+public abstract sealed class ImmediateTry<@NonNull T> extends Try<T>
+    permits ImmediateTry.Success, ImmediateTry.Failure {
+
+  static final class Success<@NonNull T> extends ImmediateTry<T> {
     private final T value;
-    
+
     Success(final T value) {
       this.value = value;
     }
-    
+
     @Override
-    public <U> Try<U> map(final Function<? super T, ? extends U> mapping) {
+    public <U extends @NonNull Object> Try<U> map(final Function<? super T, ? extends U> mapping) {
       try {
         final U result = mapping.apply(value);
         return new Success<>(result);
@@ -22,26 +25,27 @@ public abstract sealed class ImmediateTry<T> extends Try<T>
         return new Failure<>(e);
       }
     }
-    
+
     @Override
     @SuppressWarnings("unchecked")
-    public <U> Try<U> flatMap(final Function<? super T, ? extends Try<? extends U>> mapping) {
+    public <U extends @NonNull Object> Try<U> flatMap(final Function<? super T, ? extends Try<? extends U>> mapping) {
       try {
         return (Try<U>) mapping.apply(value);
       } catch (Exception e) {
         return new Failure<>(e);
       }
     }
-    
+
     @Override
-    public <C> C fold(final Function<? super Exception, ? extends C> whenFailed, final Function<? super T, ? extends C> whenSucceeded) {
+    public <C> C fold(final Function<? super Exception, ? extends C> whenFailed,
+        final Function<? super T, ? extends C> whenSucceeded) {
       return whenSucceeded.apply(value);
     }
 
     @Override
     public Try<T> whenSuccessful(Consumer<? super T> action) {
       action.accept(value);
-      
+
       return this;
     }
 
@@ -50,27 +54,28 @@ public abstract sealed class ImmediateTry<T> extends Try<T>
       return this;
     }
   }
-  
+
   @SuppressWarnings("unchecked")
-  static final class Failure<T> extends ImmediateTry<T> {
+  static final class Failure<@NonNull T> extends ImmediateTry<T> {
     private final Exception exception;
-    
+
     Failure(final Exception exception) {
       this.exception = exception;
     }
-    
+
     @Override
-    public <U> Try<U> map(final Function<? super T, ? extends U> mapping) {
-      return (Try<U>) this;
-    }
-    
-    @Override
-    public <U> Try<U> flatMap(final Function<? super T, ? extends Try<? extends U>> mapping) {
+    public <U extends @NonNull Object> Try<U> map(final Function<? super T, ? extends U> mapping) {
       return (Try<U>) this;
     }
 
     @Override
-    public <C> C fold(Function<? super Exception, ? extends C> whenFailed, Function<? super T, ? extends C> whenSucceeded) {
+    public <U extends @NonNull Object> Try<U> flatMap(final Function<? super T, ? extends Try<? extends U>> mapping) {
+      return (Try<U>) this;
+    }
+
+    @Override
+    public <C> C fold(Function<? super Exception, ? extends C> whenFailed,
+        Function<? super T, ? extends C> whenSucceeded) {
       return whenFailed.apply(exception);
     }
 
@@ -86,6 +91,24 @@ public abstract sealed class ImmediateTry<T> extends Try<T>
       return this;
     }
 
-    
+  }
+
+  static final class Factory implements TryFactory {
+
+    private static final Factory instance = new Factory();
+
+    public static final TryFactory instance() {
+      return instance;
+    }
+
+    @Override
+    public <T> Try<T> success(final T value) {
+      return new Success<>(value);
+    }
+
+    @Override
+    public <T> Try<T> failure(final Exception exception) {
+      return new Failure<>(exception);
+    }
   }
 }

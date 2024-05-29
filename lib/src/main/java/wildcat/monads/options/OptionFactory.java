@@ -4,11 +4,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.Optional;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public sealed interface OptionFactory
   permits ImmediateOption.Factory {
-  default <T> Option<T> of(final @Nullable T value) {
+  default <T> Option<@NonNull T> of(final @Nullable T value) {
     if (value == null) {
       return empty();
     }
@@ -16,11 +17,11 @@ public sealed interface OptionFactory
     return present(value);
   }
 
-  default <T> Option<T> of(final Supplier<? extends T> supplier) {
+  default <T extends @NonNull Object> Option<T> of(final Supplier<? extends T> supplier) {
     return of(supplier.get());
   }
   
-  default <T> Option<T> ofOptional(final Optional<T> optional) {
+  default <T extends @NonNull Object> Option<T> ofOptional(final Optional<T> optional) {
     if (optional.isPresent()) {
       return present(optional.get());
     } else {
@@ -28,7 +29,7 @@ public sealed interface OptionFactory
     }
   }
 
-  default <T, U> Option<U> lift(final Function<? super T, ? extends U> function, final @Nullable T value) {
+  default <T, U extends @NonNull Object> Option<U> lift(final Function<? super T, ? extends U> function, final @Nullable T value) {
     if (value == null) {
       return empty();
     } else {
@@ -38,6 +39,6 @@ public sealed interface OptionFactory
     
   <T> Option<T> empty();
   
-  <T> Option<T> present(T value);
+  <T extends @NonNull Object> Option<T> present(T value);
   
 }
