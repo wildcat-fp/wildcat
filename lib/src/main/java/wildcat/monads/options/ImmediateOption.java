@@ -19,23 +19,24 @@ abstract sealed class ImmediateOption<T> extends Option<T>
     }
     
     @Override
-    public <U> Option<U> map(final Function<T, U> mapping) {
+    public <U> Option<U> map(final Function<? super T, ? extends U> mapping) {
       final U result = mapping.apply(value);
       return new Present<>(result);
     }
     
     @Override
-    public <U> Option<U> flatMap(final Function<T, Option<U>> mapping) {
-      return mapping.apply(value);
+    @SuppressWarnings("unchecked")
+    public <U> Option<U> flatMap(final Function<? super T, ? extends Option<? extends U>> mapping) {
+      return (Option<U>) mapping.apply(value);
     }
     
     @Override
-    public <C> C fold(final Supplier<C> onEmpty, final Function<T, C> onPresent) {
-      return onPresent.apply(value);
+    public <C> C fold(final Supplier<? extends C> whenEmpty, final Function<? super T, ? extends C> whenPresent) {
+      return whenPresent.apply(value);
     }
     
     @Override
-    public Option<T> whenPresent(final Consumer<T> action) {
+    public Option<T> whenPresent(final Consumer<? super T> action) {
       action.accept(value);
       return this;
     }
@@ -57,22 +58,22 @@ abstract sealed class ImmediateOption<T> extends Option<T>
     }
     
     @Override
-    public <U> Option<U> map(final Function<T, U> mapping) {
+    public <U> Option<U> map(final Function<? super T, ? extends U> mapping) {
       return (Option<U>) this;
     }
     
     @Override
-    public <U> Option<U> flatMap(final Function<T, Option<U>> mapping) {
+    public <U> Option<U> flatMap(final Function<? super T, ? extends Option<? extends U>> mapping) {
       return (Option<U>) this;
     }
     
     @Override
-    public <C> C fold(final Supplier<C> onNone, final Function<T, C> onSome) {
-      return onNone.get();
+    public <C> C fold(final Supplier<? extends C> whenEmpty, final Function<? super T, ? extends C> whenPresent) {
+      return whenEmpty.get();
     }
     
     @Override
-    public Option<T> whenPresent(final Consumer<T> action) {
+    public Option<T> whenPresent(final Consumer<? super T> action) {
       return this;
     }
     
@@ -95,7 +96,7 @@ abstract sealed class ImmediateOption<T> extends Option<T>
       return Empty.instance();
     }
   
-    public <T> Option<T> present(T value) {
+    public <T> Option<T> present(final T value) {
       return new Present<>(value);
     }
   }

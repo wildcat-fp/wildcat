@@ -9,7 +9,7 @@ import wildcat.monads.options.Option;
  */
 public class Wildcat {
     
-    public static <T> Option<T> option(@Nullable final T value) {
+    public static <T> Option<T> option(final @Nullable T value) {
         return Option.immediate().of(value);
     }
 }

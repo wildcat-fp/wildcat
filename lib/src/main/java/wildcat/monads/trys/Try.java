@@ -1,13 +1,18 @@
 package wildcat.monads.trys;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public abstract sealed class Try<T> 
   permits ImmediateTry {
   
-  public abstract <U> Try<U> map(Function<T, U> mapping);
+  public abstract <U> Try<U> map(Function<? super T, ? extends U> mapping);
   
-  public abstract <U> Try<U> flatMap(Function<T, Try<U>> mapping);
+  public abstract <U> Try<U> flatMap(Function<? super T, ? extends Try<? extends U>> mapping);
   
-  public abstract <C> C fold(Function<? extends Exception, C> whenFailed, Function<T, C> whenSucceeded);
+  public abstract <C> C fold(Function<? super Exception, ? extends C> whenFailed, Function<? super T, ? extends C> whenSucceeded);
+
+  public abstract Try<T> whenSuccessful(Consumer<? super T> action);
+
+  public abstract Try<T> whenFailed(Consumer<? super Exception> action);
 }

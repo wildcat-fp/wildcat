@@ -11,13 +11,13 @@ public abstract sealed class Option<T>
     return ImmediateOption.factory();
   }
     
-  public abstract <U> Option<U> map(Function<T, U> mapping);
+  public abstract <U> Option<U> map(Function<? super T, ? extends U> mapping);
  
-  public abstract <U> Option<U> flatMap(Function<T, Option<U>> mapping);
+  public abstract <U> Option<U> flatMap(Function<? super T, ? extends Option<? extends U>> mapping);
   
-  public abstract <C> C fold(Supplier<C> onEmpty, Function<T, C> onPresent);
+  public abstract <C> C fold(Supplier<? extends C> onEmpty, Function<? super T, ? extends C> onPresent);
   
-  public abstract Option<T> whenPresent(Consumer<T> action);
+  public abstract Option<T> whenPresent(Consumer<? super T> action);
   
   public abstract Option<T> whenEmpty(Runnable action);
 }
