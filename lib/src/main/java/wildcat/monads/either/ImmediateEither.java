@@ -7,7 +7,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Value;
 
 abstract sealed class ImmediateEither<L, R> extends Either<L, R>
         permits ImmediateEither.Right, ImmediateEither.Left {
@@ -27,27 +26,27 @@ abstract sealed class ImmediateEither<L, R> extends Either<L, R>
         }
 
         @Override
-        public <U extends @NonNull Object> Either<L, U> map(Function<? super R, ? extends U> mapping) {
+        public <U extends @NonNull Object> Either<? extends L, ? extends U> map(Function<? super R, ? extends U> mapping) {
             return new Right<>(mapping.apply(value()));
         }
 
         @Override
-        public <U extends @NonNull Object> Either<U, R> mapLeft(Function<? super L, ? extends U> mapping) {
+        public <U extends @NonNull Object> Either<? extends U, ? extends R> mapLeft(Function<? super L, ? extends U> mapping) {
             return (Either<U, R>) this;
         }
 
         @Override
-        public <U extends @NonNull Object> Either<L, U> flatMap(Function<? super R, ? extends Either<? extends L, ? extends R>> mapping) {
+        public <U extends @NonNull Object> Either<? extends L, ? extends U> flatMap(Function<? super R, ? extends Either<? extends L, ? extends R>> mapping) {
             return (Either<L, U>) mapping.apply(value());
         }
 
         @Override
-        public <U extends @NonNull Object> Either<U, R> flatMapLeft(Function<? super L, ? extends Either<? extends U, ? extends R>> mapping) {
+        public <U extends @NonNull Object> Either<? extends U, ? extends R> flatMapLeft(Function<? super L, ? extends Either<? extends U, ? extends R>> mapping) {
             return (Either<U, R>) this;
         }
 
         @Override
-        public <OL extends @NonNull Object, OR extends @NonNull Object> Either<OL, OR> bimap(
+        public <OL extends @NonNull Object, OR extends @NonNull Object> Either<? extends OL, ? extends OR> bimap(
                 Function<? super L, ? extends OL> leftMapping,
                 Function<? super R, ? extends OR> rightMapping) {
             return new Right<OL, OR>(rightMapping.apply(value()));
@@ -70,27 +69,27 @@ abstract sealed class ImmediateEither<L, R> extends Either<L, R>
         }
 
         @Override
-        public <U extends @NonNull Object> Either<L, U> map(Function<? super R, ? extends U> mapping) {
+        public <U extends @NonNull Object> Either<? extends L, ? extends U> map(Function<? super R, ? extends U> mapping) {
             return (Either<L, U>) this;
         }
 
         @Override
-        public <U extends @NonNull Object> Either<U, R> mapLeft(Function<? super L, ? extends U> mapping) {
+        public <U extends @NonNull Object> Either<? extends U, ? extends R> mapLeft(Function<? super L, ? extends U> mapping) {
             return new Left<>(mapping.apply(value()));
         }
 
         @Override
-        public <U extends @NonNull Object> Either<L, U> flatMap(Function<? super R, ? extends Either<? extends L, ? extends R>> mapping) {
+        public <U extends @NonNull Object> Either<? extends L, ? extends U> flatMap(Function<? super R, ? extends Either<? extends L, ? extends R>> mapping) {
             return (Either<L, U>) this;
         }
 
         @Override
-        public <U extends @NonNull Object> Either<U, R> flatMapLeft(Function<? super L, ? extends Either<? extends U, ? extends R>> mapping) {
+        public <U extends @NonNull Object> Either<? extends U, ? extends R> flatMapLeft(Function<? super L, ? extends Either<? extends U, ? extends R>> mapping) {
             return (Either<U, R>) mapping.apply(value());
         }
 
         @Override
-        public <OL extends @NonNull Object, OR extends @NonNull Object> Either<OL, OR> bimap(
+        public <OL extends @NonNull Object, OR extends @NonNull Object> Either<? extends OL, ? extends OR> bimap(
                 Function<? super L, ? extends OL> leftMapping,
                 Function<? super R, ? extends OR> rightMapping) {
             return new Left<>(leftMapping.apply(value()));
@@ -112,12 +111,12 @@ abstract sealed class ImmediateEither<L, R> extends Either<L, R>
         }
 
         @Override
-        public <L, R> Either<L, R> left(final @NonNull L left) {
+        public <L, R> Either<? extends L, ? extends R> left(final @NonNull L left) {
             return new Left<>(left);
         }
 
         @Override
-        public <L, R> Either<L, R> right(final @NonNull R right) {
+        public <L, R> Either<? extends L, ? extends R> right(final @NonNull R right) {
             return new Right<>(right);
         }
     }
