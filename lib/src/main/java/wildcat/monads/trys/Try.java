@@ -12,7 +12,7 @@ public abstract sealed class Try<@NonNull T>
   
   public abstract <U extends @NonNull Object> Try<? extends U> flatMap(Function<? super T, ? extends Try<? extends U>> mapping);
   
-  public abstract <C> C fold(Function<? super Exception, ? extends C> whenFailed, Function<? super T, ? extends C> whenSucceeded);
+  public abstract <C extends @NonNull Object> C fold(Function<? super Exception, ? extends C> whenFailed, Function<? super T, ? extends C> whenSucceeded);
 
   public abstract Try<T> whenSuccessful(Consumer<? super T> action);
 

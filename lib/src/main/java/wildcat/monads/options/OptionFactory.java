@@ -9,7 +9,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public sealed interface OptionFactory
   permits ImmediateOption.Factory {
-    default <T> Option<? extends @NonNull T> when(final boolean condition, final @Nullable T value) {
+    default <T extends @NonNull Object> Option<? extends T> when(final boolean condition, final T value) {
       if (condition) {
         return present(value);
       } else {
@@ -17,7 +17,7 @@ public sealed interface OptionFactory
       }
     }
 
-    default <T> Option<? extends @NonNull T> when(final boolean condition, final Supplier<? extends T> supplier) {
+    default <T extends @NonNull Object> Option<? extends T> when(final boolean condition, final Supplier<? extends T> supplier) {
       if (condition) {
         return present(supplier);
       } else {
@@ -45,7 +45,7 @@ public sealed interface OptionFactory
     }
   }
 
-  default <T, U extends @NonNull Object> Option<? extends U> lift(final Function<? super T, ? extends U> function, final @Nullable T value) {
+  default <T, U extends @NonNull Object> Option<? extends U> lift(final Function<? super @NonNull T, ? extends U> function, final @Nullable T value) {
     if (value == null) {
       return empty();
     } else {
@@ -53,7 +53,7 @@ public sealed interface OptionFactory
     }
   }
     
-  <T> Option<T> empty();
+  <T extends @NonNull Object> Option<T> empty();
   
   <T extends @NonNull Object> Option<? extends T> present(T value);
   

@@ -102,12 +102,17 @@ abstract sealed class ImmediateOption<T> extends Option<T>
       return instance;
     }
 
-    public <T> Option<T> empty() {
+    public <T extends @NonNull Object> Option<T> empty() {
       return Empty.instance();
     }
 
     public <T extends @NonNull Object> Option<T> present(final T value) {
       return new Present<>(value);
+    }
+
+    @Override
+    public <T extends @NonNull Object> Option<? extends T> present(Supplier<? extends T> supplier) {
+      return new Present<>(supplier.get());
     }
   }
 }

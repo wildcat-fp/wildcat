@@ -5,7 +5,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import wildcat.fns.CheckedSupplier;
 
@@ -40,7 +39,7 @@ public abstract sealed class ImmediateTry<@NonNull T> extends Try<T>
     }
 
     @Override
-    public <C> C fold(final Function<? super Exception, ? extends C> whenFailed,
+    public <C extends @NonNull Object> C fold(final Function<? super Exception, ? extends C> whenFailed,
         final Function<? super T, ? extends C> whenSucceeded) {
       return whenSucceeded.apply(value);
     }
@@ -77,7 +76,7 @@ public abstract sealed class ImmediateTry<@NonNull T> extends Try<T>
     }
 
     @Override
-    public <C> C fold(Function<? super Exception, ? extends C> whenFailed,
+    public <C extends @NonNull Object> C fold(Function<? super Exception, ? extends C> whenFailed,
         Function<? super T, ? extends C> whenSucceeded) {
       return whenFailed.apply(exception);
     }
