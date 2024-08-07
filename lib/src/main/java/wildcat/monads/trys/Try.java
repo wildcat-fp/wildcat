@@ -8,9 +8,9 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public abstract sealed class Try<@NonNull T> 
   permits ImmediateTry {
   
-  public abstract <U extends @NonNull Object> Try<U> map(Function<? super T, ? extends U> mapping);
+  public abstract <U extends @NonNull Object> Try<? extends U> map(Function<? super T, ? extends U> mapping);
   
-  public abstract <U extends @NonNull Object> Try<U> flatMap(Function<? super T, ? extends Try<? extends U>> mapping);
+  public abstract <U extends @NonNull Object> Try<? extends U> flatMap(Function<? super T, ? extends Try<? extends U>> mapping);
   
   public abstract <C> C fold(Function<? super Exception, ? extends C> whenFailed, Function<? super T, ? extends C> whenSucceeded);
 

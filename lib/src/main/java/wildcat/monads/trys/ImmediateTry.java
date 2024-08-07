@@ -2,9 +2,12 @@ package wildcat.monads.trys;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
+import wildcat.fns.CheckedSupplier;
 
 public abstract sealed class ImmediateTry<@NonNull T> extends Try<T>
     permits ImmediateTry.Success, ImmediateTry.Failure {
@@ -17,7 +20,7 @@ public abstract sealed class ImmediateTry<@NonNull T> extends Try<T>
     }
 
     @Override
-    public <U extends @NonNull Object> Try<U> map(final Function<? super T, ? extends U> mapping) {
+    public <U extends @NonNull Object> Try<? extends U> map(final Function<? super T, ? extends U> mapping) {
       try {
         final U result = mapping.apply(value);
         return new Success<>(result);
@@ -28,9 +31,9 @@ public abstract sealed class ImmediateTry<@NonNull T> extends Try<T>
 
     @Override
     @SuppressWarnings("unchecked")
-    public <U extends @NonNull Object> Try<U> flatMap(final Function<? super T, ? extends Try<? extends U>> mapping) {
+    public <U extends @NonNull Object> Try<? extends U> flatMap(final Function<? super T, ? extends Try<? extends U>> mapping) {
       try {
-        return (Try<U>) mapping.apply(value);
+        return (Try<? extends U>) mapping.apply(value);
       } catch (Exception e) {
         return new Failure<>(e);
       }
@@ -64,13 +67,13 @@ public abstract sealed class ImmediateTry<@NonNull T> extends Try<T>
     }
 
     @Override
-    public <U extends @NonNull Object> Try<U> map(final Function<? super T, ? extends U> mapping) {
-      return (Try<U>) this;
+    public <U extends @NonNull Object> Try<? extends U> map(final Function<? super T, ? extends U> mapping) {
+      return (Try<? extends U>) this;
     }
 
     @Override
-    public <U extends @NonNull Object> Try<U> flatMap(final Function<? super T, ? extends Try<? extends U>> mapping) {
-      return (Try<U>) this;
+    public <U extends @NonNull Object> Try<? extends U> flatMap(final Function<? super T, ? extends Try<? extends U>> mapping) {
+      return (Try<? extends U>) this;
     }
 
     @Override
@@ -90,7 +93,6 @@ public abstract sealed class ImmediateTry<@NonNull T> extends Try<T>
 
       return this;
     }
-
   }
 
   static final class Factory implements TryFactory {
@@ -102,12 +104,30 @@ public abstract sealed class ImmediateTry<@NonNull T> extends Try<T>
     }
 
     @Override
-    public <T> Try<T> success(final T value) {
+    public <T> Try<? extends T> success(final T value) {
       return new Success<>(value);
     }
 
     @Override
-    public <T> Try<T> failure(final Exception exception) {
+    public <T> Try<? extends T> success(final Supplier<? extends T> supplier) {
+      try {
+        return new Success<>(supplier.get());
+      } catch (Exception e) {
+        return new Failure<>(e);
+      }
+    }
+
+    @Override
+    public <T, E extends Exception> Try<? extends T> attempt(final CheckedSupplier<? extends T, ? extends E> supplier) {
+      try {
+        return new Success<>(supplier.get());
+      } catch (Exception e) {
+        return new Failure<>(e);
+      }
+    }
+
+    @Override
+    public <T> Try<? extends T> failure(final Exception exception) {
       return new Failure<>(exception);
     }
   }
