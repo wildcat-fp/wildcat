@@ -9,7 +9,23 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public sealed interface OptionFactory
   permits ImmediateOption.Factory {
-  default <T> Option<@NonNull T> of(final @Nullable T value) {
+    default <T> Option<? extends @NonNull T> when(final boolean condition, final @Nullable T value) {
+      if (condition) {
+        return present(value);
+      } else {
+        return empty();
+      }
+    }
+
+    default <T> Option<? extends @NonNull T> when(final boolean condition, final Supplier<? extends T> supplier) {
+      if (condition) {
+        return present(supplier);
+      } else {
+        return empty();
+      }
+    }
+
+  default <T> Option<? extends @NonNull T> of(final @Nullable T value) {
     if (value == null) {
       return empty();
     }
@@ -17,11 +33,11 @@ public sealed interface OptionFactory
     return present(value);
   }
 
-  default <T extends @NonNull Object> Option<T> of(final Supplier<? extends T> supplier) {
+  default <T extends @NonNull Object> Option<? extends T> of(final Supplier<? extends T> supplier) {
     return of(supplier.get());
   }
   
-  default <T extends @NonNull Object> Option<T> ofOptional(final Optional<T> optional) {
+  default <T extends @NonNull Object> Option<? extends T> ofOptional(final Optional<T> optional) {
     if (optional.isPresent()) {
       return present(optional.get());
     } else {
@@ -29,7 +45,7 @@ public sealed interface OptionFactory
     }
   }
 
-  default <T, U extends @NonNull Object> Option<U> lift(final Function<? super T, ? extends U> function, final @Nullable T value) {
+  default <T, U extends @NonNull Object> Option<? extends U> lift(final Function<? super T, ? extends U> function, final @Nullable T value) {
     if (value == null) {
       return empty();
     } else {
@@ -39,6 +55,7 @@ public sealed interface OptionFactory
     
   <T> Option<T> empty();
   
-  <T extends @NonNull Object> Option<T> present(T value);
+  <T extends @NonNull Object> Option<? extends T> present(T value);
   
+  <T extends @NonNull Object> Option<? extends T> present(Supplier<? extends T> supplier);
 }
