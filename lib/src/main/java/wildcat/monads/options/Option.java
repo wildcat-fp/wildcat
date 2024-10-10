@@ -62,19 +62,23 @@ import java.util.function.Consumer;
  * @see <a href="https://en.wikipedia.org/wiki/Option_type">Option Type</a>
  */
 public abstract sealed class Option<@NonNull T>
-  permits ImmediateOption {
+  permits ImmediateOption, LazyOption {
     
   public static OptionFactory immediate() {
     return ImmediateOption.factory();
   }
+
+  public static OptionFactory lazy() {
+    return LazyOption.factory();
+  }
     
-  public abstract <U extends @NonNull Object> Option<? extends U> map(Function<? super T, ? extends U> mapping);
+  public abstract <U extends @NonNull Object> Option<U> map(Function<? super T, ? extends U> mapping);
  
-  public abstract <U extends @NonNull Object> Option<? extends U> flatMap(Function<? super T, ? extends Option<? extends U>> mapping);
+  public abstract <U extends @NonNull Object> Option<U> flatMap(Function<? super T, ? extends Option<? extends U>> mapping);
   
   public abstract <C> C fold(Supplier<? extends C> onEmpty, Function<? super T, ? extends C> onPresent);
   
-  public abstract Option<? extends T> whenPresent(Consumer<? super T> action);
+  public abstract Option<T> whenPresent(Consumer<? super T> action);
   
-  public abstract Option<? extends T> whenEmpty(Runnable action);
+  public abstract Option<T> whenEmpty(Runnable action);
 }

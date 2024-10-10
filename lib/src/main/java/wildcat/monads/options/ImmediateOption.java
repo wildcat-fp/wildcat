@@ -111,7 +111,7 @@ abstract sealed class ImmediateOption<T> extends Option<T>
     }
 
     @Override
-    public <T extends @NonNull Object> Option<? extends T> present(Supplier<? extends T> supplier) {
+    public <T extends @NonNull Object> Option<T> present(Supplier<? extends T> supplier) {
       return new Present<>(supplier.get());
     }
   }
