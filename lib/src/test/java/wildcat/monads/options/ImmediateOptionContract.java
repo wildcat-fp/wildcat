@@ -1,7 +1,5 @@
 package wildcat.monads.options;
 
-import org.junit.jupiter.api.Test;
-
 public class ImmediateOptionContract extends OptionContract<ImmediateOption<String>> {
 
   @Override
@@ -10,7 +8,7 @@ public class ImmediateOptionContract extends OptionContract<ImmediateOption<Stri
   }
 
   @Override
-  protected Option<? extends String> getPresentOption() {
+  protected Option<String> getPresentOption() {
     return factory().present("foo");
   }
 

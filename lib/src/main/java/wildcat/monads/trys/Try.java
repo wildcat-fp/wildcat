@@ -5,16 +5,17 @@ import java.util.function.Function;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public abstract sealed class Try<@NonNull T> 
+public abstract sealed class Try<T extends @NonNull Object> 
   permits ImmediateTry {
   
-  public abstract <U extends @NonNull Object> Try<? extends U> map(Function<? super T, ? extends U> mapping);
+  public abstract <U extends @NonNull Object> @NonNull Try<? extends U> map(@NonNull Function<? super T, ? extends U> mapping);
   
-  public abstract <U extends @NonNull Object> Try<? extends U> flatMap(Function<? super T, ? extends Try<? extends U>> mapping);
+  public abstract <U extends @NonNull Object> @NonNull Try<? extends U> flatMap(@NonNull Function<? super T, ? extends @NonNull Try<? extends U>> mapping);
   
-  public abstract <C extends @NonNull Object> C fold(Function<? super Exception, ? extends C> whenFailed, Function<? super T, ? extends C> whenSucceeded);
+  public abstract <C extends @NonNull Object> C fold(Function<? super @NonNull Exception, ? extends C> whenFailed,
+      Function<? super T, ? extends C> whenSucceeded);
 
-  public abstract Try<T> whenSuccessful(Consumer<? super T> action);
+  public abstract @NonNull Try<T> whenSuccessful(@NonNull Consumer<? super T> action);
 
-  public abstract Try<T> whenFailed(Consumer<? super Exception> action);
+  public abstract @NonNull Try<T> whenFailed(@NonNull Consumer<? super @NonNull Exception> action);
 }

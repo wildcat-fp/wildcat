@@ -7,19 +7,18 @@ import java.util.function.Supplier;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-abstract sealed class LazyOption<T> extends Option<T> {
+abstract sealed class LazyOption<T extends @NonNull Object> extends Option<T> {
     
-  static final OptionFactory factory() {
+  static final @NonNull OptionFactory factory() {
     return Factory.instance();
   }
   
   @EqualsAndHashCode(callSuper = true)
   @Getter(value = AccessLevel.PRIVATE)
-  static final class Present<T> extends LazyOption<T> {
+  static final class Present<T extends @NonNull Object> extends LazyOption<T> {
     private final @NonNull Supplier<? extends T> supplier;
 
     Present(final @NonNull Supplier<? extends T> supplier) {
@@ -27,66 +26,68 @@ abstract sealed class LazyOption<T> extends Option<T> {
     }
 
     @Override
-    public <U extends @NonNull Object> Option<U> map(final Function<? super T, ? extends U> mapping) {
+    public <U extends @NonNull Object> @NonNull Option<U> map(final @NonNull Function<? super T, ? extends U> mapping) {
       return new Present<>(() -> mapping.apply(supplier.get()));
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <U extends @NonNull Object> Option<U> flatMap(final Function<? super T, ? extends Option<? extends U>> mapping) {
+    public <U extends @NonNull Object> @NonNull Option<U> flatMap(final @NonNull Function<? super T, ? extends Option<? extends U>> mapping) {
       return (Option<U>) mapping.apply(supplier.get());
     }
 
     @Override
-    public <C> C fold(final Supplier<? extends C> whenEmpty, final Function<? super T, ? extends C> whenPresent) {
+    public <C extends @NonNull Object> C fold(final @NonNull Supplier<? extends C> whenEmpty,
+        final @NonNull Function<? super T, ? extends C> whenPresent) {
       return whenPresent.apply(supplier.get());
     }
 
     @Override
-    public Option<T> whenPresent(final Consumer<? super T> action) {
+    public @NonNull Option<T> whenPresent(final @NonNull Consumer<? super T> action) {
       action.accept(supplier.get());
       return this;
     }
 
     @Override
-    public Option<T> whenEmpty(final Runnable action) {
+    public @NonNull Option<T> whenEmpty(final @NonNull Runnable action) {
       return this;
     }
   }
 
   @SuppressWarnings("unchecked")
-  static final class Empty<T> extends LazyOption<T> {
+  static final class Empty<T extends @NonNull Object> extends LazyOption<T> {
     private static final Empty<?> instance = new Empty<>();
 
     private Empty() {
     }
 
-    static <T> Option<T> instance() {
+    static <T extends @NonNull Object> @NonNull Option<T> instance() {
       return (Option<T>) instance;
     }
 
     @Override
-    public <U extends @NonNull Object> Option<U> map(final Function<? super T, ? extends U> mapping) {
+    public <U extends @NonNull Object> @NonNull Option<U> map(final @NonNull Function<? super T, ? extends U> mapping) {
       return (Option<U>) this;
     }
 
     @Override
-    public <U extends @NonNull Object> Option<U> flatMap(final Function<? super T, ? extends Option<? extends U>> mapping) {
+    public <U extends @NonNull Object> @NonNull Option<U> flatMap(final @NonNull Function<? super T, ? extends Option<? extends U>> mapping) {
       return (Option<U>) this;
     }
 
     @Override
-    public <C> C fold(final Supplier<? extends C> whenEmpty, final Function<? super T, ? extends C> whenPresent) {
+    public <C extends @NonNull Object> C fold(final @NonNull Supplier<? extends C> whenEmpty,
+        final @NonNull Function<? super T, ? extends C> whenPresent) {
       return whenEmpty.get();
     }
 
     @Override
-    public Option<T> whenPresent(final Consumer<? super T> action) {
+    public @NonNull Option<T> whenPresent(final @NonNull Consumer<? super T> action) {
       return this;
     }
 
     @Override
-    public Option<T> whenEmpty(final Runnable action) {
+    public @NonNull Option<T> whenEmpty(final @NonNull Runnable action) {
       action.run();
       return this;
     }
@@ -106,17 +107,17 @@ abstract sealed class LazyOption<T> extends Option<T> {
    * @param <T> The type of the value that may be present.
    */
   @Getter(value = AccessLevel.PROTECTED)
-  static sealed class Unknown<T> extends LazyOption<T>
+  static sealed class Unknown<T extends @NonNull Object> extends LazyOption<T>
   permits FlatMapUnknown, WhenPresentUnknown, WhenEmptyUnknown {
 
-    private final Supplier<? extends T> supplier;
+    private final @NonNull Supplier<? extends T> supplier;
 
     Unknown(final @NonNull Supplier<? extends T> supplier) {
         this.supplier = supplier;
     }
 
     @Override
-    public <U> Option<U> map(Function<? super @NonNull T, ? extends U> mapping) {
+    public <U extends @NonNull Object> @NonNull Option<U> map(final @NonNull Function<? super T, ? extends U> mapping) {
         // This needs to return an Option implementation - perhaps Unknown, perhaps
         // a new implementation - that will allow building a chain of mapping
         // calls, that are only ever executed when fold is called.
@@ -125,23 +126,25 @@ abstract sealed class LazyOption<T> extends Option<T> {
     }
 
     @Override
-    public <U> Option<U> flatMap(Function<? super @NonNull T, ? extends Option<? extends U>> mapping) {
-        return new FlatMapUnknown<>(() -> {
-            Option<T> innerOption;
+    public <U extends @NonNull Object> @NonNull Option<U> flatMap(Function<? super T, ? extends @NonNull Option<? extends U>> mapping) {
+      // return new FlatMapUnknown<>(() -> {
+      // Option<T> innerOption;
 
-            final T value = supplier.get();
-            if (value == null) {
-                innerOption = Empty.instance();
-            } else {
-                innerOption = new Present<>(() -> value);
-            }
+        // final T value = supplier.get();
+        // if (value == null) {
+        // innerOption = Empty.instance();
+        // } else {
+        // innerOption = new Present<>(() -> value);
+        // }
             
-            return innerOption.flatMap(mapping); // Delegate to inner Option's flatMap
-        });
+        // return innerOption.flatMap(mapping); // Delegate to inner Option's flatMap
+        // });
+        throw new UnsupportedOperationException("Unimplemented method 'flatMap'");
     }
 
     @Override
-    public <C> C fold(Supplier<? extends C> onEmpty, Function<? super @NonNull T, ? extends C> onPresent) {
+    public <C extends @NonNull Object> C fold(final @NonNull Supplier<? extends C> onEmpty,
+        final @NonNull Function<? super T, ? extends C> onPresent) {
         final T value = supplier.get();
         if (value != null) {
             return onPresent.apply(value);
@@ -151,63 +154,67 @@ abstract sealed class LazyOption<T> extends Option<T> {
     }
 
     @Override
-    public Option<@NonNull T> whenPresent(Consumer<? super @NonNull T> action) {
+    public @NonNull Option<T> whenPresent(final @NonNull Consumer<? super T> action) {
         return new WhenPresentUnknown<>(supplier, action);
     }
 
     @Override
-    public Option<@NonNull T> whenEmpty(Runnable action) {
+    public @NonNull Option<T> whenEmpty(final @NonNull Runnable action) {
         return new WhenEmptyUnknown<>(supplier, action);
     }
   }
 
-  static final class FlatMapUnknown<T> extends Unknown<T> {
+  static final class FlatMapUnknown<T extends @NonNull Object> extends Unknown<T> {
     
     FlatMapUnknown(final @NonNull Supplier<? extends T> supplier) {
         super(supplier);
     }
 
     @Override
-    public <U> Option<U> map(Function<? super @NonNull T, ? extends U> mapping) {
+    public <U extends @NonNull Object> @NonNull Option<U> map(final @NonNull Function<? super T, ? extends U> mapping) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'map'");
     }
 
     @Override
-    public <U> Option<U> flatMap(Function<? super @NonNull T, ? extends Option<? extends U>> mapping) {
+    public <U extends @NonNull Object> @NonNull Option<U> flatMap(
+        final @NonNull Function<? super T, ? extends @NonNull Option<? extends U>> mapping) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'flatMap'");
     }
 
     @Override
-    public <C> C fold(Supplier<? extends C> onEmpty, Function<? super @NonNull T, ? extends C> onPresent) {
-        T option = supplier().get();
-        return option.fold(onEmpty, onPresent);
+    public <C extends @NonNull Object> C fold(final @NonNull Supplier<? extends C> onEmpty,
+        final @NonNull Function<? super T, ? extends C> onPresent) {
+      // T option = supplier().get();
+      // return option.fold(onEmpty, onPresent);
+      throw new UnsupportedOperationException("Unimplemented method 'fold'");
     }
 
     @Override
-    public Option<@NonNull T> whenPresent(Consumer<? super @NonNull T> action) {
+    public @NonNull Option<T> whenPresent(final @NonNull Consumer<? super T> action) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'whenPresent'");
     }
 
     @Override
-    public Option<@NonNull T> whenEmpty(Runnable action) {
+    public @NonNull Option<T> whenEmpty(final @NonNull Runnable action) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'whenEmpty'");
     }
   }
 
-  static final class WhenPresentUnknown<T> extends Unknown<T> {
-    private final Consumer<? super T> action;
+  static final class WhenPresentUnknown<T extends @NonNull Object> extends Unknown<T> {
+    private final @NonNull Consumer<? super T> action;
 
-    WhenPresentUnknown(final @NonNull Supplier<? extends T> supplier, final Consumer<? super T> action) {
+    WhenPresentUnknown(final @NonNull Supplier<? extends T> supplier, final @NonNull Consumer<? super T> action) {
         super(supplier);
         this.action = action;
     }
     
     @Override
-    public <C> C fold(Supplier<? extends C> onEmpty, Function<? super @NonNull T, ? extends C> onPresent) {
+    public <C extends @NonNull Object> C fold(final @NonNull Supplier<? extends C> onEmpty,
+        final @NonNull Function<? super T, ? extends C> onPresent) {
         final T value = supplier().get();
         if (value != null) {
             action.accept(value);
@@ -218,16 +225,17 @@ abstract sealed class LazyOption<T> extends Option<T> {
     }
   }
 
-  static final class WhenEmptyUnknown<T> extends Unknown<T> {
-    private final Runnable action;
+  static final class WhenEmptyUnknown<T extends @NonNull Object> extends Unknown<T> {
+    private final @NonNull Runnable action;
 
-    WhenEmptyUnknown(final @NonNull Supplier<? extends T> supplier, final Runnable action) {
+    WhenEmptyUnknown(final @NonNull Supplier<? extends T> supplier, final @NonNull Runnable action) {
         super(supplier);
         this.action = action;
     }
 
     @Override
-    public <C> C fold(Supplier<? extends C> onEmpty, Function<? super @NonNull T, ? extends C> onPresent) {
+    public <C extends @NonNull Object> C fold(final @NonNull Supplier<? extends C> onEmpty,
+        final @NonNull Function<? super T, ? extends C> onPresent) {
         final T value = supplier().get();
         if (value != null) {
             return onPresent.apply(value);
@@ -242,27 +250,27 @@ abstract sealed class LazyOption<T> extends Option<T> {
 
     private static final Factory instance = new Factory();
 
-    static OptionFactory instance() {
+    static @NonNull OptionFactory instance() {
       return instance;
     }
 
     @Override 
-    public <T extends @NonNull Object> Option<T> empty() {
+    public <T extends @NonNull Object> @NonNull Option<T> empty() {
       return Empty.instance();
     }
 
     @Override 
-    public <T extends @NonNull Object> Option<T> present(final T value) {
+    public <T extends @NonNull Object> @NonNull Option<T> present(final T value) {
       return new Present<>(() -> value);
     }
 
     @Override
-    public <T extends @NonNull Object> Option<T> present(Supplier<? extends T> supplier) {
+    public <T extends @NonNull Object> @NonNull Option<T> present(final @NonNull Supplier<? extends T> supplier) {
       return new Present<>(supplier);
     }
 
     @Override
-    public <T> Option<T> of(Supplier<? extends T> supplier) {
+    public <T extends @NonNull Object> @NonNull Option<T> of(final @NonNull Supplier<? extends T> supplier) {
         return new Unknown<>(supplier);
     }
   }

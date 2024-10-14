@@ -1,11 +1,10 @@
 package wildcat.monads.options;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-
-import java.util.function.Consumer;
 
 /**
  * An Option is a monad that represents the possibility of a value being present or absent.
@@ -61,24 +60,24 @@ import java.util.function.Consumer;
  * @see <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming)">Monad</a>
  * @see <a href="https://en.wikipedia.org/wiki/Option_type">Option Type</a>
  */
-public abstract sealed class Option<@NonNull T>
+public abstract sealed class Option<T extends @NonNull Object>
   permits ImmediateOption, LazyOption {
     
-  public static OptionFactory immediate() {
+  public static @NonNull OptionFactory immediate() {
     return ImmediateOption.factory();
   }
 
-  public static OptionFactory lazy() {
+  public static @NonNull OptionFactory lazy() {
     return LazyOption.factory();
   }
     
-  public abstract <U extends @NonNull Object> Option<U> map(Function<? super T, ? extends U> mapping);
+  public abstract <U extends @NonNull Object> @NonNull Option<U> map(@NonNull Function<? super T, ? extends U> mapping);
  
-  public abstract <U extends @NonNull Object> Option<U> flatMap(Function<? super T, ? extends Option<? extends U>> mapping);
+  public abstract <U extends @NonNull Object> @NonNull Option<U> flatMap(@NonNull Function<? super T, ? extends @NonNull Option<? extends U>> mapping);
   
-  public abstract <C> C fold(Supplier<? extends C> onEmpty, Function<? super T, ? extends C> onPresent);
+  public abstract <C extends @NonNull Object> C fold(@NonNull Supplier<? extends C> onEmpty, @NonNull Function<? super T, ? extends C> onPresent);
   
-  public abstract Option<T> whenPresent(Consumer<? super T> action);
+  public abstract @NonNull Option<T> whenPresent(@NonNull Consumer<? super T> action);
   
-  public abstract Option<T> whenEmpty(Runnable action);
+  public abstract @NonNull Option<T> whenEmpty(@NonNull Runnable action);
 }

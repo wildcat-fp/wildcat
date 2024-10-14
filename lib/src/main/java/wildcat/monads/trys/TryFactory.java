@@ -8,7 +8,7 @@ import wildcat.fns.CheckedSupplier;
 
 public sealed interface TryFactory 
 permits ImmediateTry.Factory {
-    default <T extends @NonNull Object> Try<? extends T> of(final Supplier<? extends T> supplier) {
+    default <T extends @NonNull Object> @NonNull Try<? extends T> of(final @NonNull Supplier<? extends T> supplier) {
         try {
             return success(supplier);
         } catch (Exception e) {
@@ -16,7 +16,7 @@ permits ImmediateTry.Factory {
         }
     }
 
-    default <T extends @NonNull Object, E extends Exception> Try<? extends T> of(final CheckedSupplier<? extends T, ? extends E> supplier) {
+    default <T extends @NonNull Object, E extends @NonNull Exception> @NonNull Try<? extends T> of(final @NonNull CheckedSupplier<? extends T, ? extends E> supplier) {
         try {
             return attempt(supplier);
         } catch (Exception e) {
@@ -24,11 +24,11 @@ permits ImmediateTry.Factory {
         }
     }
 
-    <T> Try<? extends T> success(T value);
+    <T extends @NonNull Object> @NonNull Try<? extends T> success(T value);
 
-    <T> Try<? extends T> success(Supplier<? extends T> supplier);
+    <T extends @NonNull Object> @NonNull Try<? extends T> success(Supplier<? extends T> supplier);
 
-    <T, E extends Exception> Try<? extends T> attempt(CheckedSupplier<? extends T, ? extends E> supplier);
+    <T extends @NonNull Object, E extends @NonNull Exception> Try<? extends T> attempt(@NonNull CheckedSupplier<? extends T, ? extends E> supplier);
 
-    <T> Try<? extends T> failure(Exception exception);
+    <T extends @NonNull Object> @NonNull Try<? extends T> failure(@NonNull Exception exception);
 }

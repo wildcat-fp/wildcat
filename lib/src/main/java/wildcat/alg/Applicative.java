@@ -7,10 +7,11 @@ import wildcat.hkt.Kind;
 
 public interface Applicative<For extends Applicative.k, T> extends Apply<For, T> {
 
-    @NonNull <PureValue> Kind<For, PureValue> pure(PureValue value);
+    <PureValue> @NonNull Kind<For, PureValue> pure(@NonNull PureValue value);
 
     @Override
-    default <B> Kind<For, B> map(Functor<For, T> structure, NonNullFunction<? super T, B> f) {
+    default <B> @NonNull Kind<For, B> map(final @NonNull Functor<For, T> structure,
+            final @NonNull NonNullFunction<? super T, B> f) {
         return ap(structure, pure(f));
     }
 
