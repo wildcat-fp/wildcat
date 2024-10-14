@@ -5,12 +5,12 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import wildcat.fns.NonNullFunction;
 import wildcat.hkt.Kind;
 
-public interface Applicative<For extends Applicative.k, T> extends Apply<For, T> {
+public interface Applicative<For extends Applicative.k, T extends @NonNull Object> extends Apply<For, T> {
 
-    <PureValue> @NonNull Kind<For, PureValue> pure(@NonNull PureValue value);
+    <PureValue extends @NonNull Object> @NonNull Kind<For, PureValue> pure(@NonNull PureValue value);
 
     @Override
-    default <B> @NonNull Kind<For, B> map(final @NonNull Functor<For, T> structure,
+    default <B extends @NonNull Object> @NonNull Kind<For, B> map(final @NonNull Functor<For, T> structure,
             final @NonNull NonNullFunction<? super T, B> f) {
         return ap(structure, pure(f));
     }

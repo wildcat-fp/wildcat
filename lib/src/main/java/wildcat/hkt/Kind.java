@@ -2,10 +2,10 @@ package wildcat.hkt;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public interface Kind<@NonNull W extends Kind.k, @NonNull T> {
+public interface Kind<For extends Kind.k, T extends @NonNull Object> {
 
     @SuppressWarnings("unchecked")
-    default <@NonNull A extends Kind<W, T>> A fix() {
+    default <A extends @NonNull Kind<For, T>> A fix() {
         return (A) this;
     }
 
