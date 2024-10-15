@@ -1,8 +1,9 @@
-package wildcat.alg;
+package wildcat.typeclasses.algebraic;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import wildcat.hkt.Kind;
+import wildcat.typeclasses.core.Semigroup;
 
 public interface SemigroupK<For extends SemigroupK.k> {
 

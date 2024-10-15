@@ -1,4 +1,4 @@
-package wildcat.alg;
+package wildcat.typeclasses.traversal;
 
 import java.util.function.BiFunction;
 
@@ -14,7 +14,7 @@ public interface Foldable<For extends Foldable.k> {
         @NonNull BiFunction<Output, Input, Output> f
     );
 
-    default <Value extends @NonNull Object, ValueMonoid extends @NonNull Monoid<Value>> Value fold(final @NonNull Kind<For, Value> foldable, final @NonNull ValueMonoid monoid) {
+    default <Value extends @NonNull Object, ValueMonoid extends wildcat.typeclasses.core.Monoid<Value>> Value fold(final @NonNull Kind<For, Value> foldable, final @NonNull ValueMonoid monoid) {
         return foldLeft(foldable, monoid.empty(), monoid::combine);
     }
 

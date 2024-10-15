@@ -1,4 +1,4 @@
-package wildcat.alg;
+package wildcat.typeclasses.core;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;

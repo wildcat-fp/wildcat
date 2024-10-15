@@ -1,4 +1,4 @@
-package wildcat.alg;
+package wildcat.typeclasses.algebraic;
 
 import java.util.stream.Stream;
 

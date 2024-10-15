@@ -1,10 +1,12 @@
-package wildcat.alg;
+package wildcat.typeclasses.traversal;
 
 import java.util.function.Function;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import wildcat.hkt.Kind;
+import wildcat.typeclasses.core.Applicative;
+import wildcat.typeclasses.core.Functor;
 
 public interface Traverse<For extends Traverse.k> extends Functor<For>, Foldable<For> {
 

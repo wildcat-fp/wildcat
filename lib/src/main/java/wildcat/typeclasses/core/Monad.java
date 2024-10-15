@@ -1,4 +1,4 @@
-package wildcat.alg;
+package wildcat.typeclasses.core;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
