@@ -2,7 +2,7 @@ import org.checkerframework.gradle.plugin.CheckerFrameworkExtension
 
 plugins {
     `java-library`
-    id("org.checkerframework") version "0.6.39"
+    id("org.checkerframework") version "0.6.45"
 }
 
 repositories {
@@ -37,6 +37,7 @@ testing {
                 annotationProcessor(libs.lombok)
 
                 implementation(libs.assertj)
+                implementation(libs.jqwik)
             }
         }
     }
