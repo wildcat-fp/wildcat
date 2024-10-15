@@ -12,6 +12,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import wildcat.fns.NonNullFunction;
 import wildcat.hkt.Kind;
+import wildcat.typeclasses.core.Monad;
 
 /**
  * An Option is a monad that represents the possibility of a value being present
@@ -81,6 +82,10 @@ import wildcat.hkt.Kind;
  */
 public abstract sealed class Option<T extends @NonNull Object> implements Kind<Option.k, T>
     permits Option.Present, Option.Empty {
+
+  public static @NonNull Monad<Option.k> monad() {
+    return monad.instance();
+  }
 
   public static <T extends @NonNull Object> @NonNull Option<T> when(
       final boolean condition,
@@ -171,7 +176,8 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
 
   public abstract @NonNull Option<T> whenEmpty(@NonNull Runnable action);
 
-  public abstract <B extends @NonNull Object> @NonNull Option<B> ap(@NonNull Option<NonNullFunction<? super T, ? extends B>> f);
+  public abstract <B extends @NonNull Object> @NonNull Option<B> ap(
+      @NonNull Option<NonNullFunction<? super T, ? extends B>> f);
 
   public static final class Present<T extends @NonNull Object> extends Option<T> {
     private final T value;
@@ -212,7 +218,8 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
     }
 
     @Override
-    public <B extends @NonNull Object> @NonNull Option<B> ap(@NonNull Option<NonNullFunction<? super T, ? extends B>> f) {
+    public <B extends @NonNull Object> @NonNull Option<B> ap(
+        @NonNull Option<NonNullFunction<? super T, ? extends B>> f) {
       return f.map(fn -> fn.apply(value()));
     }
 
@@ -255,18 +262,19 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
 
     @Override
     @SuppressWarnings("unchecked")
-    public <B extends @NonNull Object> @NonNull Option<B> ap(@NonNull Option<NonNullFunction<? super T, ? extends B>> f) {
+    public <B extends @NonNull Object> @NonNull Option<B> ap(
+        @NonNull Option<NonNullFunction<? super T, ? extends B>> f) {
       return (@NonNull Option<B>) this;
     }
   }
 
-  public static final class Monad implements wildcat.typeclasses.core.Monad<Option.k> {
-    private static final Monad instance = new Monad();
+  private static final class monad implements Monad<Option.k> {
+    private static final monad instance = new monad();
 
-    private Monad() {
+    private monad() {
     }
 
-    public static @NonNull Monad instance() {
+    public static @NonNull monad instance() {
       return instance;
     }
 

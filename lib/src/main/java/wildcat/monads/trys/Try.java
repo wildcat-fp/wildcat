@@ -18,4 +18,8 @@ public abstract sealed class Try<T extends @NonNull Object>
   public abstract @NonNull Try<T> whenSuccessful(@NonNull Consumer<? super T> action);
 
   public abstract @NonNull Try<T> whenFailed(@NonNull Consumer<? super @NonNull Exception> action);
+
+  public static final class Success<T extends @NonNull Object> {
+    
+  }
 }
