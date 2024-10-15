@@ -3,10 +3,9 @@ package wildcat.typeclasses.equivalence;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import wildcat.monads.options.Option;
-import wildcat.monads.options.OptionFactory;
 
-public interface PartialOrder<Value extends @NonNull Object, OF extends @NonNull OptionFactory> extends Eq<Value> {
+public interface PartialOrder<Value extends @NonNull Object> extends Eq<Value> {
     @NonNull
-    Option<Integer> partialCompare(OF optionFactory, Value a, Value b);
+    Option<Integer> partialCompare(Value a, Value b);
 
 }

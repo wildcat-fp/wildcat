@@ -9,17 +9,17 @@ public interface Functor2<For extends Functor2.k> {
 
         default <A extends @NonNull Object, B extends @NonNull Object, T extends @NonNull Object> @NonNull Kind2<For, T, B> map(
                 final @NonNull Kind2<For, A, B> fa,
-                final @NonNull NonNullFunction<? super A, T> f) {
+                final @NonNull NonNullFunction<? super A, ? extends T> f) {
                 return mapA(fa, f);
         }
 
         <A extends @NonNull Object, B extends @NonNull Object, T extends @NonNull Object> @NonNull Kind2<For, T, B> mapA(
                 @NonNull Kind2<For, A, B> fa,
-                @NonNull NonNullFunction<? super A, T> f);
+                @NonNull NonNullFunction<? super A, ? extends T> f);
 
         <A extends @NonNull Object, B extends @NonNull Object, T extends @NonNull Object> @NonNull Kind2<For, A, T> mapB(
                 @NonNull Kind2<For, A, B> fa,
-                @NonNull NonNullFunction<? super B, T> f);
+                @NonNull NonNullFunction<? super B, ? extends T> f);
 
         interface k extends Kind2.k {
         }
