@@ -5,10 +5,9 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import wildcat.fns.NonNullFunction;
 import wildcat.hkt.Kind;
 
-public interface Apply<For extends Apply.k, T extends @NonNull Object> extends Semigroupal<For>, Functor<For, T> {
+public interface Apply<For extends Apply.k> extends Functor<For> {
 
-    <OtherValue extends @NonNull Object, FK extends @NonNull Kind<For, NonNullFunction<? super T, OtherValue>>> @NonNull Kind<For, OtherValue> ap(
-            @NonNull Functor<For, T> fa, @NonNull FK f);
+    <A extends @NonNull Object, B extends @NonNull Object> @NonNull Kind<For, B> ap(@NonNull Kind<For, NonNullFunction<? super A, ? extends B>> f);
 
-    interface k extends Semigroupal.k, Functor.k {}
+    interface k extends Functor.k {}
 }

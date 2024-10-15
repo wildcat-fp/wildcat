@@ -6,10 +6,10 @@ import wildcat.fns.NonNullFunction;
 import wildcat.hkt.Kind;
 import wildcat.hkt.Kinded;
 
-public interface Invariant<For extends Invariant.k, T extends @NonNull Object> extends Kinded<For> {
+public interface Invariant<For extends Invariant.k> extends Kinded<For> {
 
-    <SecondValue extends @NonNull Object, Out extends @NonNull Invariant<For, T>> Out imap(
-        @NonNull Kind<For, T> a,
+    <T extends @NonNull Object, SecondValue extends @NonNull Object> @NonNull Kind<For, T> imap(
+        @NonNull Kind<For, T> fa, 
         @NonNull NonNullFunction<? super T, SecondValue> f, 
         @NonNull NonNullFunction<? super SecondValue, T> g
     );

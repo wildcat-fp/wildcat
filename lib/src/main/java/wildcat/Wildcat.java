@@ -10,7 +10,7 @@ import wildcat.monads.options.Option;
  */
 public class Wildcat {
     
-    public static <T> Option<? extends @NonNull T> option(final @Nullable T value) {
+    public static <T extends @NonNull Object> @NonNull Option<T> option(final @Nullable T value) {
         return Option.immediate().of(value);
     }
 }

@@ -1,11 +1,13 @@
 package wildcat.alg;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import wildcat.fns.NonNullFunction;
 import wildcat.hkt.Kind2;
 
-public interface BiFunctor<F extends BiFunctor.k, A, B> {
+public interface BiFunctor<For extends BiFunctor.k> {
 
-    <C, D> Kind2<F, C, D> bimap(Kind2<F, A, B> bi, NonNullFunction<? super A, C> f, NonNullFunction<? super B, D> g);
+    <A extends @NonNull Object, B extends @NonNull Object, C extends @NonNull Object, D extends @NonNull Object> @NonNull Kind2<For, C, D> bimap(@NonNull Kind2<For, A, B> fa, @NonNull NonNullFunction<? super A, C> f, @NonNull NonNullFunction<? super B, D> g);
 
     interface k extends Kind2.k {}
 }
