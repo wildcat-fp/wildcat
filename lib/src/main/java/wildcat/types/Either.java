@@ -24,11 +24,11 @@ public sealed interface Either<L extends @NonNull Object, R extends @NonNull Obj
     }
 
     static Functor2<Either.k> functor2() {
-        return functor2.instance();
+        return either_functor2.instance();
     }
 
     static Bifunctor<Either.k> bifunctor() {
-        return bifunctor.instance();
+        return either_bifunctor.instance();
     }
 
     <U extends @NonNull Object> Either<? extends L, ? extends U> map(
@@ -162,12 +162,12 @@ public sealed interface Either<L extends @NonNull Object, R extends @NonNull Obj
     interface k extends Bifunctor.k, Functor2.k {}
 }
 
-final class bifunctor implements Bifunctor<Either.k> {
-    private static final bifunctor instance = new bifunctor();
+final class either_bifunctor implements Bifunctor<Either.k> {
+    private static final either_bifunctor instance = new either_bifunctor();
 
-    private bifunctor() {}
+    private either_bifunctor() {}
 
-    public static bifunctor instance() {
+    public static either_bifunctor instance() {
         return instance;
     }
 
@@ -178,12 +178,12 @@ final class bifunctor implements Bifunctor<Either.k> {
     }
 }
 
-final class functor2 implements Functor2<Either.k> {
-    private static final functor2 instance = new functor2();
+final class either_functor2 implements Functor2<Either.k> {
+    private static final either_functor2 instance = new either_functor2();
 
-    private functor2() {}
+    private either_functor2() {}
 
-    public static functor2 instance() {
+    public static either_functor2 instance() {
         return instance;
     }
 

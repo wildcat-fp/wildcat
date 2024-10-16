@@ -84,7 +84,7 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
     permits Option.Present, Option.Empty {
 
   static @NonNull Monad<Option.k> monad() {
-    return monad.instance();
+      return option_monad.instance();
   }
 
   static <T extends @NonNull Object> Option<T> when(
@@ -253,13 +253,13 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
   }
 }
 
-final class monad implements Monad<Option.k> {
-    private static final monad instance = new monad();
+final class option_monad implements Monad<Option.k> {
+    private static final option_monad instance = new option_monad();
 
-    private monad() {
+    private option_monad() {
     }
 
-    static @NonNull monad instance() {
+    static @NonNull option_monad instance() {
       return instance;
     }
 
