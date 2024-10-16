@@ -4,7 +4,9 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public interface Monoid<T> extends Semigroup<T> {
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+public interface Monoid<T extends @NonNull Object> extends Semigroup<T> {
 
     T empty();
 
@@ -12,7 +14,7 @@ public interface Monoid<T> extends Semigroup<T> {
         return ms.reduce(empty(), this::combine);
     }
 
-    static <T> Monoid<T> forT(final T empty, final BiFunction<T, T, T> combine) {
+    static <T extends @NonNull Object> Monoid<? extends T> forT(final T empty, final BiFunction<? super T, ? super T, ? extends T> combine) {
         return new Monoid<T>() {
             @Override
             public T empty() {
@@ -26,7 +28,7 @@ public interface Monoid<T> extends Semigroup<T> {
         };
     }
 
-    static <T> Monoid<T> forT(final Supplier<T> empty, final BiFunction<T, T, T> combine) {
+    static <T extends @NonNull Object> Monoid<? extends T> forT(final Supplier<? extends T> empty, final BiFunction<? super T, ? super T, ? extends T> combine) {
         return new Monoid<T>() {
             @Override
             public T empty() {
@@ -40,7 +42,7 @@ public interface Monoid<T> extends Semigroup<T> {
         };
     }
 
-    static <T> Monoid<T> forT(final T empty, final Semigroup<T> semigroup) {
+    static <T extends @NonNull Object> Monoid<T> forT(final T empty, final Semigroup<T> semigroup) {
         return new Monoid<T>() {
             @Override
             public T empty() {
@@ -54,7 +56,7 @@ public interface Monoid<T> extends Semigroup<T> {
         };
     }
 
-    static <T> Monoid<T> forT(final Supplier<T> empty, final Semigroup<T> semigroup) {
+    static <T extends @NonNull Object> Monoid<T> forT(final Supplier<? extends T> empty, final Semigroup<T> semigroup) {
         return new Monoid<T>() {
             @Override
             public T empty() {

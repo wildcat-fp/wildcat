@@ -9,10 +9,10 @@ import wildcat.hkt.Kinded;
 
 public interface Invariant<For extends Invariant.k> extends Kinded<For> {
 
-    <T extends @NonNull Object, SecondValue extends @NonNull Object> @NonNull Kind<For, T> imap(
+    <T extends @NonNull Object, SecondValue extends @NonNull Object> @NonNull Kind<For, ? extends T> imap(
         @NonNull Kind<For, T> fa, 
-        @NonNull Function<? super T, SecondValue> f, 
-        @NonNull Function<? super SecondValue, T> g
+        @NonNull Function<? super T, ? extends SecondValue> f, 
+        @NonNull Function<? super SecondValue, ? extends T> g
     );
 
     interface k extends Kind.k { }

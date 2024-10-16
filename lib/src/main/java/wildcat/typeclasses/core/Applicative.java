@@ -6,7 +6,7 @@ import wildcat.hkt.Kind;
 
 public interface Applicative<For extends Applicative.k> extends Apply<For> {
 
-    <T extends @NonNull Object> @NonNull Kind<For, T> pure(final @NonNull T value);
+    <T extends @NonNull Object> @NonNull Kind<For, ? extends T> pure(final T value);
 
     interface k extends Apply.k {
     }

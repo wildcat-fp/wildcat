@@ -10,9 +10,9 @@ import wildcat.typeclasses.core.Functor;
 
 public interface Traverse<For extends Traverse.k> extends Functor<For>, Foldable<For> {
 
-    <G extends Applicative.k, A extends @NonNull Object, B extends @NonNull Object> @NonNull Kind<G, Kind<For, B>> traverse(
+    <G extends Applicative.k, A extends @NonNull Object, B extends @NonNull Object> @NonNull Kind<G, ? extends Kind<For, B>> traverse(
             @NonNull Applicative<G> applicative,
-            @NonNull Function<A, Kind<G, B>> f,
+            @NonNull Function<? super A, ? extends Kind<G, B>> f,
             @NonNull Kind<For, A> traversable);
 
     interface k extends Functor.k, Foldable.k {

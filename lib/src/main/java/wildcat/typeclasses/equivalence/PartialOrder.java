@@ -6,6 +6,6 @@ import wildcat.types.Option;
 
 public interface PartialOrder<Value extends @NonNull Object> extends Eq<Value> {
     @NonNull
-    Option<Integer> partialCompare(Value a, Value b);
+    Option<? extends Integer> partialCompare(Value a, Value b);
 
 }

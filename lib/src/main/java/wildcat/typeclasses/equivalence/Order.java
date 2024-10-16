@@ -9,7 +9,7 @@ public interface Order<Value extends @NonNull Object> extends PartialOrder<Value
     int compare(Value a, Value b);
 
     @Override
-    default Option<Integer> partialCompare(Value a, Value b) {
+    default Option<? extends Integer> partialCompare(Value a, Value b) {
         return Option.present(compare(a, b));
     }
 }

@@ -5,6 +5,7 @@ import java.util.function.BiFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import wildcat.hkt.Kind;
+import wildcat.typeclasses.core.Monoid;
 
 public interface Foldable<For extends Foldable.k> {
 
@@ -14,7 +15,7 @@ public interface Foldable<For extends Foldable.k> {
         @NonNull BiFunction<Output, Input, Output> f
     );
 
-    default <Value extends @NonNull Object, ValueMonoid extends wildcat.typeclasses.core.Monoid<Value>> Value fold(final @NonNull Kind<For, Value> foldable, final @NonNull ValueMonoid monoid) {
+    default <Value extends @NonNull Object, ValueMonoid extends Monoid<Value>> Value fold(final @NonNull Kind<For, Value> foldable, final @NonNull ValueMonoid monoid) {
         return foldLeft(foldable, monoid.empty(), monoid::combine);
     }
 

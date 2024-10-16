@@ -8,7 +8,7 @@ import wildcat.hkt.Kind;
 
 public interface Apply<For extends Apply.k> extends Functor<For> {
 
-    <A extends @NonNull Object, B extends @NonNull Object> @NonNull Kind<For, B> ap(
+    <A extends @NonNull Object, B extends @NonNull Object> @NonNull Kind<For, ? extends B> ap(
         @NonNull Kind<For, A> fa,
         @NonNull Kind<For, Function<? super A, ? extends B>> f
     );
