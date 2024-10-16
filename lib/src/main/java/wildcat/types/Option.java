@@ -1,4 +1,4 @@
-package wildcat.monads;
+package wildcat.types;
 
 import static java.util.Objects.requireNonNull;
 
@@ -87,7 +87,7 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
     return monad.instance();
   }
 
-  public static <T extends @NonNull Object> wildcat.monads.Option<T> when(
+  public static <T extends @NonNull Object> wildcat.types.Option<T> when(
       final boolean condition,
       final T value) {
     requireNonNull(value, "Value cannot be null");
@@ -98,7 +98,7 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
     }
   }
 
-  public static <T extends @NonNull Object> wildcat.monads.Option<T> when(
+  public static <T extends @NonNull Object> wildcat.types.Option<T> when(
       final boolean condition,
       final @NonNull Supplier<? extends T> supplier) {
     if (supplier == null) {
@@ -112,7 +112,7 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
     }
   }
 
-  public static <T> wildcat.monads.Option<@NonNull T> of(final @Nullable T value) {
+  public static <T> wildcat.types.Option<@NonNull T> of(final @Nullable T value) {
     if (value == null) {
       return empty();
     }
@@ -120,7 +120,7 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
     return present(value);
   }
 
-  public static <T extends @NonNull Object> wildcat.monads.Option<T> of(final @NonNull Supplier<? extends T> supplier) {
+  public static <T extends @NonNull Object> wildcat.types.Option<T> of(final @NonNull Supplier<? extends T> supplier) {
     requireNonNull(supplier, "Supplier cannot be null");
     final T value = supplier.get();
 
@@ -128,7 +128,7 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
     return of(value);
   }
 
-  public static <T extends @NonNull Object> wildcat.monads.Option<T> ofOptional(final @NonNull Optional<T> optional) {
+  public static <T extends @NonNull Object> wildcat.types.Option<T> ofOptional(final @NonNull Optional<T> optional) {
     requireNonNull(optional, "Optional cannot be null");
     if (optional.isPresent()) {
       return present(optional.get());
@@ -137,7 +137,7 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
     }
   }
 
-  public static <T extends @NonNull Object, U extends @NonNull Object> wildcat.monads.Option<U> lift(
+  public static <T extends @NonNull Object, U extends @NonNull Object> wildcat.types.Option<U> lift(
       final @NonNull Function<? super T, ? extends U> function, final @Nullable T value) {
     if (value == null) {
       return empty();
@@ -146,16 +146,16 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
     }
   }
 
-  public static <T extends @NonNull Object> wildcat.monads.Option<T> empty() {
+  public static <T extends @NonNull Object> wildcat.types.Option<T> empty() {
     return new Empty<>();
   }
 
-  public static <T extends @NonNull Object> wildcat.monads.Option<T> present(final T value) {
+  public static <T extends @NonNull Object> wildcat.types.Option<T> present(final T value) {
     requireNonNull(value, "Value cannot be null");
     return new Present<>(value);
   }
 
-  public static <T extends @NonNull Object> wildcat.monads.Option<T> present(
+  public static <T extends @NonNull Object> wildcat.types.Option<T> present(
       final @NonNull Supplier<? extends @NonNull T> supplier) {
     requireNonNull(supplier, "Supplier cannot be null");
     final T value = supplier.get();
@@ -164,10 +164,10 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
     return present(value);
   }
 
-  public abstract <U extends @NonNull Object> wildcat.monads.Option<U> map(@NonNull Function<? super T, ? extends U> mapping);
+  public abstract <U extends @NonNull Object> wildcat.types.Option<U> map(@NonNull Function<? super T, ? extends U> mapping);
 
-  public abstract <U extends @NonNull Object> wildcat.monads.Option<U> flatMap(
-      @NonNull NonNullFunction<? super T, ? extends wildcat.monads.Option<? extends U>> mapping);
+  public abstract <U extends @NonNull Object> wildcat.types.Option<U> flatMap(
+      @NonNull NonNullFunction<? super T, ? extends wildcat.types.Option<? extends U>> mapping);
 
   public abstract <C extends @NonNull Object> C fold(@NonNull Supplier<? extends C> onEmpty,
       @NonNull Function<? super T, ? extends C> onPresent);
@@ -176,7 +176,7 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
 
   public abstract @NonNull Option<T> whenEmpty(@NonNull Runnable action);
 
-  public abstract <B extends @NonNull Object> wildcat.monads.Option<B> ap(
+  public abstract <B extends @NonNull Object> wildcat.types.Option<B> ap(
       @NonNull Option<NonNullFunction<? super T, ? extends B>> f);
 
   public static final class Present<T extends @NonNull Object> extends Option<T> {
@@ -187,16 +187,16 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
     }
 
     @Override
-    public <U extends @NonNull Object> wildcat.monads.Option<U> map(@NonNull Function<? super T, ? extends U> mapping) {
+    public <U extends @NonNull Object> wildcat.types.Option<U> map(@NonNull Function<? super T, ? extends U> mapping) {
       final U newValue = mapping.apply(value);
       return new Present<>(newValue);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <U extends @NonNull Object> wildcat.monads.Option<U> flatMap(
-        @NonNull NonNullFunction<? super T, ? extends wildcat.monads.Option<? extends U>> mapping) {
-      return (wildcat.monads.Option<U>) mapping.apply(value);
+    public <U extends @NonNull Object> wildcat.types.Option<U> flatMap(
+        @NonNull NonNullFunction<? super T, ? extends wildcat.types.Option<? extends U>> mapping) {
+      return (wildcat.types.Option<U>) mapping.apply(value);
     }
 
     @Override
@@ -218,7 +218,7 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
     }
 
     @Override
-    public <B extends @NonNull Object> wildcat.monads.Option<B> ap(
+    public <B extends @NonNull Object> wildcat.types.Option<B> ap(
         @NonNull Option<NonNullFunction<? super T, ? extends B>> f) {
       return f.map(fn -> fn.apply(value()));
     }
@@ -232,15 +232,15 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
 
     @Override
     @SuppressWarnings("unchecked")
-    public <U extends @NonNull Object> wildcat.monads.Option<U> map(final @NonNull Function<? super T, ? extends U> mapping) {
-      return (wildcat.monads.Option<U>) this;
+    public <U extends @NonNull Object> wildcat.types.Option<U> map(final @NonNull Function<? super T, ? extends U> mapping) {
+      return (wildcat.types.Option<U>) this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <U extends @NonNull Object> wildcat.monads.Option<U> flatMap(
-        final @NonNull NonNullFunction<? super T, ? extends wildcat.monads.Option<? extends U>> mapping) {
-      return (wildcat.monads.Option<U>) this;
+    public <U extends @NonNull Object> wildcat.types.Option<U> flatMap(
+        final @NonNull NonNullFunction<? super T, ? extends wildcat.types.Option<? extends U>> mapping) {
+      return (wildcat.types.Option<U>) this;
     }
 
     @Override
@@ -262,9 +262,9 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
 
     @Override
     @SuppressWarnings("unchecked")
-    public <B extends @NonNull Object> wildcat.monads.Option<B> ap(
+    public <B extends @NonNull Object> wildcat.types.Option<B> ap(
         @NonNull Option<NonNullFunction<? super T, ? extends B>> f) {
-      return (wildcat.monads.Option<B>) this;
+      return (wildcat.types.Option<B>) this;
     }
   }
 
@@ -279,12 +279,12 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
     }
 
     @Override
-    public <T extends @NonNull Object> wildcat.monads.Option<T> pure(@NonNull T value) {
+    public <T extends @NonNull Object> wildcat.types.Option<T> pure(@NonNull T value) {
       return new Present<>(value);
     }
 
     @Override
-    public <A extends @NonNull Object, B extends @NonNull Object> wildcat.monads.Option<B> ap(
+    public <A extends @NonNull Object, B extends @NonNull Object> wildcat.types.Option<B> ap(
         @NonNull Kind<Option.k, A> fa,
         @NonNull Kind<Option.k, NonNullFunction<? super A, ? extends B>> f) {
       final Option<A> option = fa.fix();
@@ -293,11 +293,11 @@ public abstract sealed class Option<T extends @NonNull Object> implements Kind<O
     }
 
     @Override
-    public <A extends @NonNull Object, B extends @NonNull Object> wildcat.monads.Option<B> flatMap(
+    public <A extends @NonNull Object, B extends @NonNull Object> wildcat.types.Option<B> flatMap(
         @NonNull Kind<Option.k, A> fa,
         @NonNull NonNullFunction<? super A, ? extends @NonNull Kind<Option.k, B>> f) {
       final Option<A> option = fa.fix();
-      final NonNullFunction<A, wildcat.monads.Option<B>> fixedF = t -> f.apply(t).fix();
+      final NonNullFunction<A, wildcat.types.Option<B>> fixedF = t -> f.apply(t).fix();
       return option.flatMap(fixedF);
     }
   }
