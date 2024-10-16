@@ -2,7 +2,7 @@ package wildcat.monads.either;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import wildcat.monads.trys.Try;
+import wildcat.monads.Try;
 
 public sealed interface EitherFactory 
 permits ImmediateEither.Factory {

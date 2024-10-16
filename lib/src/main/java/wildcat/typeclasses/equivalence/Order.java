@@ -2,7 +2,7 @@ package wildcat.typeclasses.equivalence;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import wildcat.monads.options.Option;
+import wildcat.monads.Option;
 
 
 public interface Order<Value extends @NonNull Object> extends PartialOrder<Value> {

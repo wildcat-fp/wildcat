@@ -1,4 +1,4 @@
-package wildcat.monads.trys;
+package wildcat.monads;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -13,15 +13,15 @@ import wildcat.typeclasses.traversal.Foldable;
 public abstract sealed class Try<T extends @NonNull Object>
     permits Try.Success, Try.Failure {
 
-  public static <T extends @NonNull Object> @NonNull Try<T> success(@NonNull T value) {
+  public static <T extends @NonNull Object> wildcat.monads.Try<T> success(@NonNull T value) {
     return new Success<>(value);
   }
 
-  public static <T extends @NonNull Object> @NonNull Try<T> failure(@NonNull Exception exception) {
+  public static <T extends @NonNull Object> wildcat.monads.Try<T> failure(@NonNull Exception exception) {
     return new Failure<>(exception);
   }
 
-  public static <T extends @NonNull Object> @NonNull Try<T> of(final @NonNull Supplier<T> supplier) {
+  public static <T extends @NonNull Object> wildcat.monads.Try<T> of(final @NonNull Supplier<T> supplier) {
     try {
       return new Success<>(supplier.get());
     } catch (final Exception e) {
@@ -29,7 +29,7 @@ public abstract sealed class Try<T extends @NonNull Object>
     }
   }
 
-  public static <T extends @NonNull Object, E extends @NonNull Exception> @NonNull Try<T> of(final @NonNull CheckedSupplier<T, E> supplier) {
+  public static <T extends @NonNull Object, E extends @NonNull Exception> wildcat.monads.Try<T> of(final @NonNull CheckedSupplier<T, E> supplier) {
     try {
       return new Success<>(supplier.get());
     } catch (final Exception e) {
@@ -37,11 +37,11 @@ public abstract sealed class Try<T extends @NonNull Object>
     }
   }
 
-  public abstract <U extends @NonNull Object> @NonNull Try<? extends U> map(
+  public abstract <U extends @NonNull Object> wildcat.monads.Try<? extends U> map(
       @NonNull NonNullFunction<? super T, ? extends U> mapping);
 
-  public abstract <U extends @NonNull Object> @NonNull Try<? extends U> flatMap(
-      @NonNull NonNullFunction<? super T, ? extends @NonNull Try<? extends U>> mapping);
+  public abstract <U extends @NonNull Object> wildcat.monads.Try<? extends U> flatMap(
+      @NonNull NonNullFunction<? super T, ? extends wildcat.monads.Try<? extends U>> mapping);
 
   public abstract <C extends @NonNull Object> C fold(Function<? super @NonNull Exception, ? extends C> whenFailed,
       Function<? super T, ? extends C> whenSucceeded);
@@ -50,7 +50,7 @@ public abstract sealed class Try<T extends @NonNull Object>
 
   public abstract @NonNull Try<T> whenFailed(@NonNull Consumer<? super @NonNull Exception> action);
 
-  public abstract <B extends @NonNull Object> @NonNull Try<B> ap(
+  public abstract <B extends @NonNull Object> wildcat.monads.Try<B> ap(
       @NonNull Try<NonNullFunction<? super T, ? extends B>> f);
 
   public static final class Success<T extends @NonNull Object> extends Try<T> {
@@ -65,14 +65,14 @@ public abstract sealed class Try<T extends @NonNull Object>
     }
 
     @Override
-    public <U extends @NonNull Object> @NonNull Try<? extends U> map(
+    public <U extends @NonNull Object> wildcat.monads.Try<? extends U> map(
         final @NonNull NonNullFunction<? super T, ? extends U> mapping) {
       return new Success<>(mapping.apply(value));
     }
 
     @Override
-    public <U extends @NonNull Object> @NonNull Try<? extends U> flatMap(
-        final @NonNull NonNullFunction<? super T, ? extends @NonNull Try<? extends U>> mapping) {
+    public <U extends @NonNull Object> wildcat.monads.Try<? extends U> flatMap(
+        final @NonNull NonNullFunction<? super T, ? extends wildcat.monads.Try<? extends U>> mapping) {
       return mapping.apply(value);
     }
 
@@ -95,8 +95,8 @@ public abstract sealed class Try<T extends @NonNull Object>
 
     @Override
     @SuppressWarnings("unchecked")
-    public <B extends @NonNull Object> @NonNull Try<B> ap(@NonNull Try<NonNullFunction<? super T, ? extends B>> f) {
-      return (@NonNull Try<B>) f.map(fn -> fn.apply(value()));
+    public <B extends @NonNull Object> wildcat.monads.Try<B> ap(@NonNull Try<NonNullFunction<? super T, ? extends B>> f) {
+      return (wildcat.monads.Try<B>) f.map(fn -> fn.apply(value()));
     }
   }
 
@@ -113,17 +113,17 @@ public abstract sealed class Try<T extends @NonNull Object>
 
     @Override
     @SuppressWarnings("unchecked")
-    public <U extends @NonNull Object> @NonNull Try<? extends U> map(
+    public <U extends @NonNull Object> wildcat.monads.Try<? extends U> map(
         @NonNull NonNullFunction<? super T, ? extends U> mapping) {
       // TODO Auto-generated method stub
-      return (@NonNull Try<? extends U>) this;
+      return (wildcat.monads.Try<? extends U>) this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <U extends @NonNull Object> @NonNull Try<? extends U> flatMap(
-        @NonNull NonNullFunction<? super T, ? extends @NonNull Try<? extends U>> mapping) {
-      return (@NonNull Try<? extends U>) this;
+    public <U extends @NonNull Object> wildcat.monads.Try<? extends U> flatMap(
+        @NonNull NonNullFunction<? super T, ? extends wildcat.monads.Try<? extends U>> mapping) {
+      return (wildcat.monads.Try<? extends U>) this;
     }
 
     @Override
@@ -145,8 +145,8 @@ public abstract sealed class Try<T extends @NonNull Object>
 
     @Override
     @SuppressWarnings("unchecked")
-    public <B extends @NonNull Object> @NonNull Try<B> ap(@NonNull Try<NonNullFunction<? super T, ? extends B>> f) {
-      return (@NonNull Try<B>) this;
+    public <B extends @NonNull Object> wildcat.monads.Try<B> ap(@NonNull Try<NonNullFunction<? super T, ? extends B>> f) {
+      return (wildcat.monads.Try<B>) this;
     }
 
   }
