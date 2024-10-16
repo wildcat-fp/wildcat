@@ -4,10 +4,20 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import wildcat.fns.NonNullFunction;
 import wildcat.hkt.Kind2;
+import wildcat.typeclasses.algebraic.Bifunctor;
+import wildcat.typeclasses.algebraic.Functor2;
 
 public record Tuple2<A extends @NonNull Object, B extends @NonNull Object>(
         A a,
         B b) implements Kind2<Tuple2.k, A, B> {
+
+    public static Bifunctor<Tuple2.k> bifunctor() {
+        return bifunctor.instance();
+    }
+
+    public static Functor2<Tuple2.k> functor() {
+        return functor2.instance();
+    }
 
     public static <A extends @NonNull Object, B extends @NonNull Object> @NonNull Tuple2<A, B> of(final A a,
             final B b) {
@@ -34,13 +44,13 @@ public record Tuple2<A extends @NonNull Object, B extends @NonNull Object>(
         return new Tuple2<>(c, d);
     }
 
-    public static final class Bifunctor implements wildcat.typeclasses.algebraic.Bifunctor<Tuple2.k> {
-        private static final Bifunctor instance = new Bifunctor();
+    private static final class bifunctor implements Bifunctor<Tuple2.k> {
+        private static final bifunctor instance = new bifunctor();
 
-        private Bifunctor() {
+        private bifunctor() {
         }
 
-        public static @NonNull Bifunctor instance() {
+        public static @NonNull bifunctor instance() {
             return instance;
         }
 
@@ -54,13 +64,13 @@ public record Tuple2<A extends @NonNull Object, B extends @NonNull Object>(
         }
     }
 
-    public static final class Functor2 implements wildcat.typeclasses.algebraic.Functor2<Tuple2.k> {
-        private static final Functor2 instance = new Functor2();
+    private static final class functor2 implements Functor2<Tuple2.k> {
+        private static final functor2 instance = new functor2();
 
-        private Functor2() {
+        private functor2() {
         }
 
-        public static @NonNull Functor2 instance() {
+        public static @NonNull functor2 instance() {
             return instance;
         }
 
@@ -81,6 +91,6 @@ public record Tuple2<A extends @NonNull Object, B extends @NonNull Object>(
         }
     }
 
-    interface k extends wildcat.typeclasses.algebraic.Bifunctor.k, Functor2.k {
+    interface k extends Bifunctor.k, Functor2.k {
     }
 }
