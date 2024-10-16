@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = "wildcat-core"
-include("lib")
+include("wildcat-core")
