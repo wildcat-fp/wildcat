@@ -13,6 +13,7 @@
     # pkgs.nodePackages.nodemon
     pkgs.zulu
     pkgs.zsh
+    pkgs.gh
   ];
 
   # Sets environment variables in the workspace
@@ -22,6 +23,8 @@
     extensions = [
       # "vscodevim.vim"
       "redhat.java"
+      "github.vscode-github-actions"
+      "github.vscode-pull-request-github"
     ];
 
     # Enable previews
