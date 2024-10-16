@@ -4,6 +4,7 @@ import java.util.function.Function;
 
 import org.checkerframework.checker.nullness.qual.NonNull;;
 
+@Deprecated
 @FunctionalInterface
 public interface NonNullFunction<T extends @NonNull Object, R extends @NonNull Object> {
 
