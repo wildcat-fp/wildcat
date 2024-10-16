@@ -16,6 +16,8 @@ dependencies {
     implementation(libs.assertj)
     implementation(libs.jqwik)
     implementation(libs.junit.jupiter)
+
+    api(project(":wildcat-core"))
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

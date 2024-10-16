@@ -38,6 +38,8 @@ testing {
 
                 implementation(libs.assertj)
                 implementation(libs.jqwik)
+
+                implementation(project(":wildcat-laws"))
             }
         }
     }
