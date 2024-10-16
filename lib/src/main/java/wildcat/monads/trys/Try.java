@@ -2,19 +2,47 @@ package wildcat.monads.trys;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import wildcat.fns.CheckedSupplier;
 import wildcat.fns.NonNullFunction;
 import wildcat.typeclasses.traversal.Foldable;
 
-public abstract sealed class Try<T extends @NonNull Object> 
-  permits Try.Success, Try.Failure {
-  
-  public abstract <U extends @NonNull Object> @NonNull Try<? extends U> map(@NonNull NonNullFunction<? super T, ? extends U> mapping);
-  
-  public abstract <U extends @NonNull Object> @NonNull Try<? extends U> flatMap(@NonNull NonNullFunction<? super T, ? extends @NonNull Try<? extends U>> mapping);
-  
+public abstract sealed class Try<T extends @NonNull Object>
+    permits Try.Success, Try.Failure {
+
+  public static <T extends @NonNull Object> @NonNull Try<T> success(@NonNull T value) {
+    return new Success<>(value);
+  }
+
+  public static <T extends @NonNull Object> @NonNull Try<T> failure(@NonNull Exception exception) {
+    return new Failure<>(exception);
+  }
+
+  public static <T extends @NonNull Object> @NonNull Try<T> of(final @NonNull Supplier<T> supplier) {
+    try {
+      return new Success<>(supplier.get());
+    } catch (final Exception e) {
+      return new Failure<>(e);
+    }
+  }
+
+  public static <T extends @NonNull Object, E extends @NonNull Exception> @NonNull Try<T> of(final @NonNull CheckedSupplier<T, E> supplier) {
+    try {
+      return new Success<>(supplier.get());
+    } catch (final Exception e) {
+      return new Failure<>(e);
+    }
+  }
+
+  public abstract <U extends @NonNull Object> @NonNull Try<? extends U> map(
+      @NonNull NonNullFunction<? super T, ? extends U> mapping);
+
+  public abstract <U extends @NonNull Object> @NonNull Try<? extends U> flatMap(
+      @NonNull NonNullFunction<? super T, ? extends @NonNull Try<? extends U>> mapping);
+
   public abstract <C extends @NonNull Object> C fold(Function<? super @NonNull Exception, ? extends C> whenFailed,
       Function<? super T, ? extends C> whenSucceeded);
 
@@ -37,7 +65,8 @@ public abstract sealed class Try<T extends @NonNull Object>
     }
 
     @Override
-    public <U extends @NonNull Object> @NonNull Try<? extends U> map(final @NonNull NonNullFunction<? super T, ? extends U> mapping) {
+    public <U extends @NonNull Object> @NonNull Try<? extends U> map(
+        final @NonNull NonNullFunction<? super T, ? extends U> mapping) {
       return new Success<>(mapping.apply(value));
     }
 
@@ -84,7 +113,8 @@ public abstract sealed class Try<T extends @NonNull Object>
 
     @Override
     @SuppressWarnings("unchecked")
-    public <U extends @NonNull Object> @NonNull Try<? extends U> map(@NonNull NonNullFunction<? super T, ? extends U> mapping) {
+    public <U extends @NonNull Object> @NonNull Try<? extends U> map(
+        @NonNull NonNullFunction<? super T, ? extends U> mapping) {
       // TODO Auto-generated method stub
       return (@NonNull Try<? extends U>) this;
     }
@@ -121,5 +151,6 @@ public abstract sealed class Try<T extends @NonNull Object>
 
   }
 
-  public interface k extends Foldable.k {}
+  public interface k extends Foldable.k {
+  }
 }
