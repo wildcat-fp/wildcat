@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import wildcat.fns.CheckedSupplier;
-import wildcat.fns.NonNullFunction;
 import wildcat.typeclasses.traversal.Foldable;
 
 public sealed interface Try<T extends @NonNull Object>
@@ -37,9 +36,9 @@ public sealed interface Try<T extends @NonNull Object>
     }
   }
 
-  <U extends @NonNull Object> Try<? extends U> map(@NonNull NonNullFunction<? super T, ? extends U> mapping);
+  <U extends @NonNull Object> Try<? extends U> map(@NonNull Function<? super T, ? extends U> mapping);
 
-  <U extends @NonNull Object> Try<? extends U> flatMap(@NonNull NonNullFunction<? super T, ? extends Try<? extends U>> mapping);
+  <U extends @NonNull Object> Try<? extends U> flatMap(@NonNull Function<? super T, ? extends Try<? extends U>> mapping);
 
   <C extends @NonNull Object> C fold(
     Function<? super @NonNull Exception, ? extends C> whenFailed,
@@ -50,18 +49,18 @@ public sealed interface Try<T extends @NonNull Object>
   @NonNull Try<T> whenFailed(@NonNull Consumer<? super @NonNull Exception> action);
 
   <B extends @NonNull Object> Try<B> ap(
-      @NonNull Try<NonNullFunction<? super T, ? extends B>> f);
+      @NonNull Try<Function<? super T, ? extends B>> f);
 
   record Success<T extends @NonNull Object>(T value) implements Try<T> {
     @Override
     public <U extends @NonNull Object> Try<? extends U> map(
-        final @NonNull NonNullFunction<? super T, ? extends U> mapping) {
+        final @NonNull Function<? super T, ? extends U> mapping) {
       return new Success<>(mapping.apply(value));
     }
 
     @Override
     public <U extends @NonNull Object> Try<? extends U> flatMap(
-        final @NonNull NonNullFunction<? super T, ? extends Try<? extends U>> mapping) {
+        final @NonNull Function<? super T, ? extends Try<? extends U>> mapping) {
       return mapping.apply(value);
     }
 
@@ -85,7 +84,7 @@ public sealed interface Try<T extends @NonNull Object>
 
     @Override
     @SuppressWarnings("unchecked")
-    public <B extends @NonNull Object> Try<B> ap(final @NonNull Try<NonNullFunction<? super T, ? extends B>> f) {
+    public <B extends @NonNull Object> Try<B> ap(final @NonNull Try<Function<? super T, ? extends B>> f) {
       return (Try<B>) f.map(fn -> fn.apply(value()));
     }
   }
@@ -94,14 +93,14 @@ public sealed interface Try<T extends @NonNull Object>
     @Override
     @SuppressWarnings("unchecked")
     public <U extends @NonNull Object> Try<? extends U> map(
-        final @NonNull NonNullFunction<? super T, ? extends U> mapping) {
+        final @NonNull Function<? super T, ? extends U> mapping) {
       return (Try<? extends U>) this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <U extends @NonNull Object> Try<? extends U> flatMap(
-        final @NonNull NonNullFunction<? super T, ? extends Try<? extends U>> mapping) {
+        final @NonNull Function<? super T, ? extends Try<? extends U>> mapping) {
       return (Try<? extends U>) this;
     }
 
@@ -125,7 +124,7 @@ public sealed interface Try<T extends @NonNull Object>
 
     @Override
     @SuppressWarnings("unchecked")
-    public <B extends @NonNull Object> Try<B> ap(final @NonNull Try<NonNullFunction<? super T, ? extends B>> f) {
+    public <B extends @NonNull Object> Try<B> ap(final @NonNull Try<Function<? super T, ? extends B>> f) {
       return (Try<B>) this;
     }
 

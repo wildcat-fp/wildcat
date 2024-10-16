@@ -5,12 +5,12 @@ import static wildcat.utils.Types.genericCast;
 
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import wildcat.fns.NonNullFunction;
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Monad;
 
@@ -138,7 +138,7 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
   }
 
   static <T extends @NonNull Object, U extends @NonNull Object> Option<U> lift(
-      final @NonNull NonNullFunction<? super T, ? extends U> function, final @Nullable T value) {
+      final @NonNull Function<? super T, ? extends U> function, final @Nullable T value) {
     if (value == null) {
       return empty();
     } else {
@@ -164,34 +164,34 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
     return present(value);
   }
 
-  <U extends @NonNull Object> Option<U> map(@NonNull NonNullFunction<? super T, ? extends U> mapping);
+  <U extends @NonNull Object> Option<U> map(@NonNull Function<? super T, ? extends U> mapping);
 
   <U extends @NonNull Object> Option<U> flatMap(
-      @NonNull NonNullFunction<? super T, ? extends Option<? extends U>> mapping);
+      @NonNull Function<? super T, ? extends Option<? extends U>> mapping);
 
   <C extends @NonNull Object> C fold(@NonNull Supplier<? extends C> onEmpty,
-      @NonNull NonNullFunction<? super T, ? extends C> onPresent);
+      @NonNull Function<? super T, ? extends C> onPresent);
 
   @NonNull Option<T> whenPresent(@NonNull Consumer<? super T> action);
 
   @NonNull Option<T> whenEmpty(@NonNull Runnable action);
 
-  <B extends @NonNull Object> Option<B> ap(@NonNull Option<NonNullFunction<? super T, ? extends B>> f);
+  <B extends @NonNull Object> Option<B> ap(@NonNull Option<Function<? super T, ? extends B>> f);
 
   record Present<T extends @NonNull Object>(T value) implements Option<T> {
     @Override
-    public <U extends @NonNull Object> @NonNull Option<U> map(@NonNull NonNullFunction<? super T, ? extends U> mapping) {
+    public <U extends @NonNull Object> @NonNull Option<U> map(@NonNull Function<? super T, ? extends U> mapping) {
       final U newValue = mapping.apply(value);
       return new Present<>(newValue);
     }
 
     @Override
-    public <U extends @NonNull Object> @NonNull Option<U> flatMap(final @NonNull NonNullFunction<? super T, ? extends Option<? extends U>> mapping) {
+    public <U extends @NonNull Object> @NonNull Option<U> flatMap(final @NonNull Function<? super T, ? extends Option<? extends U>> mapping) {
       return genericCast(mapping.apply(value));
     }
 
     @Override
-    public <C extends @NonNull Object> C fold(final @NonNull Supplier<? extends C> onEmpty, final @NonNull NonNullFunction<? super T, ? extends C> onPresent) {
+    public <C extends @NonNull Object> C fold(final @NonNull Supplier<? extends C> onEmpty, final @NonNull Function<? super T, ? extends C> onPresent) {
       return onPresent.apply(value);
     }
 
@@ -208,26 +208,26 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
     }
 
     @Override
-    public <B extends @NonNull Object> Option<B> ap(final @NonNull Option<NonNullFunction<? super T, ? extends B>> f) {
+    public <B extends @NonNull Object> Option<B> ap(final @NonNull Option<Function<? super T, ? extends B>> f) {
       return f.map(fn -> fn.apply(value()));
     }
   }
 
   record Empty<T extends @NonNull Object>() implements Option<T> {
     @Override
-    public <U extends @NonNull Object> Option<U> map(final @NonNull NonNullFunction<? super T, ? extends U> mapping) {
+    public <U extends @NonNull Object> Option<U> map(final @NonNull Function<? super T, ? extends U> mapping) {
       return genericCast(this);
     }
 
     @Override
     public <U extends @NonNull Object> Option<U> flatMap(
-        final @NonNull NonNullFunction<? super T, ? extends Option<? extends U>> mapping) {
+        final @NonNull Function<? super T, ? extends Option<? extends U>> mapping) {
       return genericCast(this);
     }
 
     @Override
     public <C extends @NonNull Object> C fold(final @NonNull Supplier<? extends C> onEmpty,
-        final @NonNull NonNullFunction<? super T, ? extends C> onPresent) {
+        final @NonNull Function<? super T, ? extends C> onPresent) {
       return onEmpty.get();
     }
 
@@ -244,12 +244,10 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
 
     @Override
     public <B extends @NonNull Object> Option<B> ap(
-        @NonNull Option<NonNullFunction<? super T, ? extends B>> f) {
+        @NonNull Option<Function<? super T, ? extends B>> f) {
       return genericCast(this);
     }
   }
-
-  
 
   interface k extends Monad.k {
   }
@@ -273,18 +271,18 @@ final class monad implements Monad<Option.k> {
     @Override
     public <A extends @NonNull Object, B extends @NonNull Object> Option<B> ap(
         @NonNull Kind<Option.k, A> fa,
-        @NonNull Kind<Option.k, NonNullFunction<? super A, ? extends B>> f) {
+        @NonNull Kind<Option.k, Function<? super A, ? extends B>> f) {
       final Option<A> option = fa.fix();
-      final Option<NonNullFunction<? super A, ? extends B>> optionF = f.fix();
+      final Option<Function<? super A, ? extends B>> optionF = f.fix();
       return option.ap(optionF);
     }
 
     @Override
     public <A extends @NonNull Object, B extends @NonNull Object> Option<B> flatMap(
         @NonNull Kind<Option.k, A> fa,
-        @NonNull NonNullFunction<? super A, ? extends @NonNull Kind<Option.k, B>> f) {
+        @NonNull Function<? super A, ? extends @NonNull Kind<Option.k, B>> f) {
       final Option<A> option = fa.fix();
-      final NonNullFunction<A, Option<B>> fixedF = t -> f.apply(t).fix();
+      final Function<A, Option<B>> fixedF = t -> f.apply(t).fix();
       return option.flatMap(fixedF);
     }
   }
