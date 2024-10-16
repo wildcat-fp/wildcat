@@ -186,29 +186,29 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
     }
 
     @Override
-    public <U extends @NonNull Object> @NonNull Option<U> flatMap(@NonNull final NonNullFunction<? super T, ? extends Option<? extends U>> mapping) {
+    public <U extends @NonNull Object> @NonNull Option<U> flatMap(final @NonNull NonNullFunction<? super T, ? extends Option<? extends U>> mapping) {
       return genericCast(mapping.apply(value));
     }
 
     @Override
-    public <C extends @NonNull Object> C fold(@NonNull final Supplier<? extends C> onEmpty, @NonNull final NonNullFunction<? super T, ? extends C> onPresent) {
+    public <C extends @NonNull Object> C fold(final @NonNull Supplier<? extends C> onEmpty, final @NonNull NonNullFunction<? super T, ? extends C> onPresent) {
       return onPresent.apply(value);
     }
 
     @Override
-    public @NonNull Option<T> whenPresent(@NonNull final Consumer<? super T> action) {
+    public @NonNull Option<T> whenPresent(final @NonNull Consumer<? super T> action) {
       action.accept(value());
 
       return this;
     }
 
     @Override
-    public @NonNull Option<T> whenEmpty(@NonNull final Runnable action) {
+    public @NonNull Option<T> whenEmpty(final @NonNull Runnable action) {
       return this;
     }
 
     @Override
-    public <B extends @NonNull Object> Option<B> ap(@NonNull final Option<NonNullFunction<? super T, ? extends B>> f) {
+    public <B extends @NonNull Object> Option<B> ap(final @NonNull Option<NonNullFunction<? super T, ? extends B>> f) {
       return f.map(fn -> fn.apply(value()));
     }
   }
