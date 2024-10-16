@@ -264,25 +264,30 @@ final class monad implements Monad<Option.k> {
     }
 
     @Override
-    public <T extends @NonNull Object> Option<T> pure(@NonNull T value) {
+    public <T extends @NonNull Object> Option<T> pure(final @NonNull T value) {
       return new Option.Present<>(value);
     }
 
     @Override
     public <A extends @NonNull Object, B extends @NonNull Object> Option<B> ap(
-        @NonNull Kind<Option.k, A> fa,
-        @NonNull Kind<Option.k, Function<? super A, ? extends B>> f) {
+        final @NonNull Kind<Option.k, A> fa,
+        final @NonNull Kind<Option.k, Function<? super A, ? extends B>> f) {
       final Option<A> option = fa.fix();
       final Option<Function<? super A, ? extends B>> optionF = f.fix();
       return option.ap(optionF);
     }
 
     @Override
-    public <A extends @NonNull Object, B extends @NonNull Object> Option<B> flatMap(
-        @NonNull Kind<Option.k, A> fa,
-        @NonNull Function<? super A, ? extends @NonNull Kind<Option.k, B>> f) {
+    public <A extends @NonNull Object, B extends @NonNull Object> Option<? extends B> flatMap(
+        final @NonNull Kind<Option.k, A> fa,
+        final @NonNull Function<? super A, ? extends @NonNull Kind<Option.k, ? extends B>> f) {
       final Option<A> option = fa.fix();
-      final Function<A, Option<B>> fixedF = t -> f.apply(t).fix();
+      final Function<? super A, ? extends Option<? extends B>> fixedF = t -> {
+        final @NonNull Kind<Option.k, ? extends B> applied = f.apply(t);
+        return genericCast(applied.fix());
+    };
       return option.flatMap(fixedF);
     }
+
+
   }
