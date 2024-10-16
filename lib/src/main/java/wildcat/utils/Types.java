@@ -9,7 +9,7 @@ public final class Types {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T genericCast(final @NonNull Object value) {
+    public static <T extends @NonNull Object> T genericCast(final @NonNull Object value) {
         Objects.requireNonNull(value, "Value cannot be null");
 
         return (T) value;
