@@ -16,7 +16,7 @@ public interface Foldable<For extends Foldable.k> {
     );
 
     default <Value extends @NonNull Object, ValueMonoid extends Monoid<Value>> Value fold(final @NonNull Kind<For, Value> foldable, final @NonNull ValueMonoid monoid) {
-        return foldLeft(foldable, monoid.empty(), monoid::combine);
+        return foldLeft(foldable, monoid.identity(), monoid::combine);
     }
 
     interface k extends Kind.k {}

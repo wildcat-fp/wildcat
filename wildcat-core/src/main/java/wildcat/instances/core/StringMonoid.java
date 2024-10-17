@@ -17,7 +17,7 @@ public final class StringMonoid extends StringSemigroup implements Monoid<String
     }
 
     @Override
-    public String empty() {
+    public String identity() {
         return "";
     }
 

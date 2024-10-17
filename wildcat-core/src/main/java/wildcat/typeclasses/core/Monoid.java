@@ -8,16 +8,16 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 public interface Monoid<T extends @NonNull Object> extends Semigroup<T> {
 
-    T empty();
+    T identity();
 
     default T composeAll(final Stream<T> ms) {
-        return ms.reduce(empty(), this::combine);
+        return ms.reduce(identity(), this::combine);
     }
 
     static <T extends @NonNull Object> Monoid<? extends T> forT(final T empty, final BiFunction<? super T, ? super T, ? extends T> combine) {
         return new Monoid<T>() {
             @Override
-            public T empty() {
+            public T identity() {
                 return empty;
             }
 
@@ -31,7 +31,7 @@ public interface Monoid<T extends @NonNull Object> extends Semigroup<T> {
     static <T extends @NonNull Object> Monoid<? extends T> forT(final Supplier<? extends T> empty, final BiFunction<? super T, ? super T, ? extends T> combine) {
         return new Monoid<T>() {
             @Override
-            public T empty() {
+            public T identity() {
                 return empty.get();
             }
 
@@ -45,7 +45,7 @@ public interface Monoid<T extends @NonNull Object> extends Semigroup<T> {
     static <T extends @NonNull Object> Monoid<T> forT(final T empty, final Semigroup<T> semigroup) {
         return new Monoid<T>() {
             @Override
-            public T empty() {
+            public T identity() {
                 return empty;
             }
 
@@ -59,7 +59,7 @@ public interface Monoid<T extends @NonNull Object> extends Semigroup<T> {
     static <T extends @NonNull Object> Monoid<T> forT(final Supplier<? extends T> empty, final Semigroup<T> semigroup) {
         return new Monoid<T>() {
             @Override
-            public T empty() {
+            public T identity() {
                 return empty.get();
             }
 

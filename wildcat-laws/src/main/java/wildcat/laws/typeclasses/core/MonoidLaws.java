@@ -14,7 +14,7 @@ public interface MonoidLaws<T extends @NonNull Object> extends SemigroupLaws<T> 
     default void identity(final @ForAll T a) {
         final Monoid<T> monoid = instance();
 
-        Assertions.assertThat(monoid.combine(monoid.empty(), a)).isEqualTo(a);
-        Assertions.assertThat(monoid.combine(a, monoid.empty())).isEqualTo(a);
+        Assertions.assertThat(monoid.combine(monoid.identity(), a)).isEqualTo(a);
+        Assertions.assertThat(monoid.combine(a, monoid.identity())).isEqualTo(a);
     }
 }
