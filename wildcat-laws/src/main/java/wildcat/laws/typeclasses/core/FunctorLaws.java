@@ -2,8 +2,6 @@ package wildcat.laws.typeclasses.core;
 
 import java.util.function.Function;
 
-import java.util.function.Function;
-
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import net.jqwik.api.ForAll;
