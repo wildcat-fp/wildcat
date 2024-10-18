@@ -9,14 +9,10 @@ import net.jqwik.api.Property;
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Functor;
 
-public interface FunctorLaws<For extends Functor.k, T extends @NonNull Object, FT extends @NonNull Object, GT extends @NonNull Object> {
+public interface FunctorLaws<For extends Functor.k, T extends @NonNull Object> {
     Functor<For> instance();
 
     Kind<For, T> unit(final T a);
-
-    Function<? super GT, ? extends FT> f();
-
-    Function<? super T, ? extends GT> g();
 
     <A extends @NonNull Object> void verifyEquals(final Kind<For, ? extends A> a, final Kind<For, ? extends A> b);
 
@@ -25,17 +21,22 @@ public interface FunctorLaws<For extends Functor.k, T extends @NonNull Object, F
         final Functor<For> functor = instance();
         final Kind<For, T> unit = unit(a);
 
-        final @NonNull Kind<For, ? extends T> mapped = functor.map(unit, x -> x);
+        final Kind<For, ? extends T> mapped = functor.map(unit, x -> x);
         verifyEquals(unit, mapped);
     }
 
     @Property
-    default void composition(final @ForAll T a) {
+    default void composition(final @ForAll T a, final @ForAll Function<? super T, ? extends String> f) {
         final Functor<For> functor = instance();
         final Kind<For, T> unit = unit(a);
+        final Function<String, Integer> len = String::length;
 
-        final Kind<For, ? extends FT> mapped = functor.map(functor.map(unit, g()), f());
-        final Kind<For, ? extends FT> composed = functor.map(unit, g().andThen(f()));
-        verifyEquals(composed, mapped);
+        final Kind<For, ? extends String> mapped = functor.map(unit, f);
+
+        final Kind<For, ? extends Integer> mappedLen = functor.map(mapped, len);
+
+        final Kind<For, ? extends Integer> composed = functor.map(unit, f.andThen(len));
+
+        verifyEquals(mappedLen, composed);
     }
 }

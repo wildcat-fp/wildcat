@@ -20,9 +20,18 @@ public class OptionalK<T extends @NonNull Object> implements Kind<OptionalK.k, T
     public static <T extends @NonNull Object> OptionalK<T> of(final Optional<T> value) {
         return new OptionalK<>(value);
     }
-    
+
     public Optional<T> value() {
         return value;
+    }
+
+    @Override
+    public String toString() {
+        if (value.isEmpty()) {
+            return "OptionalK[empty]";
+        } else {
+            return "OptionalK[value=" + value.get() + "]";
+        }
     }
 
     public interface k extends Functor.k {

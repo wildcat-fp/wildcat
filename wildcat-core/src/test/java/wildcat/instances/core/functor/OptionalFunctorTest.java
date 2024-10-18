@@ -6,22 +6,11 @@ import wildcat.laws.typeclasses.core.FunctorLaws;
 import wildcat.typeclasses.core.Functor;
 
 import java.util.Optional;
-import java.util.function.Function;
 
 import org.assertj.core.api.Assertions;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class OptionalFunctorTest implements FunctorLaws<OptionalK.k, String, Integer, String> {
-
-    @Override
-    public Function<? super String, ? extends Integer> f() {
-        return String::length;
-    }
-
-    @Override
-    public Function<? super String, ? extends String> g() {
-        return s -> s + " " + s.hashCode();
-    }
+public class OptionalFunctorTest implements FunctorLaws<OptionalK.k, String> {
 
     @Override
     public Functor<OptionalK.k> instance() {
@@ -40,11 +29,13 @@ public class OptionalFunctorTest implements FunctorLaws<OptionalK.k, String, Int
             final Kind<OptionalK.k, ? extends A> b) {
         @SuppressWarnings("unchecked")
         final OptionalK<A> aKind = (OptionalK<A>) a.fix();
+
         @SuppressWarnings("unchecked")
         final OptionalK<A> bKind = (OptionalK<A>) b.fix();
 
         final Optional<A> aValue = aKind.value();
         final Optional<A> bValue = bKind.value();
+
         Assertions.assertThat(aValue).isEqualTo(bValue);
     }
 
