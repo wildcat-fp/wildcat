@@ -2,8 +2,9 @@ import org.checkerframework.gradle.plugin.CheckerFrameworkExtension
 
 plugins {
     `java-library`
-    id("org.checkerframework") version "0.6.45"
-    id("com.diffplug.spotless") version "7.0.0.BETA3"
+    alias(libs.plugins.checkerframework)
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.spotbugs)
 }
 
 repositories {
@@ -26,6 +27,8 @@ spotless {
 dependencies {
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
+
+    spotbugsPlugins(libs.findsecbugs)
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
