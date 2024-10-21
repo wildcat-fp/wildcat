@@ -18,10 +18,11 @@ spotless {
     val formatterConfigFile = configDir.file("wildcat-eclipse-formatter-settings.xml")
 
     java {
-        eclipse().configFile(formatterConfigFile)
-
         importOrder()
         removeUnusedImports()
+
+        eclipse().configFile(formatterConfigFile)
+
         formatAnnotations()
     }
 }
