@@ -10,27 +10,29 @@ import wildcat.hkt.kinds.OptionalK;
 import wildcat.typeclasses.core.Functor;
 
 public final class OptionalFunctor implements Functor<OptionalK.k> {
-    private static final OptionalFunctor INSTANCE = new OptionalFunctor();
-
-    private OptionalFunctor() { }
-
-    public static OptionalFunctor functor() {
-        return INSTANCE;
-    }
-
-    public <A extends @NonNull Object, B extends @NonNull Object> @NonNull Optional<? extends B> map(
-            final @NonNull Optional<A> fa,
-            final @NonNull Function<? super A, ? extends B> f) {
-        return fa.map(f);
-    }
-
-    @Override
-    public <A extends @NonNull Object, B extends @NonNull Object> @NonNull Kind<OptionalK.k, ? extends B> map(
-            final @NonNull Kind<OptionalK.k, A> fa,
-            final @NonNull Function<? super A, ? extends B> f) {
-        final OptionalK<A> optionalK = fa.fix();
-        final Optional<A> value = optionalK.value();
-        final Optional<B> mapped = value.map(f);
-        return OptionalK.of(mapped);
-    }
+  private static final OptionalFunctor INSTANCE = new OptionalFunctor();
+  
+  private OptionalFunctor() {}
+  
+  public static OptionalFunctor functor() {
+    return INSTANCE;
+  }
+  
+  public <A extends @NonNull Object, B extends @NonNull Object> @NonNull Optional<? extends B> map(
+      final @NonNull Optional<A> fa,
+      final @NonNull Function<? super A, ? extends B> f
+  ) {
+    return fa.map(f);
+  }
+  
+  @Override
+  public <A extends @NonNull Object, B extends @NonNull Object> @NonNull Kind<OptionalK.k, ? extends B> map(
+      final @NonNull Kind<OptionalK.k, A> fa,
+      final @NonNull Function<? super A, ? extends B> f
+  ) {
+    final OptionalK<A> optionalK = fa.fix();
+    final Optional<A> value = optionalK.value();
+    final Optional<B> mapped = value.map(f);
+    return OptionalK.of(mapped);
+  }
 }

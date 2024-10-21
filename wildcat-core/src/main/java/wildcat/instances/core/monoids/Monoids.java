@@ -8,61 +8,61 @@ import wildcat.typeclasses.core.Monoid;
 import wildcat.typeclasses.core.Semigroup;
 
 public final class Monoids {
-    private Monoids() {
+  private Monoids() {
+  }
+  
+  public static <T extends @NonNull Object> Monoid<T> monoid(final T empty, final Semigroup<T> semigroup) {
+    return new Monoid<T>() {
+      @Override
+      public T identity() {
+        return empty;
+      }
+      
+      @Override
+      public T combine(final T a, final T b) {
+        return semigroup.combine(a, b);
+      }
+    };
+  }
+  
+  public static <T extends @NonNull Object> Monoid<T> monoid(final T empty, final BiFunction<? super T, ? super T, ? extends T> combine) {
+    return new Monoid<T>() {
+      @Override
+      public T identity() {
+        return empty;
+      }
+      
+      @Override
+      public T combine(final T a, final T b) {
+        return combine.apply(a, b);
+      }
+    };
+  }
+  
+  public static StringMonoid forStrings() {
+    return StringMonoid.monoid();
+  }
+  
+  private static final class StringMonoid implements Monoid<String> {
+    
+    private static final StringMonoid INSTANCE = new StringMonoid();
+    
+    private StringMonoid() {
     }
-
-    public static <T extends @NonNull Object> Monoid<T> monoid(final T empty, final Semigroup<T> semigroup) {
-        return new Monoid<T>() {
-            @Override
-            public T identity() {
-                return empty;
-            }
-
-            @Override
-            public T combine(final T a, final T b) {
-                return semigroup.combine(a, b);
-            }
-        };
+    
+    public static StringMonoid monoid() {
+      return INSTANCE;
     }
-
-    public static <T extends @NonNull Object> Monoid<T> monoid(final T empty, final BiFunction<? super T, ? super T, ? extends T> combine) {
-        return new Monoid<T>() {
-            @Override
-            public T identity() {
-                return empty;
-            }
-
-            @Override
-            public T combine(final T a, final T b) {
-                return combine.apply(a, b);
-            }
-        };
+    
+    @Override
+    public String identity() {
+      return "";
     }
-
-    public static StringMonoid forStrings() {
-        return StringMonoid.monoid();
+    
+    @Override
+    public String combine(final String a, final String b) {
+      return a + b;
     }
-
-    private static final class StringMonoid implements Monoid<String> {
-        
-        private static final StringMonoid INSTANCE = new StringMonoid();
-        
-        private StringMonoid() {
-        }
-        
-        public static StringMonoid monoid() {
-            return INSTANCE;
-        }
-
-        @Override
-        public String identity() {
-            return "";
-        }
-
-        @Override
-        public String combine(final String a, final String b) {
-            return a + b;
-        }
-    }
-
+  }
+  
 }
