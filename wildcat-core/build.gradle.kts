@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.checkerframework)
     alias(libs.plugins.spotless)
     alias(libs.plugins.spotbugs)
+    alias(libs.plugins.errorprone.plugin)
 }
 
 repositories {
@@ -32,6 +33,8 @@ dependencies {
     annotationProcessor(libs.lombok)
     
     compileOnly(libs.spotbugs.annotations)
+
+    errorprone(libs.errorprone.core)
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

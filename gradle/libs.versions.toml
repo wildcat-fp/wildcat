@@ -4,11 +4,13 @@ lombok = "1.18.32"
 assertj = "3.25.0"
 jqwik = "1.9.1"
 spotbugs = "4.8.6"
+errorprone = "2.34.0"
 
 spotbugs-plugin = "6.0.25"
 findsecbugs = "1.13.0"
 spotless = "7.0.0.BETA3"
 checkerframework = "0.6.45"
+errorprone-plugin = "4.1.0"
 
 [libraries]
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
@@ -16,6 +18,7 @@ lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 jqwik = { module = "net.jqwik:jqwik", version.ref = "jqwik" }
 spotbugs-annotations = { module = "com.github.spotbugs:spotbugs-annotations", version.ref = "spotbugs" }
+errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }
 
 findsecbugs = { module = "com.h3xstream.findsecbugs:findsecbugs-plugin", version.ref = "findsecbugs" }
 
@@ -23,3 +26,4 @@ findsecbugs = { module = "com.h3xstream.findsecbugs:findsecbugs-plugin", version
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 checkerframework = { id = "org.checkerframework", version.ref = "checkerframework" }
 spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs-plugin" }
+errorprone-plugin = { id = "net.ltgt.errorprone", version.ref = "errorprone-plugin" }
