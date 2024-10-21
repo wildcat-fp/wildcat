@@ -9,11 +9,10 @@ import wildcat.hkt.Kind;
 import wildcat.hkt.kinds.OptionalK;
 import wildcat.typeclasses.core.Functor;
 
-public class OptionalFunctor implements Functor<OptionalK.k> {
+public final class OptionalFunctor implements Functor<OptionalK.k> {
     private static final OptionalFunctor INSTANCE = new OptionalFunctor();
 
-    protected OptionalFunctor() {
-    }
+    private OptionalFunctor() { }
 
     public static OptionalFunctor functor() {
         return INSTANCE;

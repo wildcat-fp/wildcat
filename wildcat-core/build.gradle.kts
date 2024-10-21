@@ -27,8 +27,8 @@ spotless {
 dependencies {
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
-
-    spotbugsPlugins(libs.findsecbugs)
+    
+    compileOnly(libs.spotbugs.annotations)
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

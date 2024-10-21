@@ -9,6 +9,8 @@ import java.util.function.Supplier;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.common.returnsreceiver.qual.This;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import wildcat.fns.CheckedSupplier;
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Monad;
@@ -97,6 +99,8 @@ public sealed interface Try<T extends @NonNull Object>
             return genericCast(f.map(fn -> fn.apply(value())));
         }
     }
+
+    @SuppressFBWarnings
 
     record Failure<T extends @NonNull Object>(Exception exception) implements Try<T> {
         @Override

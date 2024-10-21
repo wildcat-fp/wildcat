@@ -3,9 +3,10 @@ junit-jupiter = "5.10.1"
 lombok = "1.18.32"
 assertj = "3.25.0"
 jqwik = "1.9.1"
+spotbugs = "4.8.6"
 
-spotbugs = "6.0.25"
-findsecbugs = "1.12.0"
+spotbugs-plugin = "6.0.25"
+findsecbugs = "1.13.0"
 spotless = "7.0.0.BETA3"
 checkerframework = "0.6.45"
 
@@ -14,10 +15,11 @@ junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "jun
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 jqwik = { module = "net.jqwik:jqwik", version.ref = "jqwik" }
+spotbugs-annotations = { module = "com.github.spotbugs:spotbugs-annotations", version.ref = "spotbugs" }
 
 findsecbugs = { module = "com.h3xstream.findsecbugs:findsecbugs-plugin", version.ref = "findsecbugs" }
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 checkerframework = { id = "org.checkerframework", version.ref = "checkerframework" }
-spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs" }
+spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs-plugin" }
