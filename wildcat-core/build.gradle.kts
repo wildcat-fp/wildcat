@@ -20,7 +20,9 @@ spotless {
     java {
         eclipse().configFile(formatterConfigFile)
 
+        importOrder()
         removeUnusedImports()
+        formatAnnotations()
     }
 }
 
