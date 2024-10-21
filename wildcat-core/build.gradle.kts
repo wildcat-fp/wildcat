@@ -3,10 +3,24 @@ import org.checkerframework.gradle.plugin.CheckerFrameworkExtension
 plugins {
     `java-library`
     id("org.checkerframework") version "0.6.45"
+    id("com.diffplug.spotless") version "7.0.0.BETA3"
 }
 
 repositories {
     mavenCentral()
+}
+
+spotless {
+    ratchetFrom("origin/main")
+    
+    val configDir = rootProject.layout.projectDirectory.dir("wildcat-core")
+    val formatterConfigFile = configDir.file("wildcat-eclipse-formatter-settings.xml")
+
+    java {
+        eclipse().configFile(formatterConfigFile)
+
+        removeUnusedImports()
+    }
 }
 
 dependencies {
