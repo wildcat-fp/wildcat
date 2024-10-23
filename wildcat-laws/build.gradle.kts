@@ -2,7 +2,7 @@ import org.checkerframework.gradle.plugin.CheckerFrameworkExtension
 
 plugins {
     `java-library`
-    id("org.checkerframework") version "0.6.45"
+    id("static-analysis")
 }
 
 repositories {
@@ -25,12 +25,6 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
-}
-
-configure<CheckerFrameworkExtension> {
-    checkers = listOf(
-        "org.checkerframework.checker.nullness.NullnessChecker"
-    )
 }
 
 testing {

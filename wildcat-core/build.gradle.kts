@@ -2,39 +2,16 @@ import org.checkerframework.gradle.plugin.CheckerFrameworkExtension
 
 plugins {
     `java-library`
-    alias(libs.plugins.checkerframework)
-    alias(libs.plugins.spotless)
-    alias(libs.plugins.spotbugs)
-    alias(libs.plugins.errorprone.plugin)
+    id("static-analysis")
 }
 
 repositories {
     mavenCentral()
 }
 
-spotless {
-    ratchetFrom("origin/main")
-    
-    val configDir = rootProject.layout.projectDirectory.dir("wildcat-core")
-    val formatterConfigFile = configDir.file("wildcat-eclipse-formatter-settings.xml")
-
-    java {
-        importOrder()
-        removeUnusedImports()
-
-        eclipse().configFile(formatterConfigFile)
-
-        formatAnnotations()
-    }
-}
-
 dependencies {
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
-    
-    compileOnly(libs.spotbugs.annotations)
-
-    errorprone(libs.errorprone.core)
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -42,12 +19,6 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
-}
-
-configure<CheckerFrameworkExtension> {
-    checkers = listOf(
-        "org.checkerframework.checker.nullness.NullnessChecker"
-    )
 }
 
 testing {

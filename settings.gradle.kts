@@ -10,7 +10,7 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
 }
 
-rootProject.name = "wildcat-core"
+rootProject.name = "wildcat"
 include(
     "wildcat-core",
     "wildcat-laws"
