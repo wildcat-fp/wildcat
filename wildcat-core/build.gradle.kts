@@ -1,38 +1,11 @@
-import org.checkerframework.gradle.plugin.CheckerFrameworkExtension
-
 plugins {
-    `java-library`
-    id("static-analysis")
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compileOnly(libs.lombok)
-    annotationProcessor(libs.lombok)
-}
-
-// Apply a specific Java toolchain to ease working on different environments.
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
+  id("common")
 }
 
 testing {
     suites {
         withType<JvmTestSuite> {
-            useJUnitJupiter()
-
             dependencies {
-                compileOnly(libs.lombok)
-                annotationProcessor(libs.lombok)
-
-                implementation(libs.assertj)
-                implementation(libs.jqwik)
-
                 implementation(project(":wildcat-laws"))
             }
         }
