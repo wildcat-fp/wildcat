@@ -8,7 +8,7 @@ import net.jqwik.api.Property;
 import wildcat.typeclasses.core.Monoid;
 
 public interface MonoidLaws<T extends @NonNull Object> extends SemigroupLaws<T> {
-    Monoid<T> instance();
+    @Override Monoid<T> instance();
 
     @Property
     default void identity(final @ForAll T a) {
