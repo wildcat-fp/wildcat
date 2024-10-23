@@ -5,11 +5,12 @@ assertj = "3.25.0"
 jqwik = "1.9.1"
 spotbugs = "4.8.6"
 errorprone = "2.34.0"
+checkerframework-checker = "3.48.0"
 
 spotbugs-plugin = "6.0.25"
 findsecbugs = "1.13.0"
 spotless = "7.0.0.BETA3"
-checkerframework = "0.6.45"
+checkerframework-plugin = "0.6.45"
 errorprone-plugin = "4.1.0"
 
 [libraries]
@@ -17,6 +18,7 @@ junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "jun
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 jqwik = { module = "net.jqwik:jqwik", version.ref = "jqwik" }
+checkerframework-checker = { module = "org.checkerframework:checker", version.ref = "checkerframework-checker" }
 spotbugs-annotations = { module = "com.github.spotbugs:spotbugs-annotations", version.ref = "spotbugs" }
 errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }
 
@@ -24,6 +26,6 @@ findsecbugs = { module = "com.h3xstream.findsecbugs:findsecbugs-plugin", version
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
-checkerframework = { id = "org.checkerframework", version.ref = "checkerframework" }
+checkerframework = { id = "org.checkerframework", version.ref = "checkerframework-plugin" }
 spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs-plugin" }
 errorprone-plugin = { id = "net.ltgt.errorprone", version.ref = "errorprone-plugin" }

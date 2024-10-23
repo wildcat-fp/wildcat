@@ -35,4 +35,5 @@ dependencies {
     compileOnly(libs.spotbugs.annotations)
 
     errorprone(libs.errorprone.core)
+    checkerFramework(libs.checkerframework.checker)
 }
