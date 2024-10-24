@@ -1,42 +1,55 @@
-# wildcat-core
-This library provides core functional programming abstractions and typeclasses for Java.
-## Features
-- **HKTs (Higher-Kinded Types)**: Enables working with generic types in a more powerful way.
-- **Typeclasses**: Defines common interfaces for types like Functor, Applicative, Monad, and more.
-- **Data Structures**: Provides implementations of common data structures like List, Maybe, Either, etc.
-- **Functional Utilities**: Offers a collection of useful functions for working with functional data.
-## Installation
-Add the following dependency to your `pom.xml` or `build.gradle` file:
+# Wildcat: Functional Programming in Java
+
+Wildcat is a library that brings the power and elegance of functional programming to Java. 
+It provides a set of core abstractions and utilities to enable type classes, higher-kinded types, 
+and other functional programming concepts in a Java environment.
+
+## Modules
+
+This repository is divided into two main modules:
+
+### wildcat-core
+
+This module contains the core functionality of Wildcat, including:
+
+- **Higher-Kinded Type Simulation:** Provides mechanisms to simulate higher-kinded types in Java 
+  using witness types and the `Kind` interface. This allows for defining type classes and working with 
+  generic types in a more functional way.
+- **Type Classes:** Defines a number of commonly used type classes like `Functor`, `Applicative`, 
+  `Monad`, `Semigroup`, `Monoid`, etc. These type classes provide a way to abstract over common 
+  operations and behaviors across different data types.
+- **Data Structures:** Implements various functional data structures like `Either`, `Maybe`, `Validated`, 
+  and more. These data structures provide safe and expressive ways to handle errors and optional values.
+- **Utility Functions:** Includes a collection of utility functions for working with functions, 
+  collections, and other common data types in a functional style.
 
 
-```xml 
-<dependency> 
-    <groupId>your-group-id</groupId> 
-    <artifactId>wildcat-core</artifactId> 
-    <version>your-version</version> 
-</dependency>
-```
+### wildcat-laws
 
-## Usage
-Here's a simple example of using the `Functor` typeclass:
+This module focuses on providing testing infrastructure to ensure the correctness of type class 
+instances and other functional abstractions. It includes:
+
+- **Law Definitions:** Defines laws that type class instances must satisfy to be considered valid. 
+  For example, the `Monoid` laws ensure that the `combine` operation is associative and that there 
+  exists an identity element.
+- **Property-Based Testing:** Leverages property-based testing libraries to generate random test cases 
+  and verify that type class instances adhere to their laws. This helps to ensure that the library's 
+  core abstractions are robust and reliable.
 
 
-```java 
-import wildcat.hkt.Kind; 
-import wildcat.typeclasses.core.Functor;
+## Getting Started
 
-// Define a Functor instance for List 
-class ListFunctor implements Functor<List.k> { 
-    @Override public <A, B> Kind<List.k, B> map(Function<A, B> f, Kind<List.k, A> fa) { 
-        // Implementation for mapping over a List 
-    } 
-}
+Wildcat isn't officially released yet, but you can use it by publishing it to your local maven
+repository and adding it as a dependency in your project. When the project is further along,
+this section will be much more useful.
 
-// Usage List<Integer> numbers = Arrays.asList(1, 2, 3); ListFunctor listFunctor = new ListFunctor(); Kind<List.k, String> mappedNumbers = listFunctor.map(String::valueOf, numbers);
-```
 
 ## Contributing
-Contributions are welcome! Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines.
+
+We welcome contributions to Wildcat! If you're interested in contributing, please read our 
+[contribution guidelines](CONTRIBUTING.md) to learn how to get started.
+
 
 ## License
-This library is licensed under the Apache License, Version 2.0. See the [LICENSE](LICENSE) file for details.
+
+Wildcat is licensed under the [MIT License](LICENSE).
