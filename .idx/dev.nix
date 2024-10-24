@@ -2,7 +2,7 @@
 # see: https://developers.google.com/idx/guides/customize-idx-env
 { pkgs, ... }: {
   # Which nixpkgs channel to use.
-  channel = "stable-23.11"; # or "unstable"
+  channel = "stable-24.05"; # or "unstable"
 
   # Use https://search.nixos.org/packages to find packages
   packages = [
@@ -13,6 +13,9 @@
     # pkgs.nodePackages.nodemon
     pkgs.zulu
     pkgs.zsh
+    pkgs.oh-my-zsh
+    pkgs.bat
+    pkgs.tree
     pkgs.gh
   ];
 
@@ -25,6 +28,15 @@
       "redhat.java"
       "github.vscode-github-actions"
       "github.vscode-pull-request-github"
+      "EditorConfig.EditorConfig"
+      "fwcd.kotlin"
+      "KnisterPeter.vscode-github"
+      "vscjava.vscode-gradle"
+      "vscjava.vscode-java-debug"
+      "vscjava.vscode-java-dependency"
+      "vscjava.vscode-java-pack"
+      "vscjava.vscode-java-test"
+      "vscjava.vscode-maven"
     ];
 
     # Enable previews
