@@ -4,15 +4,20 @@ import java.util.function.BiFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
- * A {@code Semigroup} is a type class that represents a set of types that have an associative binary operation.
+ * A {@code Semigroup} is a type class that represents a set of types that have
+ * an associative binary operation.
  * <p>
- * The associative law states that for any elements a, b, and c in the set, the following equation holds:
+ * The associative law states that for any elements a, b, and c in the set, the
+ * following equation holds:
+ * 
  * <pre>
  * (a combine b) combine c = a combine (b combine c)
  * </pre>
+ * 
  * In other words, the order in which the operation is applied does not matter.
  * <p>
  * <strong>Example:</strong>
+ * 
  * <pre>{@code
  * // A Semigroup instance for integers using addition as the binary operation
  * Semigroup<Integer> additionSemigroup = (a, b) -> a + b;
@@ -24,11 +29,14 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * @param <T>
  *   the type of elements in the semigroup
  *
- * @apiNote The {@code Semigroup} type class is a fundamental building block for many other algebraic structures,
- *   such as monoids and groups. It is used extensively in functional programming to represent operations
+ * @apiNote The {@code Semigroup} type class is a fundamental building block for
+ *   many other algebraic structures,
+ *   such as monoids and groups. It is used extensively in functional
+ *   programming to represent operations
  *   that can be combined in a flexible and efficient way.
  *
- * @see <a href="https://en.wikipedia.org/wiki/Semigroup">Semigroup (Wikipedia)</a>
+ * @see <a href="https://en.wikipedia.org/wiki/Semigroup">Semigroup
+ *   (Wikipedia)</a>
  */
 public interface Semigroup<T extends @NonNull Object> {
   
@@ -54,7 +62,9 @@ public interface Semigroup<T extends @NonNull Object> {
    * 
    * @return a new {@code Semigroup} instance
    */
-  static <T extends @NonNull Object> Semigroup<? extends T> forT(final BiFunction<? super T, ? super T, ? extends T> combine) {
+  static <T extends @NonNull Object> Semigroup<? extends T> forT(
+      final BiFunction<? super T, ? super T, ? extends T> combine
+  ) {
     return (a, b) -> combine.apply(a, b);
   }
 }
