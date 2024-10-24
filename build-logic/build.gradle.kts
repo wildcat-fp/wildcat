@@ -9,9 +9,4 @@ dependencies {
     implementation("net.ltgt.errorprone:net.ltgt.errorprone.gradle.plugin:${libs.versions.errorprone.plugin.get()}")
 
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
-    
-  // implementation(libs.plugins.checkerframework)
-  // implementation(libs.plugins.errorprone.plugin)
-  // implementation(libs.plugins.spotbugs)
-  // implementation(libs.plugins.spotless)
 }
