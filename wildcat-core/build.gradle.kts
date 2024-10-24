@@ -1,5 +1,6 @@
 plugins {
   id("common")
+  id("static-analysis")
 }
 
 testing {

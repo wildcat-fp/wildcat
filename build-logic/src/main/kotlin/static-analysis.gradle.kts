@@ -2,10 +2,12 @@ import org.checkerframework.gradle.plugin.CheckerFrameworkExtension
 import org.gradle.accessors.dm.LibrariesForLibs
 
 plugins {
+    id("java")
+    
     id("org.checkerframework")
-    id("com.diffplug.spotless")
-    id("com.github.spotbugs")
     id("net.ltgt.errorprone")
+    id("com.github.spotbugs")
+    id("com.diffplug.spotless")
 }
 
 val libs = the<LibrariesForLibs>()
