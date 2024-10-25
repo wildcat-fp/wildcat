@@ -1,9 +1,7 @@
 package wildcat.instances.core.monoids;
 
 import java.util.function.BiFunction;
-
 import org.checkerframework.checker.nullness.qual.NonNull;
-
 import wildcat.typeclasses.core.Monoid;
 import wildcat.typeclasses.core.Semigroup;
 
@@ -43,7 +41,7 @@ public final class Monoids {
     return StringMonoid.monoid();
   }
   
-  private static final class StringMonoid implements Monoid<String> {
+  private static final class StringMonoid implements Monoid<@NonNull String> {
     
     private static final StringMonoid INSTANCE = new StringMonoid();
     

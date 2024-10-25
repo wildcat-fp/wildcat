@@ -73,11 +73,11 @@ public interface Apply<For extends Apply.k> extends Functor<For> {
    * @return A new value of type {@code Kind<For, ? extends B>} representing the result of the function
    *   application within the context {@code For}.
    */
-  <A extends @NonNull Object, B extends @NonNull Object> @NonNull Kind<For, ? extends B> ap(
-      @NonNull Kind<For, A> fa,
-      @NonNull Kind<For, Function<? super A, ? extends B>> f
+  <A extends @NonNull Object, B extends @NonNull Object> Kind<For, ? extends B> ap(
+      Kind<For, A> fa,
+      Kind<For, @NonNull Function<? super A, ? extends B>> f
   );
-      
+  
   /**
    * A witness interface used to simulate Higher Kinded Types in Java.
    * This interface serves as a placeholder for the type constructor {@code For}, allowing us to
