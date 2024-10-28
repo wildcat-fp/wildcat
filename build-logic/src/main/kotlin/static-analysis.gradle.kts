@@ -39,3 +39,7 @@ dependencies {
     errorprone(libs.errorprone.core)
     checkerFramework(libs.checkerframework.checker)
 }
+
+spotbugs {
+  excludeFilter = rootProject.file("config/spotbugs-exclude-filter.xml")
+}
