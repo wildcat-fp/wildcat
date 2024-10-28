@@ -3,6 +3,7 @@ package wildcat.types;
 import static wildcat.utils.Types.genericCast;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -12,11 +13,25 @@ import org.checkerframework.common.returnsreceiver.qual.This;
 import wildcat.fns.CheckedSupplier;
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Monad;
+import wildcat.typeclasses.equivalence.Eq;
+import wildcat.typeclasses.equivalence.EqK;
 
 public sealed interface Try<T extends @NonNull Object>
                            extends
                            Kind<Try.k, T>
     permits Try.Success, Try.Failure {
+  
+  static Monad<Try.k> monad() {
+    return try_monad.instance();
+  }
+  
+  static EqK<Try.k> eq() {
+    return try_eqk.instance();
+  }
+  
+  static EqK<Try.k> eq(final Eq<? super @NonNull Throwable> exceptionEq) {
+    return new try_eqk(exceptionEq);
+  }
   
   static <T extends @NonNull Object> Try<T> success(final T value) {
     return new Success<>(value);
@@ -98,14 +113,17 @@ public sealed interface Try<T extends @NonNull Object>
     };
   }
   
-  default <B extends @NonNull Object> Try<? extends B> ap(final @NonNull Try<@NonNull Function<? super T, ? extends B>> f) {
+  default <B extends @NonNull Object> Try<? extends B> ap(
+      final @NonNull Try<@NonNull Function<? super T, ? extends B>> f
+  ) {
     return switch (this) {
       case Success<T> success -> f.map(fn -> fn.apply(success.value()));
       case Failure<T> failure -> genericCast(this);
     };
   }
   
-  record Success<T extends @NonNull Object>(T value) implements Try<T> {}
+  record Success<T extends @NonNull Object>(T value) implements Try<T> {
+  }
   
   @SuppressFBWarnings(
       value = {
@@ -114,13 +132,22 @@ public sealed interface Try<T extends @NonNull Object>
       },
       justification = "Exception mutability is not a concern in this context"
   )
-  record Failure<T extends @NonNull Object>(Exception exception) implements Try<T> {}
+  record Failure<T extends @NonNull Object>(Exception exception) implements Try<T> {
+  }
   
-  interface k extends Monad.k {
+  interface k extends Monad.k, EqK.k {
   }
 }
 
 final class try_monad implements Monad<Try.k> {
+  private static final try_monad instance = new try_monad();
+  
+  private try_monad() {
+  }
+  
+  static try_monad instance() {
+    return instance;
+  }
   
   @Override
   public <T extends @NonNull Object> Try<? extends T> pure(T value) {
@@ -149,5 +176,59 @@ final class try_monad implements Monad<Try.k> {
     };
     return tryA.flatMap(fixedF);
   }
+}
+
+final class try_eqk implements EqK<Try.k> {
+  private static final try_eqk instance = new try_eqk();
   
+  static try_eqk instance() {
+    return instance;
+  }
+  
+  private final Eq<? super @NonNull Throwable> exceptionEq;
+  
+  public try_eqk(final Eq<? super @NonNull Throwable> exceptionEq) {
+    this.exceptionEq = exceptionEq;
+  }
+  
+  public try_eqk() {
+    this(ExceptionEq.instance());
+  }
+  
+  private static final class ExceptionEq implements Eq<@NonNull Throwable> {
+    private static final ExceptionEq instance = new ExceptionEq();
+    
+    static ExceptionEq instance() {
+      return instance;
+    }
+    
+    private ExceptionEq() {
+    }
+    
+    @Override
+    public boolean eqv(final @NonNull Throwable a, final @NonNull Throwable b) {
+      return Objects.equals(a, b);
+    }
+  }
+  
+  @Override
+  public <A extends @NonNull Object> boolean eqK(
+      final Kind<Try.k, A> a,
+      final Kind<Try.k, A> b,
+      final Eq<A> eq
+  ) {
+    final Try<A> tryA = a.fix();
+    final Try<A> tryB = b.fix();
+    
+    return switch (tryA) {
+      case Try.Success<A> successA -> switch (tryB) {
+        case Try.Success<A> successB -> eq.eqv(successA.value(), successB.value());
+        case Try.Failure<A> ignored -> false;
+      };
+      case Try.Failure<A> failureA -> switch (tryB) {
+        case Try.Success<A> ignored -> false;
+        case Try.Failure<A> failureB -> exceptionEq.eqv(failureA.exception(), failureB.exception());
+      };
+    };
+  }
 }
