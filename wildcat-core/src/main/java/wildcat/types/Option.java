@@ -3,10 +3,12 @@ package wildcat.types;
 import static java.util.Objects.requireNonNull;
 import static wildcat.utils.Types.genericCast;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import org.checkerframework.checker.nullness.qual.KeyForBottom;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import wildcat.hkt.Kind;
@@ -175,100 +177,66 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
     return present(value);
   }
   
-  <U extends @NonNull Object> Option<U> map(Function<? super T, ? extends U> mapping);
-  
-  <U extends @NonNull Object> Option<U> flatMap(
-      Function<? super T, ? extends Option<? extends U>> mapping
-  );
-  
-  <C extends @NonNull Object> C fold(
-      Supplier<? extends C> onEmpty,
-      @NonNull Function<? super T, ? extends C> onPresent
-  );
-      
-  @NonNull Option<T> whenPresent(Consumer<? super T> action);
-  
-  @NonNull Option<T> whenEmpty(Runnable action);
-  
-  <B extends @NonNull Object> Option<B> ap(Option<@NonNull Function<? super T, ? extends B>> f);
-  
-  record Present<T extends @NonNull Object>(T value) implements Option<T> {
-    @Override
-    public <U extends @NonNull Object> Option<U> map(@NonNull Function<? super T, ? extends U> mapping) {
-      final U newValue = mapping.apply(value);
-      return new Present<>(newValue);
-    }
-    
-    @Override
-    public <U extends @NonNull Object> Option<U> flatMap(final Function<? super T, ? extends Option<? extends U>> mapping) {
-      return genericCast(mapping.apply(value));
-    }
-    
-    @Override
-    public <C extends @NonNull Object> C fold(final Supplier<? extends C> onEmpty, final Function<? super T, ? extends C> onPresent) {
-      return onPresent.apply(value);
-    }
-    
-    @Override
-    public Option<T> whenPresent(final Consumer<? super T> action) {
-      action.accept(value());
-      
-      return this;
-    }
-    
-    @Override
-    public Option<T> whenEmpty(final Runnable action) {
-      return this;
-    }
-    
-    @Override
-    public <B extends @NonNull Object> Option<B> ap(final Option<@NonNull Function<? super T, ? extends B>> f) {
-      return f.map(fn -> fn.apply(value()));
-    }
+  default <U extends @NonNull Object> Option<U> map(
+      final Function<? super T, ? extends U> mapping
+  ) {
+    return switch (this) {
+      case Empty() -> genericCast(this);
+      case Present(var it) -> new Present<>(mapping.apply(it));
+    };
   }
   
-  record Empty<T extends @NonNull Object>() implements Option<T> {
-    @Override
-    public <U extends @NonNull Object> Option<U> map(final Function<? super T, ? extends U> mapping) {
-      return genericCast(this);
-    }
-    
-    @Override
-    public <U extends @NonNull Object> Option<U> flatMap(
-        final Function<? super T, ? extends Option<? extends U>> mapping
-    ) {
-      return genericCast(this);
-    }
-    
-    @Override
-    public <C extends @NonNull Object> C fold(
-        final Supplier<? extends C> onEmpty,
-        final Function<? super T, ? extends C> onPresent
-    ) {
-      return onEmpty.get();
-    }
-    
-    @Override
-    public Option<T> whenPresent(final Consumer<? super T> action) {
-      return this;
-    }
-    
-    @Override
-    public Option<T> whenEmpty(final Runnable action) {
-      action.run();
-      return this;
-    }
-    
-    @Override
-    public <B extends @NonNull Object> Option<B> ap(
-        final Option<@NonNull Function<? super T, ? extends B>> f
-    ) {
-      return genericCast(this);
-    }
+  default <U extends @NonNull Object> Option<U> flatMap(
+      final Function<? super T, ? extends @NonNull Option<? extends U>> mapping
+  ) {
+    return switch (this) {
+      case Empty() -> genericCast(this);
+      case Present(var it) -> genericCast(mapping.apply(it));
+    };
   }
   
-  interface k extends Monad.k, EqK.k {
+  default <@KeyForBottom C extends @NonNull Object> C fold(
+      final Supplier<? extends C> onEmpty,
+      final Function<? super T, ? extends C> onPresent
+  ) {
+    return switch (this) {
+      case Empty() -> onEmpty.get();
+      case Present(var it) -> onPresent.apply(it);
+    };
   }
+  
+  default Option<T> whenPresent(final Consumer<? super T> action) {
+    return switch (this) {
+      case Empty() -> this;
+      case Present(var it) -> {
+        action.accept(it);
+        yield this;
+      }
+    };
+  }
+  
+  default Option<T> whenEmpty(final Runnable action) {
+    return switch (this) {
+      case Empty() -> {
+        action.run();
+        yield this;
+      }
+      case Present(var __) -> this;
+    };
+  }
+  
+  default <B extends @NonNull Object> Option<B> ap(final Option<@NonNull Function<? super T, ? extends B>> f) {
+    return switch (this) {
+      case Empty() -> genericCast(this);
+      case Present(var it) -> f.map(fn -> fn.apply(it));
+    };
+  }
+  
+  record Present<T extends @NonNull Object>(T value) implements Option<T> {}
+  
+  record Empty<T extends @NonNull Object>() implements Option<T> {}
+  
+  interface k extends Monad.k, EqK.k {}
 }
 
 final class option_eq implements EqK<Option.k> {
@@ -282,6 +250,10 @@ final class option_eq implements EqK<Option.k> {
   }
   
   @Override
+  @SuppressFBWarnings(
+      value = "DLS_DEAD_LOCAL_STORE",
+      justification = "Compiler-generated variable in switch expression"
+  )
   public <A extends @NonNull Object> boolean eqK(
       final Kind<Option.k, A> a,
       final Kind<Option.k, A> b,
@@ -290,15 +262,16 @@ final class option_eq implements EqK<Option.k> {
     final Option<A> optionA = a.fix();
     final Option<A> optionB = b.fix();
     
-    if (optionA instanceof Option.Present<A> presentA && optionB instanceof Option.Present<A> presentB) {
-      return eq.eqv(presentA.value(), presentB.value());
-    }
-    
-    if (optionA instanceof Option.Empty<?> && optionB instanceof Option.Empty<?>) {
-      return true;
-    }
-    
-    return false;
+    return switch (optionA) {
+      case Option.Empty() -> switch (optionB) {
+        case Option.Empty() -> true;
+        case Option.Present(var __) -> false;
+      };
+      case Option.Present(var valueA) -> switch (optionB) {
+        case Option.Empty() -> false;
+        case Option.Present(var valueB) -> eq.eqv(valueA, valueB);
+      };
+    };
   }
 }
 
@@ -339,6 +312,4 @@ final class option_monad implements Monad<Option.k> {
     };
     return option.flatMap(fixedF);
   }
-  
-  
 }
