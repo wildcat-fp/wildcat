@@ -9,7 +9,7 @@ checkerframework-checker = "3.48.0"
 
 spotbugs-plugin = "6.0.25"
 findsecbugs = "1.13.0"
-spotless = "7.0.0.BETA3"
+spotless = "7.0.0.BETA4"
 checkerframework-plugin = "0.6.45"
 errorprone-plugin = "4.1.0"
 
