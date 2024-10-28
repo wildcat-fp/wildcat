@@ -4,6 +4,16 @@ Wildcat is a library that brings the power and elegance of functional programmin
 It provides a set of core abstractions and utilities to enable type classes, higher-kinded types, 
 and other functional programming concepts in a Java environment.
 
+## Goals
+
+The main goals of Wildcat are:
+
+1. Provide a robust and extensible framework for developing Java code using functional and algebraic 
+   programming techniques.
+2. Ensure the framework is rock-solid and based on well-defined rules and concepts.
+3. Ensure the framework is accessible enough to all Java developers, no matter their prior experience
+   with functional programming.
+
 ## Modules
 
 This repository is divided into two main modules:
