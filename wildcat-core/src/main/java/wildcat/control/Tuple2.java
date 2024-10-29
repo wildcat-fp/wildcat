@@ -1,4 +1,4 @@
-package wildcat.types;
+package wildcat.control;
 
 import java.util.function.Function;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -51,7 +51,7 @@ public record Tuple2<A extends @NonNull Object, B extends @NonNull Object>(
    * 
    * @return A new {@code Tuple2} with the given values.
    */
-  public static <A extends @NonNull Object, B extends @NonNull Object> wildcat.types.Tuple2<A, B> of(
+  public static <A extends @NonNull Object, B extends @NonNull Object> wildcat.control.Tuple2<A, B> of(
       final A a,
       final B b
   ) {

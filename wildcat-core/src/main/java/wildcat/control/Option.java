@@ -1,4 +1,4 @@
-package wildcat.types;
+package wildcat.control;
 
 import static java.util.Objects.requireNonNull;
 import static wildcat.utils.Types.genericCast;

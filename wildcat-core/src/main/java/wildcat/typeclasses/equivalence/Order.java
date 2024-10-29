@@ -1,15 +1,14 @@
 package wildcat.typeclasses.equivalence;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-
-import wildcat.types.Option;
+import wildcat.control.Option;
 
 
 public interface Order<Value extends @NonNull Object> extends PartialOrder<Value> {
-    int compare(Value a, Value b);
-
-    @Override
-    default Option<? extends Integer> partialCompare(Value a, Value b) {
-        return Option.present(compare(a, b));
-    }
+  int compare(Value a, Value b);
+  
+  @Override
+  default Option<? extends Integer> partialCompare(Value a, Value b) {
+    return Option.present(compare(a, b));
+  }
 }
