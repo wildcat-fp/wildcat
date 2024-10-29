@@ -1,23 +1,21 @@
 package wildcat.typeclasses.traversal;
 
 import java.util.function.BiFunction;
-
 import org.checkerframework.checker.nullness.qual.NonNull;
-
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Monoid;
 
 public interface Foldable<For extends Foldable.k> {
-
-    <Input extends @NonNull Object, Output extends @NonNull Object> Output foldLeft(
-        @NonNull Kind<For, Input> foldable, 
-        @NonNull Output empty, 
-        @NonNull BiFunction<Output, Input, Output> f
-    );
-
-    default <Value extends @NonNull Object, ValueMonoid extends Monoid<Value>> Value fold(final @NonNull Kind<For, Value> foldable, final @NonNull ValueMonoid monoid) {
-        return foldLeft(foldable, monoid.identity(), monoid::combine);
-    }
-
-    interface k extends Kind.k {}
+  
+  <Input extends @NonNull Object, Output extends @NonNull Object> Output foldLeft(
+      Kind<For, Input> foldable,
+      Output empty,
+      BiFunction<Output, Input, Output> f
+  );
+  
+  default <Value extends @NonNull Object, ValueMonoid extends Monoid<Value>> Value fold(final Kind<For, Value> foldable, final ValueMonoid monoid) {
+    return foldLeft(foldable, monoid.identity(), monoid::combine);
+  }
+  
+  interface k extends Kind.k {}
 }
