@@ -12,6 +12,9 @@ import org.checkerframework.checker.nullness.qual.KeyForBottom;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import wildcat.hkt.Kind;
+import wildcat.typeclasses.core.Applicative;
+import wildcat.typeclasses.core.Apply;
+import wildcat.typeclasses.core.Functor;
 import wildcat.typeclasses.core.Monad;
 import wildcat.typeclasses.equivalence.Eq;
 import wildcat.typeclasses.equivalence.EqK;
@@ -87,12 +90,24 @@ import wildcat.typeclasses.equivalence.EqK;
 public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k, T>
     permits Option.Present, Option.Empty {
   
-  static @NonNull Monad<Option.k> monad() {
-    return option_monad.instance();
+  static @NonNull Functor<Option.k> functor() {
+    return option_functor.functor_instance();
   }
   
-  static @NonNull EqK<Option.k> eq() {
-    return option_eq.instance();
+  static @NonNull Apply<Option.k> apply() {
+    return option_apply.apply_instance();
+  }
+  
+  static @NonNull Applicative<Option.k> applicative() {
+    return option_applicative.applicative_instance();
+  }
+  
+  static @NonNull Monad<Option.k> monad() {
+    return option_monad.monad_instance();
+  }
+  
+  static @NonNull EqK<Option.k> eqk() {
+    return option_eqk.eqk_instance();
   }
   
   static <T extends @NonNull Object> Option<T> when(
@@ -239,13 +254,13 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
   interface k extends Monad.k, EqK.k {}
 }
 
-final class option_eq implements EqK<Option.k> {
-  private static final option_eq instance = new option_eq();
+final class option_eqk implements EqK<Option.k> {
+  private static final option_eqk instance = new option_eqk();
   
-  private option_eq() {
+  private option_eqk() {
   }
   
-  static option_eq instance() {
+  static option_eqk eqk_instance() {
     return instance;
   }
   
@@ -275,29 +290,67 @@ final class option_eq implements EqK<Option.k> {
   }
 }
 
-final class option_monad implements Monad<Option.k> {
-  private static final option_monad instance = new option_monad();
+class option_functor implements Functor<Option.k> {
+  private static final option_functor instance = new option_functor();
   
-  private option_monad() {
-  }
+  option_functor() {}
   
-  static option_monad instance() {
+  static option_functor functor_instance() {
     return instance;
   }
   
   @Override
-  public <T extends @NonNull Object> Option<T> pure(final T value) {
-    return new Option.Present<>(value);
+  public final <A extends @NonNull Object, B extends @NonNull Object> Option<B> map(
+      final Kind<Option.k, A> fa,
+      final Function<? super A, ? extends B> f
+  ) {
+    final Option<A> option = fa.fix();
+    return option.map(f);
+  }
+}
+
+class option_apply extends option_functor implements Apply<Option.k> {
+  private static final option_apply instance = new option_apply();
+  
+  option_apply() {}
+  
+  static option_apply apply_instance() {
+    return instance;
   }
   
   @Override
-  public <A extends @NonNull Object, B extends @NonNull Object> Option<B> ap(
+  public final <A extends @NonNull Object, B extends @NonNull Object> Option<? extends B> ap(
       final Kind<Option.k, A> fa,
       final Kind<Option.k, @NonNull Function<? super A, ? extends B>> f
   ) {
     final Option<A> option = fa.fix();
     final Option<@NonNull Function<? super A, ? extends B>> optionF = f.fix();
     return option.ap(optionF);
+  }
+}
+
+class option_applicative extends option_apply implements Applicative<Option.k> {
+  private static final option_applicative instance = new option_applicative();
+  
+  option_applicative() {}
+  
+  static option_applicative applicative_instance() {
+    return instance;
+  }
+  
+  @Override
+  public final <T extends @NonNull Object> Option<T> pure(final T value) {
+    return new Option.Present<>(value);
+  }
+}
+
+class option_monad extends option_applicative implements Monad<Option.k> {
+  private static final option_monad instance = new option_monad();
+  
+  option_monad() {}
+  
+  static option_monad monad_instance() {
+    return instance;
   }
   
   @Override
