@@ -16,7 +16,7 @@ public class OptionTest<T extends @NonNull Object> implements MonadLaws<Option.k
   }
   
   @Override
-  public Kind<k, T> unit(T a) {
+  public <U extends @NonNull Object> Kind<k, ? extends U> unit(final U a) {
     return Option.of(a);
   }
   
