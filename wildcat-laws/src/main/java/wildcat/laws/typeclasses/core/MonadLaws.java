@@ -7,14 +7,19 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Monad;
 
-public interface MonadLaws<For extends Monad.k, T extends @NonNull Object> extends FunctorLaws<For, T> {
+public interface MonadLaws<For extends Monad.k, T extends @NonNull Object> extends ApplyLaws<For, T> {
   @Override
   Monad<For> instance();
   
+  @Override
+  default <U extends @NonNull Object> Kind<For, ? extends U> unit(final U a) {
+    return instance().pure(a);
+  }
+  
   @Property
-  default void leftIdentity(final @ForAll T a, final @ForAll Function<? super T, ? extends @NonNull String> f) {
+  default void monadLeftIdentity(final @ForAll T a, final @ForAll Function<? super T, ? extends @NonNull String> f) {
     final Monad<For> instance = instance();
-    final Kind<For, ? extends T> pure = instance.pure(a);
+    final Kind<For, ? extends T> pure = unit(a);
     final Function<? super T, ? extends Kind<For, ? extends String>> fixedF = t -> instance.pure(f.apply(t));
     
     final Kind<For, ? extends String> mapped = instance.flatMap(pure, fixedF);
@@ -24,9 +29,9 @@ public interface MonadLaws<For extends Monad.k, T extends @NonNull Object> exten
   }
   
   @Property
-  default void rightIdentity(final @ForAll T a) {
+  default void monadRightIdentity(final @ForAll T a) {
     final Monad<For> instance = instance();
-    final Kind<For, ? extends T> pureInstance = instance.pure(a);
+    final Kind<For, ? extends T> pureInstance = unit(a);
     
     final Kind<For, ? extends T> mapped = instance.flatMap(pureInstance, instance::pure);
     
@@ -34,9 +39,9 @@ public interface MonadLaws<For extends Monad.k, T extends @NonNull Object> exten
   }
   
   @Property
-  default void flatMapAssociativity(final @ForAll T a, final @ForAll Function<? super T, ? extends @NonNull String> f) {
+  default void monadFlatMapAssociativity(final @ForAll T a, final @ForAll Function<? super T, ? extends @NonNull String> f) {
     final Monad<For> instance = instance();
-    final Kind<For, ? extends T> pureA = instance.pure(a);
+    final Kind<For, ? extends T> pureA = unit(a);
     final Function<? super T, ? extends Kind<For, ? extends String>> fixedF = t -> instance.pure(f.apply(t));
     final Function<? super String, ? extends Kind<For, ? extends Integer>> g = s -> instance.pure(Integer.valueOf(s.length()));
     
