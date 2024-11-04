@@ -240,7 +240,7 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
     };
   }
   
-  default <B extends @NonNull Object> Option<B> ap(final Option<@NonNull Function<? super T, ? extends B>> f) {
+  default <B extends @NonNull Object> Option<B> ap(final Option<? extends @NonNull Function<? super T, ? extends B>> f) {
     return switch (this) {
       case Empty() -> genericCast(this);
       case Present(var it) -> f.map(fn -> fn.apply(it));
@@ -318,13 +318,16 @@ class option_apply extends option_functor implements Apply<Option.k> {
     return instance;
   }
   
+  @SuppressWarnings(
+    "unchecked"
+  )
   @Override
   public final <A extends @NonNull Object, B extends @NonNull Object> Option<? extends B> ap(
-      final Kind<Option.k, A> fa,
-      final Kind<Option.k, @NonNull Function<? super A, ? extends B>> f
+      final Kind<Option.k, ? extends A> fa,
+      final Kind<Option.k, ? extends @NonNull Function<? super A, ? extends B>> f
   ) {
-    final Option<A> option = fa.fix();
-    final Option<@NonNull Function<? super A, ? extends B>> optionF = f.fix();
+    final Option<A> option = (Option<A>) fa.fix();
+    final Option<@NonNull Function<? super A, ? extends B>> optionF = (Option<@NonNull Function<? super A, ? extends B>>) f.fix();
     return option.ap(optionF);
   }
 }

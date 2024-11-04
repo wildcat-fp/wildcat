@@ -154,13 +154,16 @@ final class try_monad implements Monad<Try.k> {
     return Try.success(value);
   }
   
+  @SuppressWarnings(
+    "unchecked"
+  )
   @Override
   public <A extends @NonNull Object, B extends @NonNull Object> Try<? extends B> ap(
-      final Kind<Try.k, A> fa,
-      final Kind<Try.k, @NonNull Function<? super A, ? extends B>> f
+      final Kind<Try.k, ? extends A> fa,
+      final Kind<Try.k, ? extends @NonNull Function<? super A, ? extends B>> f
   ) {
-    final Try<A> tryA = fa.fix();
-    final Try<@NonNull Function<? super A, ? extends B>> tryF = f.fix();
+    final Try<A> tryA = (Try<A>) fa.fix();
+    final Try<@NonNull Function<? super A, ? extends B>> tryF = (Try<@NonNull Function<? super A, ? extends B>>) f.fix();
     return tryA.ap(tryF);
   }
   
