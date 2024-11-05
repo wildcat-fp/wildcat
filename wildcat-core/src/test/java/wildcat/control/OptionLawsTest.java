@@ -9,7 +9,7 @@ import wildcat.hkt.Kind;
 import wildcat.laws.typeclasses.core.MonadLaws;
 import wildcat.typeclasses.core.Monad;
 
-public class OptionTest<T extends @NonNull Object> implements MonadLaws<Option.k, T> {
+public class OptionLawsTest<T extends @NonNull Object> implements MonadLaws<Option.k, T> {
   @Override
   public Monad<k> instance() {
     return Option.monad();
