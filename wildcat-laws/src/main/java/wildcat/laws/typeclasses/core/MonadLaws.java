@@ -7,7 +7,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Monad;
 
-public interface MonadLaws<For extends Monad.k, T extends @NonNull Object> extends ApplyLaws<For, T> {
+public interface MonadLaws<For extends Monad.k, T extends @NonNull Object> extends ApplicativeLaws<For, T> {
   @Override
   Monad<For> instance();
   
