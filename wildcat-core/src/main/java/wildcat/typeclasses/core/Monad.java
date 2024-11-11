@@ -4,12 +4,7 @@ import java.util.function.Function;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import wildcat.hkt.Kind;
 
-public interface Monad<For extends Monad.k> extends Applicative<For> {
-  
-  <A extends @NonNull Object, B extends @NonNull Object> Kind<For, ? extends B> flatMap(
-      Kind<For, A> fa,
-      Function<? super A, ? extends @NonNull Kind<For, ? extends B>> f
-  );
+public interface Monad<For extends Monad.k> extends FlatMap<For>, Applicative<For> {
   
   @Override
   default <A extends @NonNull Object, B extends @NonNull Object> Kind<For, ? extends B> map(
@@ -20,6 +15,6 @@ public interface Monad<For extends Monad.k> extends Applicative<For> {
     return flatMap(fa, fn);
   }
   
-  interface k extends Applicative.k {
+  interface k extends Applicative.k, FlatMap.k {
   }
 }
