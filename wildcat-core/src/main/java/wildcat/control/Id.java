@@ -7,6 +7,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Applicative;
 import wildcat.typeclasses.core.Apply;
+import wildcat.typeclasses.core.FlatMap;
 import wildcat.typeclasses.core.Functor;
 import wildcat.typeclasses.core.Monad;
 
@@ -26,6 +27,10 @@ public record Id<T extends @NonNull Object>(T value) implements Kind<Id.k, T> {
   
   public static Applicative<Id.k> applicative() {
     return id_applicative.applicative_instance();
+  }
+  
+  public static FlatMap<Id.k> flatmap() {
+    return id_flatmap.flatmap_instance();
   }
   
   public static Monad<Id.k> monad() {
@@ -105,12 +110,12 @@ class id_applicative extends id_apply implements Applicative<Id.k> {
   }
 }
 
-class id_monad extends id_applicative implements Monad<Id.k> {
-  private static final id_monad instance = new id_monad();
+class id_flatmap extends id_apply implements FlatMap<Id.k> {
+  private static final id_flatmap instance = new id_flatmap();
   
-  id_monad() {}
+  id_flatmap() {}
   
-  static id_monad monad_instance() {
+  static id_flatmap flatmap_instance() {
     return instance;
   }
   
@@ -126,5 +131,21 @@ class id_monad extends id_applicative implements Monad<Id.k> {
     };
     
     return id.flatMap(fixedF);
+  }
+  
+}
+
+class id_monad extends id_flatmap implements Monad<Id.k> {
+  private static final id_monad instance = new id_monad();
+  
+  id_monad() {}
+  
+  static id_monad monad_instance() {
+    return instance;
+  }
+  
+  @Override
+  public <T extends @NonNull Object> Kind<Id.k, ? extends T> pure(T value) {
+    return id_applicative.applicative_instance().pure(value);
   }
 }

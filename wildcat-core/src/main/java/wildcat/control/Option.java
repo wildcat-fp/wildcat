@@ -14,6 +14,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Applicative;
 import wildcat.typeclasses.core.Apply;
+import wildcat.typeclasses.core.FlatMap;
 import wildcat.typeclasses.core.Functor;
 import wildcat.typeclasses.core.Monad;
 import wildcat.typeclasses.equivalence.Eq;
@@ -100,6 +101,10 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
   
   static @NonNull Applicative<Option.k> applicative() {
     return option_applicative.applicative_instance();
+  }
+  
+  static @NonNull FlatMap<Option.k> flatmap() {
+    return option_flatmap.flatmap_instance();
   }
   
   static @NonNull Monad<Option.k> monad() {
@@ -347,12 +352,12 @@ class option_applicative extends option_apply implements Applicative<Option.k> {
   }
 }
 
-class option_monad extends option_applicative implements Monad<Option.k> {
-  private static final option_monad instance = new option_monad();
+class option_flatmap extends option_apply implements FlatMap<Option.k> {
+  private static final option_flatmap instance = new option_flatmap();
   
-  option_monad() {}
+  option_flatmap() {}
   
-  static option_monad monad_instance() {
+  static option_flatmap flatmap_instance() {
     return instance;
   }
   
@@ -367,5 +372,20 @@ class option_monad extends option_applicative implements Monad<Option.k> {
       return genericCast(applied.fix());
     };
     return option.flatMap(fixedF);
+  }
+}
+
+class option_monad extends option_flatmap implements Monad<Option.k> {
+  private static final option_monad instance = new option_monad();
+  
+  option_monad() {}
+  
+  static option_monad monad_instance() {
+    return instance;
+  }
+  
+  @Override
+  public <T extends @NonNull Object> Kind<Option.k, ? extends T> pure(T value) {
+    return option_applicative.applicative_instance().pure(value);
   }
 }
