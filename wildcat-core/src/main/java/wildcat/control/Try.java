@@ -12,6 +12,10 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.common.returnsreceiver.qual.This;
 import wildcat.fns.CheckedSupplier;
 import wildcat.hkt.Kind;
+import wildcat.typeclasses.core.Applicative;
+import wildcat.typeclasses.core.Apply;
+import wildcat.typeclasses.core.FlatMap;
+import wildcat.typeclasses.core.Functor;
 import wildcat.typeclasses.core.Monad;
 import wildcat.typeclasses.equivalence.Eq;
 import wildcat.typeclasses.equivalence.EqK;
@@ -21,15 +25,31 @@ public sealed interface Try<T extends @NonNull Object>
                            Kind<Try.k, T>
     permits Try.Success, Try.Failure {
   
+  static Functor<Try.k> functor() {
+    return try_functor.instance();
+  }
+  
+  static Apply<Try.k> apply() {
+    return try_apply.instance();
+  }
+  
+  static Applicative<Try.k> applicative() {
+    return try_applicative.instance();
+  }
+  
+  static FlatMap<Try.k> flatmap() {
+    return try_flatmap.instance();
+  }
+  
   static Monad<Try.k> monad() {
     return try_monad.instance();
   }
   
-  static EqK<Try.k> eq() {
+  static EqK<Try.k> eqk() {
     return try_eqk.instance();
   }
   
-  static EqK<Try.k> eq(final Eq<? super @NonNull Throwable> exceptionEq) {
+  static EqK<Try.k> eqk(final Eq<? super @NonNull Throwable> exceptionEq) {
     return new try_eqk(exceptionEq);
   }
   
@@ -59,8 +79,8 @@ public sealed interface Try<T extends @NonNull Object>
     }
   }
   
-  default <U extends @NonNull Object> Try<? extends U> map(
-      final @NonNull Function<? super T, ? extends U> mapping
+  default <U extends @NonNull Object> Try<U> map(
+      final Function<? super T, ? extends U> mapping
   ) {
     return switch (this) {
       case Success<T> success -> {
@@ -139,32 +159,71 @@ public sealed interface Try<T extends @NonNull Object>
   }
 }
 
-final class try_monad implements Monad<Try.k> {
-  private static final try_monad instance = new try_monad();
+class try_functor implements Functor<Try.k> {
+  private static final try_functor instance = new try_functor();
   
-  private try_monad() {
+  try_functor() {
   }
   
-  static try_monad instance() {
+  static try_functor instance() {
     return instance;
   }
   
   @Override
-  public <T extends @NonNull Object> Try<? extends T> pure(T value) {
-    return Try.success(value);
+  public final <A extends @NonNull Object, B extends @NonNull Object> Try<B> map(
+      final Kind<Try.k, A> fa,
+      final Function<? super A, ? extends B> f
+  ) {
+    final Try<A> t = fa.fix();
+    return t.map(f);
+  }
+}
+
+class try_apply extends try_functor implements Apply<Try.k> {
+  private static final try_apply instance = new try_apply();
+  
+  try_apply() {
   }
   
-  @SuppressWarnings(
-    "unchecked"
-  )
+  static try_apply instance() {
+    return instance;
+  }
+  
   @Override
-  public <A extends @NonNull Object, B extends @NonNull Object> Try<? extends B> ap(
+  public final <A extends @NonNull Object, B extends @NonNull Object> Try<? extends B> ap(
       final Kind<Try.k, ? extends A> fa,
       final Kind<Try.k, ? extends @NonNull Function<? super A, ? extends B>> f
   ) {
-    final Try<A> tryA = (Try<A>) fa.fix();
-    final Try<@NonNull Function<? super A, ? extends B>> tryF = (Try<@NonNull Function<? super A, ? extends B>>) f.fix();
-    return tryA.ap(tryF);
+    final Try<A> t = genericCast(fa.fix());
+    final Try<@NonNull Function<? super A, ? extends B>> tF = genericCast(f.fix());
+    return t.ap(tF);
+  }
+}
+
+class try_applicative extends try_apply implements Applicative<Try.k> {
+  private static final try_applicative instance = new try_applicative();
+  
+  try_applicative() {
+  }
+  
+  static try_applicative instance() {
+    return instance;
+  }
+  
+  @Override
+  public final <T extends @NonNull Object> Try<T> pure(final T value) {
+    return Try.success(value);
+  }
+}
+
+class try_flatmap extends try_apply implements FlatMap<Try.k> {
+  private static final try_flatmap instance = new try_flatmap();
+  
+  try_flatmap() {
+  }
+  
+  static try_flatmap instance() {
+    return instance;
   }
   
   @Override
@@ -178,6 +237,22 @@ final class try_monad implements Monad<Try.k> {
       return genericCast(applied.fix());
     };
     return tryA.flatMap(fixedF);
+  }
+}
+
+class try_monad extends try_flatmap implements Monad<Try.k> {
+  private static final try_monad instance = new try_monad();
+  
+  try_monad() {
+  }
+  
+  static try_monad instance() {
+    return instance;
+  }
+  
+  @Override
+  public <T extends @NonNull Object> Try<? extends T> pure(T value) {
+    return Try.success(value);
   }
 }
 
