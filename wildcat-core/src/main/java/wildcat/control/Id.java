@@ -10,6 +10,8 @@ import wildcat.typeclasses.core.Apply;
 import wildcat.typeclasses.core.FlatMap;
 import wildcat.typeclasses.core.Functor;
 import wildcat.typeclasses.core.Monad;
+import wildcat.typeclasses.equivalence.Eq;
+import wildcat.typeclasses.equivalence.EqK;
 
 public record Id<T extends @NonNull Object>(T value) implements Kind<Id.k, T> {
   
@@ -37,6 +39,10 @@ public record Id<T extends @NonNull Object>(T value) implements Kind<Id.k, T> {
     return id_monad.monad_instance();
   }
   
+  public static EqK<Id.k> eqk() {
+    return id_eqk.eqk_instance();
+  }
+  
   public <U extends @NonNull Object> Id<U> map(
       final Function<? super T, ? extends U> f
   ) {
@@ -53,7 +59,7 @@ public record Id<T extends @NonNull Object>(T value) implements Kind<Id.k, T> {
     return f.map(fn -> fn.apply(value()));
   }
   
-  interface k extends Monad.k {}
+  interface k extends Monad.k, EqK.k {}
 }
 
 class id_functor implements Functor<Id.k> {
@@ -147,5 +153,27 @@ class id_monad extends id_flatmap implements Monad<Id.k> {
   @Override
   public <T extends @NonNull Object> Kind<Id.k, ? extends T> pure(T value) {
     return id_applicative.applicative_instance().pure(value);
+  }
+}
+
+class id_eqk implements EqK<Id.k> {
+  private static final id_eqk instance = new id_eqk();
+  
+  id_eqk() {}
+  
+  static id_eqk eqk_instance() {
+    return instance;
+  }
+  
+  @Override
+  public <A extends @NonNull Object> boolean eqK(
+      final Kind<Id.k, A> a,
+      final Kind<Id.k, A> b,
+      final Eq<A> eq
+  ) {
+    final Id<A> idA = a.fix();
+    final Id<A> idB = b.fix();
+    
+    return eq.eqv(idA.value(), idB.value());
   }
 }
