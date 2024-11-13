@@ -7,7 +7,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import org.checkerframework.checker.nullness.qual.KeyForBottom;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import wildcat.fns.nonnull.NonNullFunction;
