@@ -1,9 +1,9 @@
 package wildcat.laws.typeclasses.core;
 
-import java.util.function.Function;
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import wildcat.fns.nonnull.NonNullFunction;
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Functor;
 
@@ -19,15 +19,15 @@ public interface FunctorLaws<For extends Functor.k, T extends @NonNull Object> {
     final Functor<For> functor = instance();
     final Kind<For, ? extends T> unit = unit(a);
     
-    final Kind<For, ? extends T> mapped = functor.map(unit, Function.identity());
+    final Kind<For, ? extends T> mapped = functor.map(unit, NonNullFunction.identity());
     verifyEquals(unit, mapped);
   }
   
   @Property
-  default void functorComposition(final @ForAll T a, final @ForAll Function<? super T, ? extends String> f) {
+  default void functorComposition(final @ForAll T a, final @ForAll NonNullFunction<? super T, ? extends String> f) {
     final Functor<For> functor = instance();
     final Kind<For, ? extends T> unit = unit(a);
-    final Function<String, Integer> len = String::length;
+    final NonNullFunction<@NonNull String, @NonNull Integer> len = String::length;
     
     final Kind<For, ? extends String> mapped = functor.map(unit, f);
     
