@@ -1,8 +1,8 @@
 package wildcat.typeclasses.core;
 
-import java.util.function.Function;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
+import wildcat.fns.nonnull.NonNullFunction;
 import wildcat.hkt.Kind;
 
 /**
@@ -48,7 +48,7 @@ public interface Functor<For extends Functor.k> {
    */
   <A extends @NonNull Object, @UnknownKeyFor B extends @NonNull Object> Kind<For, ? extends B> map(
       Kind<For, A> fa,
-      Function<? super A, ? extends B> f
+      NonNullFunction<? super A, ? extends B> f
   );
   
   /**

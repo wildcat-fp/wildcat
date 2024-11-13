@@ -2,8 +2,8 @@ package wildcat.control;
 
 import static wildcat.utils.Types.genericCast;
 
-import java.util.function.Function;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import wildcat.fns.nonnull.NonNullFunction;
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Applicative;
 import wildcat.typeclasses.core.Apply;
@@ -44,18 +44,18 @@ public record Id<T extends @NonNull Object>(T value) implements Kind<Id.k, T> {
   }
   
   public <U extends @NonNull Object> Id<U> map(
-      final Function<? super T, ? extends U> f
+      final NonNullFunction<? super T, ? extends U> f
   ) {
     return new Id<>(f.apply(value()));
   }
   
   public <U extends @NonNull Object> Id<U> flatMap(
-      final Function<? super T, ? extends @NonNull Id<? extends U>> f
+      final NonNullFunction<? super T, ? extends @NonNull Id<? extends U>> f
   ) {
     return genericCast(f.apply(value()));
   }
   
-  public <B extends @NonNull Object> Id<B> ap(final Id<? extends @NonNull Function<? super T, ? extends B>> f) {
+  public <B extends @NonNull Object> Id<B> ap(final Id<? extends @NonNull NonNullFunction<? super T, ? extends B>> f) {
     return f.map(fn -> fn.apply(value()));
   }
   
@@ -74,7 +74,7 @@ class id_functor implements Functor<Id.k> {
   @Override
   public final <A extends @NonNull Object, B extends @NonNull Object> Id<B> map(
       final Kind<Id.k, A> fa,
-      final Function<? super A, ? extends B> f
+      final NonNullFunction<? super A, ? extends B> f
   ) {
     final Id<A> id = fa.fix();
     return id.map(f);
@@ -93,10 +93,10 @@ class id_apply extends id_functor implements Apply<Id.k> {
   @Override
   public final <A extends @NonNull Object, B extends @NonNull Object> Id<? extends B> ap(
       final Kind<Id.k, ? extends A> fa,
-      final Kind<Id.k, ? extends @NonNull Function<? super A, ? extends B>> f
+      final Kind<Id.k, ? extends @NonNull NonNullFunction<? super A, ? extends B>> f
   ) {
     final Id<A> id = genericCast(fa.fix());
-    final Id<@NonNull Function<? super A, ? extends B>> idF = genericCast(f.fix());
+    final Id<@NonNull NonNullFunction<? super A, ? extends B>> idF = genericCast(f.fix());
     return id.ap(idF);
   }
 }
@@ -128,10 +128,10 @@ class id_flatmap extends id_apply implements FlatMap<Id.k> {
   @Override
   public final <A extends @NonNull Object, B extends @NonNull Object> Id<? extends B> flatMap(
       final Kind<Id.k, A> fa,
-      final Function<? super A, ? extends @NonNull Kind<Id.k, ? extends B>> f
+      final NonNullFunction<? super A, ? extends @NonNull Kind<Id.k, ? extends B>> f
   ) {
     final Id<A> id = fa.fix();
-    final Function<? super A, ? extends Id<? extends B>> fixedF = t -> {
+    final NonNullFunction<? super A, ? extends Id<? extends B>> fixedF = t -> {
       final Kind<Id.k, ? extends B> applied = f.apply(t);
       return genericCast(applied.fix());
     };

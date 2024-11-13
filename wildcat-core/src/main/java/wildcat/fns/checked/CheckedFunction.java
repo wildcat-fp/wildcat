@@ -1,4 +1,4 @@
-package wildcat.fns;
+package wildcat.fns.checked;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 

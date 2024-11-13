@@ -5,12 +5,12 @@ import static wildcat.utils.Types.genericCast;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import org.checkerframework.checker.nullness.qual.KeyForBottom;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.common.returnsreceiver.qual.This;
-import wildcat.fns.CheckedSupplier;
+import wildcat.fns.checked.CheckedSupplier;
+import wildcat.fns.nonnull.NonNullFunction;
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Applicative;
 import wildcat.typeclasses.core.Apply;
@@ -80,7 +80,7 @@ public sealed interface Try<T extends @NonNull Object>
   }
   
   default <U extends @NonNull Object> Try<U> map(
-      final Function<? super T, ? extends U> mapping
+      final NonNullFunction<? super T, ? extends U> mapping
   ) {
     return switch (this) {
       case Success<T> success -> {
@@ -92,7 +92,7 @@ public sealed interface Try<T extends @NonNull Object>
   }
   
   default <U extends @NonNull Object> Try<? extends U> flatMap(
-      final @NonNull Function<? super T, ? extends @NonNull Try<? extends U>> mapping
+      final @NonNull NonNullFunction<? super T, ? extends @NonNull Try<? extends U>> mapping
   ) {
     return switch (this) {
       case Success<T> success -> {
@@ -103,9 +103,9 @@ public sealed interface Try<T extends @NonNull Object>
     };
   }
   
-  default <@KeyForBottom C extends @NonNull Object> C fold(
-      final Function<? super @NonNull Exception, ? extends C> whenFailed,
-      final Function<? super T, ? extends C> whenSucceeded
+  default <C extends @NonNull Object> C fold(
+      final NonNullFunction<? super @NonNull Exception, ? extends C> whenFailed,
+      final NonNullFunction<? super T, ? extends C> whenSucceeded
   ) {
     return switch (this) {
       case Success<T> success -> whenSucceeded.apply(success.value());
@@ -134,7 +134,7 @@ public sealed interface Try<T extends @NonNull Object>
   }
   
   default <B extends @NonNull Object> Try<? extends B> ap(
-      final @NonNull Try<@NonNull Function<? super T, ? extends B>> f
+      final @NonNull Try<@NonNull NonNullFunction<? super T, ? extends B>> f
   ) {
     return switch (this) {
       case Success<T> success -> f.map(fn -> fn.apply(success.value()));
@@ -172,7 +172,7 @@ class try_functor implements Functor<Try.k> {
   @Override
   public final <A extends @NonNull Object, B extends @NonNull Object> Try<B> map(
       final Kind<Try.k, A> fa,
-      final Function<? super A, ? extends B> f
+      final NonNullFunction<? super A, ? extends B> f
   ) {
     final Try<A> t = fa.fix();
     return t.map(f);
@@ -192,10 +192,10 @@ class try_apply extends try_functor implements Apply<Try.k> {
   @Override
   public final <A extends @NonNull Object, B extends @NonNull Object> Try<? extends B> ap(
       final Kind<Try.k, ? extends A> fa,
-      final Kind<Try.k, ? extends @NonNull Function<? super A, ? extends B>> f
+      final Kind<Try.k, ? extends @NonNull NonNullFunction<? super A, ? extends B>> f
   ) {
     final Try<A> t = genericCast(fa.fix());
-    final Try<@NonNull Function<? super A, ? extends B>> tF = genericCast(f.fix());
+    final Try<@NonNull NonNullFunction<? super A, ? extends B>> tF = genericCast(f.fix());
     return t.ap(tF);
   }
 }
@@ -229,10 +229,10 @@ class try_flatmap extends try_apply implements FlatMap<Try.k> {
   @Override
   public <A extends @NonNull Object, B extends @NonNull Object> Try<? extends B> flatMap(
       final Kind<Try.k, A> fa,
-      final Function<? super A, ? extends @NonNull Kind<Try.k, ? extends B>> f
+      final NonNullFunction<? super A, ? extends @NonNull Kind<Try.k, ? extends B>> f
   ) {
     final Try<A> tryA = fa.fix();
-    final Function<? super A, ? extends Try<? extends B>> fixedF = t -> {
+    final NonNullFunction<? super A, ? extends Try<? extends B>> fixedF = t -> {
       final Kind<Try.k, ? extends B> applied = f.apply(t);
       return genericCast(applied.fix());
     };

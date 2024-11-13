@@ -1,7 +1,7 @@
-package wildcat.fns;
+package wildcat.fns.checked;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public interface CheckedSupplier<T extends @NonNull Object, E extends @NonNull Exception> {
-    T get() throws E;
+  T get() throws E;
 }

@@ -6,11 +6,12 @@ import static wildcat.utils.Types.genericCast;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import org.checkerframework.checker.nullness.qual.KeyForBottom;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import wildcat.fns.nonnull.NonNullFunction;
+import wildcat.fns.nonnull.NonNullSupplier;
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Applicative;
 import wildcat.typeclasses.core.Apply;
@@ -19,6 +20,7 @@ import wildcat.typeclasses.core.Functor;
 import wildcat.typeclasses.core.Monad;
 import wildcat.typeclasses.equivalence.Eq;
 import wildcat.typeclasses.equivalence.EqK;
+import wildcat.typeclasses.oop.core.Mappable;
 
 /**
  * An Option is a monad that represents the possibility of a value being present
@@ -88,7 +90,9 @@ import wildcat.typeclasses.equivalence.EqK;
  *   "https://en.wikipedia.org/wiki/Monad_(functional_programming)">Monad</a>
  * @see <a href="https://en.wikipedia.org/wiki/Option_type">Option Type</a>
  */
-public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k, T>
+public sealed interface Option<T extends @NonNull Object> extends
+                              Kind<Option.k, T>,
+                              Mappable<T>
     permits Option.Present, Option.Empty {
   
   static @NonNull Functor<Option.k> functor() {
@@ -150,7 +154,7 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
     return present(value);
   }
   
-  static <T extends @NonNull Object> Option<T> of(final Supplier<? extends T> supplier) {
+  static <T extends @NonNull Object> Option<T> of(final NonNullSupplier<? extends T> supplier) {
     requireNonNull(supplier, "Supplier cannot be null");
     final T value = supplier.get();
     
@@ -168,7 +172,7 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
   }
   
   static <T extends @NonNull Object, U extends @NonNull Object> Option<U> lift(
-      final Function<? super T, ? extends U> function,
+      final NonNullFunction<? super T, ? extends U> function,
       final @Nullable T value
   ) {
     if (value == null) {
@@ -197,8 +201,9 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
     return present(value);
   }
   
+  @Override
   default <U extends @NonNull Object> Option<U> map(
-      final Function<? super T, ? extends U> mapping
+      final NonNullFunction<? super T, ? extends U> mapping
   ) {
     return switch (this) {
       case Empty() -> genericCast(this);
@@ -207,7 +212,7 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
   }
   
   default <U extends @NonNull Object> Option<U> flatMap(
-      final Function<? super T, ? extends @NonNull Option<? extends U>> mapping
+      final NonNullFunction<? super T, ? extends @NonNull Option<? extends U>> mapping
   ) {
     return switch (this) {
       case Empty() -> genericCast(this);
@@ -215,9 +220,9 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
     };
   }
   
-  default <@KeyForBottom C extends @NonNull Object> C fold(
-      final Supplier<? extends C> onEmpty,
-      final Function<? super T, ? extends C> onPresent
+  default <C extends @NonNull Object> C fold(
+      final NonNullSupplier<? extends C> onEmpty,
+      final NonNullFunction<? super T, ? extends C> onPresent
   ) {
     return switch (this) {
       case Empty() -> onEmpty.get();
@@ -245,7 +250,7 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
     };
   }
   
-  default <B extends @NonNull Object> Option<B> ap(final Option<? extends @NonNull Function<? super T, ? extends B>> f) {
+  default <B extends @NonNull Object> Option<B> ap(final Option<? extends @NonNull NonNullFunction<? super T, ? extends B>> f) {
     return switch (this) {
       case Empty() -> genericCast(this);
       case Present(var it) -> f.map(fn -> fn.apply(it));
@@ -307,7 +312,7 @@ class option_functor implements Functor<Option.k> {
   @Override
   public final <A extends @NonNull Object, B extends @NonNull Object> Option<B> map(
       final Kind<Option.k, A> fa,
-      final Function<? super A, ? extends B> f
+      final NonNullFunction<? super A, ? extends B> f
   ) {
     final Option<A> option = fa.fix();
     return option.map(f);
@@ -323,16 +328,13 @@ class option_apply extends option_functor implements Apply<Option.k> {
     return instance;
   }
   
-  @SuppressWarnings(
-    "unchecked"
-  )
   @Override
   public final <A extends @NonNull Object, B extends @NonNull Object> Option<? extends B> ap(
       final Kind<Option.k, ? extends A> fa,
-      final Kind<Option.k, ? extends @NonNull Function<? super A, ? extends B>> f
+      final Kind<Option.k, ? extends @NonNull NonNullFunction<? super A, ? extends B>> f
   ) {
-    final Option<A> option = (Option<A>) fa.fix();
-    final Option<@NonNull Function<? super A, ? extends B>> optionF = (Option<@NonNull Function<? super A, ? extends B>>) f.fix();
+    final Option<A> option = genericCast(fa.fix());
+    final Option<@NonNull NonNullFunction<? super A, ? extends B>> optionF = genericCast(f.fix());
     return option.ap(optionF);
   }
 }
@@ -364,10 +366,10 @@ class option_flatmap extends option_apply implements FlatMap<Option.k> {
   @Override
   public <A extends @NonNull Object, B extends @NonNull Object> Option<? extends B> flatMap(
       final Kind<Option.k, A> fa,
-      final Function<? super A, ? extends @NonNull Kind<Option.k, ? extends B>> f
+      final NonNullFunction<? super A, ? extends @NonNull Kind<Option.k, ? extends B>> f
   ) {
     final Option<A> option = fa.fix();
-    final Function<? super A, ? extends Option<? extends B>> fixedF = t -> {
+    final NonNullFunction<? super A, ? extends Option<? extends B>> fixedF = t -> {
       final Kind<Option.k, ? extends B> applied = f.apply(t);
       return genericCast(applied.fix());
     };
