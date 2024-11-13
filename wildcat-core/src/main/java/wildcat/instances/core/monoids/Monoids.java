@@ -1,7 +1,8 @@
 package wildcat.instances.core.monoids;
 
-import java.util.function.BiFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
+
+import wildcat.fns.nonnull.NonNullBiFunction;
 import wildcat.typeclasses.core.Monoid;
 import wildcat.typeclasses.core.Semigroup;
 
@@ -23,7 +24,7 @@ public final class Monoids {
     };
   }
   
-  public static <T extends @NonNull Object> Monoid<T> monoid(final T empty, final BiFunction<? super T, ? super T, ? extends T> combine) {
+  public static <T extends @NonNull Object> Monoid<T> monoid(final T empty, final NonNullBiFunction<? super T, ? super T, ? extends T> combine) {
     return new Monoid<T>() {
       @Override
       public T identity() {
@@ -53,12 +54,12 @@ public final class Monoids {
     }
     
     @Override
-    public String identity() {
+    public @NonNull String identity() {
       return "";
     }
     
     @Override
-    public String combine(final String a, final String b) {
+    public @NonNull String combine(final @NonNull String a, final @NonNull String b) {
       return a + b;
     }
   }

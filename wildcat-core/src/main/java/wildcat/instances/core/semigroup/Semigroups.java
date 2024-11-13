@@ -1,24 +1,23 @@
 package wildcat.instances.core.semigroup;
 
-import java.util.function.BiFunction;
-
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import wildcat.fns.nonnull.NonNullBiFunction;
 import wildcat.typeclasses.core.Semigroup;
 
 public final class Semigroups {
   
   private Semigroups() {}
   
-  public static <T extends @NonNull Object> Semigroup<T> semigroup(final BiFunction<? super T, ? super T, ? extends T> combine) {
+  public static <T extends @NonNull Object> Semigroup<T> semigroup(final NonNullBiFunction<? super T, ? super T, ? extends T> combine) {
     return (a, b) -> combine.apply(a, b);
   }
   
-  public static Semigroup<String> forStrings() {
+  public static Semigroup<@NonNull String> forStrings() {
     return StringSemigroup.semigroup();
   }
   
-  private static final class StringSemigroup implements Semigroup<String> {
+  private static final class StringSemigroup implements Semigroup<@NonNull String> {
     private static final StringSemigroup INSTANCE = new StringSemigroup();
     
     private StringSemigroup() {}
@@ -28,7 +27,7 @@ public final class Semigroups {
     }
     
     @Override
-    public String combine(final String a, final String b) {
+    public @NonNull String combine(final @NonNull String a, final @NonNull String b) {
       return a + b;
     }
   }

@@ -6,7 +6,6 @@ import static wildcat.utils.Types.genericCast;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import wildcat.fns.nonnull.NonNullFunction;
@@ -132,7 +131,7 @@ public sealed interface Option<T extends @NonNull Object> extends
   
   static <T extends @NonNull Object> Option<T> when(
       final boolean condition,
-      final Supplier<? extends T> supplier
+      final NonNullSupplier<? extends T> supplier
   ) {
     if (supplier == null) {
       throw new IllegalArgumentException("Supplier cannot be null");
@@ -191,7 +190,7 @@ public sealed interface Option<T extends @NonNull Object> extends
   }
   
   static <T extends @NonNull Object> Option<T> present(
-      final Supplier<? extends @NonNull T> supplier
+      final NonNullSupplier<? extends @NonNull T> supplier
   ) {
     requireNonNull(supplier, "Supplier cannot be null");
     final T value = supplier.get();

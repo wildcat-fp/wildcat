@@ -1,8 +1,8 @@
 package wildcat.typeclasses.equivalence;
 
-import java.util.function.BiFunction;
-
 import org.checkerframework.checker.nullness.qual.NonNull;
+
+import wildcat.fns.nonnull.NonNullBiFunction;
 
 @FunctionalInterface
 public interface Eq<T extends @NonNull Object> {
@@ -12,7 +12,7 @@ public interface Eq<T extends @NonNull Object> {
         return !eqv(a, b);
     }
 
-    static <T extends @NonNull Object> Eq<? extends T> forT(final BiFunction<? super T, ? super T, ? extends Boolean> check) {
+    static <T extends @NonNull Object> Eq<? extends T> forT(final NonNullBiFunction<? super T, ? super T, ? extends Boolean> check) {
         return (a, b) -> check.apply(a, b);
     }
 }

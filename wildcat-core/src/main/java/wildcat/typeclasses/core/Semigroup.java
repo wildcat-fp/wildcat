@@ -1,7 +1,8 @@
 package wildcat.typeclasses.core;
 
-import java.util.function.BiFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
+
+import wildcat.fns.nonnull.NonNullBiFunction;
 
 /**
  * A {@code Semigroup} is a type class that represents a set of types that have
@@ -63,7 +64,7 @@ public interface Semigroup<T extends @NonNull Object> {
    * @return a new {@code Semigroup} instance
    */
   static <T extends @NonNull Object> Semigroup<? extends T> forT(
-      final BiFunction<? super T, ? super T, ? extends T> combine
+      final NonNullBiFunction<? super T, ? super T, ? extends T> combine
   ) {
     return (a, b) -> combine.apply(a, b);
   }

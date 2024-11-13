@@ -5,11 +5,11 @@ import static wildcat.utils.Types.genericCast;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.common.returnsreceiver.qual.This;
 import wildcat.fns.checked.CheckedSupplier;
 import wildcat.fns.nonnull.NonNullFunction;
+import wildcat.fns.nonnull.NonNullSupplier;
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Applicative;
 import wildcat.typeclasses.core.Apply;
@@ -60,7 +60,7 @@ public sealed interface Try<T extends @NonNull Object>
     return new Failure<>(exception);
   }
   
-  static <T extends @NonNull Object> Try<T> of(final Supplier<T> supplier) {
+  static <T extends @NonNull Object> Try<T> of(final NonNullSupplier<T> supplier) {
     try {
       return new Success<>(supplier.get());
     } catch (final Exception e) {
