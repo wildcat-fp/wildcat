@@ -4,10 +4,10 @@ import static wildcat.utils.Types.genericCast;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Objects;
-import java.util.function.Consumer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.common.returnsreceiver.qual.This;
 import wildcat.fns.checked.CheckedSupplier;
+import wildcat.fns.nonnull.NonNullConsumer;
 import wildcat.fns.nonnull.NonNullFunction;
 import wildcat.fns.nonnull.NonNullSupplier;
 import wildcat.hkt.Kind;
@@ -112,7 +112,7 @@ public sealed interface Try<T extends @NonNull Object>
     };
   }
   
-  default @This Try<T> whenSuccessful(final @NonNull Consumer<? super T> action) {
+  default @This Try<T> whenSuccessful(final @NonNull NonNullConsumer<? super T> action) {
     return switch (this) {
       case Success<T> success -> {
         action.accept(success.value());
@@ -122,7 +122,7 @@ public sealed interface Try<T extends @NonNull Object>
     };
   }
   
-  default @This Try<T> whenFailed(final @NonNull Consumer<? super @NonNull Exception> action) {
+  default @This Try<T> whenFailed(final @NonNull NonNullConsumer<? super @NonNull Exception> action) {
     return switch (this) {
       case Success<T> success -> this;
       case Failure<T> failure -> {

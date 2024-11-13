@@ -1,7 +1,6 @@
 package wildcat.typeclasses.traversal;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-
 import wildcat.fns.nonnull.NonNullFunction;
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Applicative;

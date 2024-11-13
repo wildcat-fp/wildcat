@@ -1,7 +1,6 @@
 package wildcat.instances.core.semigroup;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-
 import wildcat.fns.nonnull.NonNullBiFunction;
 import wildcat.typeclasses.core.Semigroup;
 

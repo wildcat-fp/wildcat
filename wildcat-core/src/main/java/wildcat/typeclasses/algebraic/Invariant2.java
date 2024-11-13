@@ -1,7 +1,6 @@
 package wildcat.typeclasses.algebraic;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-
 import wildcat.fns.nonnull.NonNullFunction;
 import wildcat.hkt.Kind2;
 import wildcat.hkt.Kinded2;

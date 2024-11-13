@@ -1,7 +1,7 @@
 package wildcat.control;
 
-import java.util.function.Function;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import wildcat.fns.nonnull.NonNullFunction;
 import wildcat.hkt.Kind2;
 import wildcat.typeclasses.algebraic.Bifunctor;
 import wildcat.typeclasses.algebraic.Functor2;
@@ -71,7 +71,7 @@ public record Tuple2<A extends @NonNull Object, B extends @NonNull Object>(
    *   first value and the second value of this {@code Tuple2}.
    */
   public <C extends @NonNull Object> Tuple2<C, B> map(
-      final Function<? super A, ? extends C> f
+      final NonNullFunction<? super A, ? extends C> f
   ) {
     final C c = f.apply(a());
     return new Tuple2<>(c, b());
@@ -90,7 +90,7 @@ public record Tuple2<A extends @NonNull Object, B extends @NonNull Object>(
    *   the result of applying the function to the second value.
    */
   public <C extends @NonNull Object> Tuple2<A, C> map2(
-      final Function<? super B, ? extends C> f
+      final NonNullFunction<? super B, ? extends C> f
   ) {
     final C c = f.apply(b());
     return new Tuple2<>(a(), c);
@@ -114,8 +114,8 @@ public record Tuple2<A extends @NonNull Object, B extends @NonNull Object>(
    *   the values of this {@code Tuple2}.
    */
   public <C extends @NonNull Object, D extends @NonNull Object> Tuple2<C, D> bimap(
-      final Function<? super A, ? extends C> f,
-      final Function<? super B, ? extends D> g
+      final NonNullFunction<? super A, ? extends C> f,
+      final NonNullFunction<? super B, ? extends D> g
   ) {
     final C c = f.apply(a());
     final D d = g.apply(b());
@@ -135,8 +135,8 @@ public record Tuple2<A extends @NonNull Object, B extends @NonNull Object>(
     @Override
     public <A extends @NonNull Object, B extends @NonNull Object, C extends @NonNull Object, D extends @NonNull Object> Tuple2<C, D> bimap(
         final Kind2<Tuple2.k, A, B> fa,
-        final Function<? super A, ? extends C> f,
-        final Function<? super B, ? extends D> g
+        final NonNullFunction<? super A, ? extends C> f,
+        final NonNullFunction<? super B, ? extends D> g
     ) {
       final Tuple2<A, B> tuple = fa.fix();
       return tuple.bimap(f, g);
@@ -156,7 +156,7 @@ public record Tuple2<A extends @NonNull Object, B extends @NonNull Object>(
     @Override
     public <A extends @NonNull Object, B extends @NonNull Object, T extends @NonNull Object> Tuple2<T, B> mapA(
         final Kind2<Tuple2.k, A, B> fa,
-        final Function<? super A, ? extends T> f
+        final NonNullFunction<? super A, ? extends T> f
     ) {
       final Tuple2<A, B> tuple = fa.fix();
       return tuple.map(f);
@@ -165,7 +165,7 @@ public record Tuple2<A extends @NonNull Object, B extends @NonNull Object>(
     @Override
     public <A extends @NonNull Object, B extends @NonNull Object, T extends @NonNull Object> Tuple2<A, T> mapB(
         final Kind2<Tuple2.k, A, B> fa,
-        final Function<? super B, ? extends T> f
+        final NonNullFunction<? super B, ? extends T> f
     ) {
       final Tuple2<A, B> tuple = fa.fix();
       return tuple.map2(f);

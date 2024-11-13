@@ -5,9 +5,9 @@ import static wildcat.utils.Types.genericCast;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Optional;
-import java.util.function.Consumer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import wildcat.fns.nonnull.NonNullConsumer;
 import wildcat.fns.nonnull.NonNullFunction;
 import wildcat.fns.nonnull.NonNullSupplier;
 import wildcat.hkt.Kind;
@@ -228,7 +228,7 @@ public sealed interface Option<T extends @NonNull Object> extends
     };
   }
   
-  default Option<T> whenPresent(final Consumer<? super T> action) {
+  default Option<T> whenPresent(final NonNullConsumer<? super T> action) {
     return switch (this) {
       case Empty() -> this;
       case Present(var it) -> {

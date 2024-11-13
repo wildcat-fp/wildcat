@@ -2,7 +2,6 @@ package wildcat.typeclasses.core;
 
 import java.util.stream.Stream;
 import org.checkerframework.checker.nullness.qual.NonNull;
-
 import wildcat.fns.nonnull.NonNullBiFunction;
 import wildcat.fns.nonnull.NonNullSupplier;
 

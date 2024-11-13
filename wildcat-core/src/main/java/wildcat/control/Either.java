@@ -2,9 +2,8 @@ package wildcat.control;
 
 import static wildcat.utils.Types.genericCast;
 
-import java.util.function.Consumer;
 import org.checkerframework.checker.nullness.qual.NonNull;
-
+import wildcat.fns.nonnull.NonNullConsumer;
 import wildcat.fns.nonnull.NonNullFunction;
 import wildcat.hkt.Kind2;
 import wildcat.typeclasses.algebraic.Bifunctor;
@@ -32,7 +31,7 @@ public sealed interface Either<L extends @NonNull Object, R extends @NonNull Obj
   }
   
   <U extends @NonNull Object> Either<? extends L, ? extends U> map(
-    NonNullFunction<? super R, ? extends U> mapping
+      NonNullFunction<? super R, ? extends U> mapping
   );
   
   <U extends @NonNull Object> Either<? extends U, ? extends R> mapLeft(
@@ -57,9 +56,9 @@ public sealed interface Either<L extends @NonNull Object, R extends @NonNull Obj
       NonNullFunction<? super R, ? extends C> rigthMapping
   );
   
-  Either<L, R> whenLeft(Consumer<? super L> action);
+  Either<L, R> whenLeft(NonNullConsumer<? super L> action);
   
-  Either<L, R> whenRight(Consumer<? super R> action);
+  Either<L, R> whenRight(NonNullConsumer<? super R> action);
   
   record Left<L extends @NonNull Object, R extends @NonNull Object>(L value) implements Either<L, R> {
     @Override
@@ -99,14 +98,14 @@ public sealed interface Either<L extends @NonNull Object, R extends @NonNull Obj
     }
     
     @Override
-    public Either<L, R> whenLeft(final Consumer<? super L> action) {
+    public Either<L, R> whenLeft(final NonNullConsumer<? super L> action) {
       action.accept(value());
       
       return this;
     }
     
     @Override
-    public Either<L, R> whenRight(final Consumer<? super R> action) {
+    public Either<L, R> whenRight(final NonNullConsumer<? super R> action) {
       return this;
     }
   }
@@ -158,14 +157,14 @@ public sealed interface Either<L extends @NonNull Object, R extends @NonNull Obj
     
     @Override
     public @NonNull Either<L, R> whenLeft(
-        final Consumer<? super L> action
+        final NonNullConsumer<? super L> action
     ) {
       return this;
     }
     
     @Override
     public @NonNull Either<L, R> whenRight(
-        final Consumer<? super R> action
+        final NonNullConsumer<? super R> action
     ) {
       action.accept(value());
       
