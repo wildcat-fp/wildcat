@@ -1,6 +1,7 @@
 package wildcat.typeclasses.core;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+
 import wildcat.fns.nonnull.NonNullFunction;
 import wildcat.hkt.Kind;
 
