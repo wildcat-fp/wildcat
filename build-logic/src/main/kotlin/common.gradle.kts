@@ -3,6 +3,7 @@ import org.gradle.accessors.dm.LibrariesForLibs
 plugins {
   `java-library`
   id("static-analysis")
+  id("testing")
 }
 
 val libs = the<LibrariesForLibs>()
@@ -21,21 +22,5 @@ java {
 dependencies {
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
-}
-
-testing {
-    suites {
-        withType<JvmTestSuite> {
-            useJUnitJupiter()
-
-            dependencies {
-                compileOnly(libs.lombok)
-                annotationProcessor(libs.lombok)
-
-                implementation(libs.assertj)
-                implementation(libs.jqwik)
-            }
-        }
-    }
 }
 

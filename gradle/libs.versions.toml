@@ -12,6 +12,7 @@ findsecbugs = "1.13.0"
 spotless = "7.0.0.BETA4"
 checkerframework-plugin = "0.6.45"
 errorprone-plugin = "4.1.0"
+pitest-plugin = "1.15.0"
 
 [libraries]
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
@@ -29,3 +30,4 @@ spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 checkerframework = { id = "org.checkerframework", version.ref = "checkerframework-plugin" }
 spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs-plugin" }
 errorprone-plugin = { id = "net.ltgt.errorprone", version.ref = "errorprone-plugin" }
+pitest-plugin = { id = "info.solidsoft.pitest", version.ref = "pitest-plugin" }
