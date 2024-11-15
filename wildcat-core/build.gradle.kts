@@ -12,3 +12,7 @@ testing {
         }
     }
 }
+
+pitest {
+  excludedTestClasses = setOf("**.*LawsTest")
+}
