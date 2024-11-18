@@ -8,11 +8,12 @@ testing {
         withType<JvmTestSuite> {
             dependencies {
                 implementation(project(":wildcat-laws"))
+                implementation(project(":wildcat-asserts"))
             }
         }
     }
 }
 
 pitest {
-  excludedTestClasses = setOf("**.*LawsTest")
+  excludedTestClasses = setOf("*Test@laws")
 }

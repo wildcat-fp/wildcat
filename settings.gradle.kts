@@ -8,5 +8,6 @@ includeBuild("build-logic")
 
 include(
     "wildcat-core",
-    "wildcat-laws"
+    "wildcat-laws",
+    "wildcat-asserts"
 )
