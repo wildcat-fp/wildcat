@@ -8,7 +8,7 @@ import wildcat.hkt.kinds.OptionalK;
 import wildcat.laws.typeclasses.core.FunctorLaws;
 import wildcat.typeclasses.core.Functor;
 
-public class OptionalFunctorTest implements FunctorLaws<OptionalK.k, @NonNull String> {
+public class OptionalFunctorLawsTest implements FunctorLaws<OptionalK.k, @NonNull String> {
   
   @Override
   public Functor<OptionalK.k> instance() {

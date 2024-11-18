@@ -4,7 +4,7 @@ import wildcat.instances.core.monoids.Monoids;
 import wildcat.laws.typeclasses.core.MonoidLaws;
 import wildcat.typeclasses.core.Monoid;
 
-public class StringMonoidTest implements MonoidLaws<String> {
+public class StringMonoidLawsTest implements MonoidLaws<String> {
   @Override
   public Monoid<String> instance() {
     return Monoids.forStrings();
