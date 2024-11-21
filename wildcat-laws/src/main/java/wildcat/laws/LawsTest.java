@@ -18,6 +18,9 @@ import org.junit.jupiter.api.Tag;
 @Tag(
   "laws"
 )
+@net.jqwik.api.Tag(
+  "laws"
+)
 public @interface LawsTest {
   
 }

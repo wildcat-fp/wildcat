@@ -144,7 +144,7 @@ public sealed interface Option<T extends @NonNull Object> extends
     }
   }
   
-  static <T> Option<@NonNull T> of(final @Nullable T value) {
+  static <T extends @NonNull Object> Option<T> of(final @Nullable T value) {
     if (value == null) {
       return empty();
     }

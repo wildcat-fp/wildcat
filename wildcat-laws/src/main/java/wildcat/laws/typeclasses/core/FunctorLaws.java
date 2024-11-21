@@ -5,8 +5,10 @@ import net.jqwik.api.Property;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import wildcat.fns.nonnull.NonNullFunction;
 import wildcat.hkt.Kind;
+import wildcat.laws.LawsTest;
 import wildcat.typeclasses.core.Functor;
 
+@LawsTest
 public interface FunctorLaws<For extends Functor.k, T extends @NonNull Object> {
   Functor<For> instance();
   
@@ -21,6 +23,8 @@ public interface FunctorLaws<For extends Functor.k, T extends @NonNull Object> {
     
     final Kind<For, ? extends T> mapped = functor.map(unit, NonNullFunction.identity());
     verifyEquals(unit, mapped);
+    
+    // throw new RuntimeException("Failed!");
   }
   
   @Property
