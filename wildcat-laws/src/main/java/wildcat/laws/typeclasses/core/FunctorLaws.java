@@ -23,8 +23,6 @@ public interface FunctorLaws<For extends Functor.k, T extends @NonNull Object> {
     
     final Kind<For, ? extends T> mapped = functor.map(unit, NonNullFunction.identity());
     verifyEquals(unit, mapped);
-    
-    // throw new RuntimeException("Failed!");
   }
   
   @Property

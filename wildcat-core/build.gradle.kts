@@ -14,12 +14,6 @@ testing {
     }
 }
 
-tasks.withType<Test> {
-  useJUnitPlatform {
-    // excludeTags("laws")
-  }
-}
-
 pitest {
-  // excludedGroups = setOf("laws")
+  excludedGroups = setOf("laws")
 }
