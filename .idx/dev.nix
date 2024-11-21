@@ -20,7 +20,10 @@
   ];
 
   # Sets environment variables in the workspace
-  env = {};
+  env = {
+    ZSH = "${pkgs.oh-my-zsh}/share/oh-my-zsh";
+  };
+  
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
