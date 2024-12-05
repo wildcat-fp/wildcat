@@ -1,6 +1,7 @@
 package wildcat.control;
 
 import static java.util.Objects.requireNonNull;
+import static wildcat.utils.Assert.parameterIsNotNull;
 import static wildcat.utils.Types.genericCast;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -121,7 +122,7 @@ public sealed interface Option<T extends @NonNull Object> extends
       final boolean condition,
       final T value
   ) {
-    requireNonNull(value, "Value cannot be null");
+    parameterIsNotNull(value, "Value cannot be null");
     if (condition) {
       return present(value);
     } else {
@@ -133,9 +134,7 @@ public sealed interface Option<T extends @NonNull Object> extends
       final boolean condition,
       final NonNullSupplier<? extends T> supplier
   ) {
-    if (supplier == null) {
-      throw new IllegalArgumentException("Supplier cannot be null");
-    }
+    parameterIsNotNull(supplier, "Supplier cannot be null");
     
     if (condition) {
       return present(supplier);
@@ -153,7 +152,7 @@ public sealed interface Option<T extends @NonNull Object> extends
   }
   
   static <T extends @NonNull Object> Option<T> of(final NonNullSupplier<? extends T> supplier) {
-    requireNonNull(supplier, "Supplier cannot be null");
+    parameterIsNotNull(supplier, "Supplier cannot be null");
     final T value = supplier.get();
     
     requireNonNull(value, "Value cannot be null");
@@ -161,7 +160,7 @@ public sealed interface Option<T extends @NonNull Object> extends
   }
   
   static <T extends @NonNull Object> Option<T> ofOptional(final Optional<T> optional) {
-    requireNonNull(optional, "Optional cannot be null");
+    parameterIsNotNull(optional, "Optional cannot be null");
     if (optional.isPresent()) {
       return present(optional.get());
     } else {
@@ -173,6 +172,8 @@ public sealed interface Option<T extends @NonNull Object> extends
       final NonNullFunction<? super T, ? extends U> function,
       final @Nullable T value
   ) {
+    parameterIsNotNull(function, "Function cannot be null");
+    
     if (value == null) {
       return empty();
     } else {
@@ -185,14 +186,12 @@ public sealed interface Option<T extends @NonNull Object> extends
   }
   
   static <T extends @NonNull Object> Option<T> present(final T value) {
-    requireNonNull(value, "Value cannot be null");
+    parameterIsNotNull(value, "Value cannot be null");
     return new Present<>(value);
   }
   
-  static <T extends @NonNull Object> Option<T> present(
-      final NonNullSupplier<? extends @NonNull T> supplier
-  ) {
-    requireNonNull(supplier, "Supplier cannot be null");
+  static <T extends @NonNull Object> Option<T> present(final NonNullSupplier<? extends @NonNull T> supplier) {
+    parameterIsNotNull(supplier, "Supplier cannot be null");
     final T value = supplier.get();
     
     requireNonNull(value, "Value cannot be null");
@@ -203,6 +202,7 @@ public sealed interface Option<T extends @NonNull Object> extends
   default <U extends @NonNull Object> Option<U> map(
       final NonNullFunction<? super T, ? extends U> mapping
   ) {
+    parameterIsNotNull(mapping, "Mapping function cannot be null");
     return switch (this) {
       case Empty() -> genericCast(this);
       case Present(var it) -> new Present<>(mapping.apply(it));
@@ -212,6 +212,7 @@ public sealed interface Option<T extends @NonNull Object> extends
   default <U extends @NonNull Object> Option<U> flatMap(
       final NonNullFunction<? super T, ? extends @NonNull Option<? extends U>> mapping
   ) {
+    parameterIsNotNull(mapping, "Mapping function cannot be null");
     return switch (this) {
       case Empty() -> genericCast(this);
       case Present(var it) -> genericCast(mapping.apply(it));
@@ -222,6 +223,9 @@ public sealed interface Option<T extends @NonNull Object> extends
       final NonNullSupplier<? extends C> onEmpty,
       final NonNullFunction<? super T, ? extends C> onPresent
   ) {
+    parameterIsNotNull(onEmpty, "On empty function cannot be null");
+    parameterIsNotNull(onPresent, "On present function cannot be null");
+    
     return switch (this) {
       case Empty() -> onEmpty.get();
       case Present(var it) -> onPresent.apply(it);
@@ -229,6 +233,7 @@ public sealed interface Option<T extends @NonNull Object> extends
   }
   
   default Option<T> whenPresent(final NonNullConsumer<? super T> action) {
+    parameterIsNotNull(action, "Action cannot be null");
     return switch (this) {
       case Empty() -> this;
       case Present(var it) -> {
@@ -239,6 +244,8 @@ public sealed interface Option<T extends @NonNull Object> extends
   }
   
   default Option<T> whenEmpty(final Runnable action) {
+    parameterIsNotNull(action, "Action cannot be null");
+    
     return switch (this) {
       case Empty() -> {
         action.run();
@@ -249,6 +256,8 @@ public sealed interface Option<T extends @NonNull Object> extends
   }
   
   default <B extends @NonNull Object> Option<B> ap(final Option<? extends @NonNull NonNullFunction<? super T, ? extends B>> f) {
+    parameterIsNotNull(f, "Function cannot be null");
+    
     return switch (this) {
       case Empty() -> genericCast(this);
       case Present(var it) -> f.map(fn -> fn.apply(it));
