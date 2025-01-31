@@ -1,17 +1,29 @@
 package wildcat.control;
 
+import static wildcat.utils.Assert.parameterIsNotNull;
 import static wildcat.utils.Types.genericCast;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import wildcat.control.Either.Right;
 import wildcat.fns.nonnull.NonNullConsumer;
 import wildcat.fns.nonnull.NonNullFunction;
+import wildcat.hkt.Kind;
 import wildcat.hkt.Kind2;
 import wildcat.typeclasses.algebraic.Bifunctor;
-import wildcat.typeclasses.algebraic.Functor2;
+import wildcat.typeclasses.core.Functor2;
+import wildcat.typeclasses.core.Applicative;
+import wildcat.typeclasses.core.Apply;
+import wildcat.typeclasses.core.Apply2;
+import wildcat.typeclasses.core.FlatMap2;
+import wildcat.typeclasses.core.Functor;
+import wildcat.typeclasses.core.Monad;
+import wildcat.typeclasses.oop.core.Mappable;
 
 public sealed interface Either<L extends @NonNull Object, R extends @NonNull Object>
                               extends
-                              Kind2<Either.k, L, R>
+                              Kind<Either.k, R>,
+                              Kind2<Either.k, L, R>,
+                              Mappable<R>
     permits Either.Left, Either.Right {
   
   static <L extends @NonNull Object, R extends @NonNull Object> Either<L, R> left(final L value) {
@@ -30,9 +42,22 @@ public sealed interface Either<L extends @NonNull Object, R extends @NonNull Obj
     return either_bifunctor.instance();
   }
   
+  @Override
   <U extends @NonNull Object> Either<? extends L, ? extends U> map(
       NonNullFunction<? super R, ? extends U> mapping
   );
+
+  default <U extends @NonNull Object> Either<? extends U, ? extends R> mapA(
+      NonNullFunction<? super L, ? extends U> mapping
+  ) {
+    return mapLeft(mapping);
+  }
+
+  default <U extends @NonNull Object> Either<? extends L, ? extends U> mapB(
+      NonNullFunction<? super R, ? extends U> mapping
+  ) {
+    return map(mapping);
+  }
   
   <U extends @NonNull Object> Either<? extends U, ? extends R> mapLeft(
       NonNullFunction<? super L, ? extends U> mapping
@@ -41,6 +66,18 @@ public sealed interface Either<L extends @NonNull Object, R extends @NonNull Obj
   <U extends @NonNull Object> Either<? extends L, ? extends U> flatMap(
       NonNullFunction<? super R, ? extends Either<? extends L, ? extends U>> mapping
   );
+
+  default <U extends @NonNull Object> Either<? extends U, ? extends R> flatMapA(
+      NonNullFunction<? super L, ? extends Either<? extends U, ? extends R>> mapping
+  ) {
+    return flatMapLeft(mapping);
+  }
+
+  default <U extends @NonNull Object> Either<? extends L, ? extends U> flatMapB(
+      NonNullFunction<? super R, ? extends Either<? extends L, ? extends U>> mapping
+  ) {
+    return flatMap(mapping);
+  }
   
   <U extends @NonNull Object> Either<? extends U, ? extends R> flatMapLeft(
       NonNullFunction<? super L, ? extends Either<? extends U, ? extends R>> mapping
@@ -60,24 +97,61 @@ public sealed interface Either<L extends @NonNull Object, R extends @NonNull Obj
   
   Either<L, R> whenRight(NonNullConsumer<? super R> action);
   
+  default <U extends @NonNull Object> Either<L, U> ap(final Either<?, ? extends @NonNull NonNullFunction<? super R, ? extends U>> f) {
+    parameterIsNotNull(f, "Function cannot be null");
+    
+    return switch (this) {
+      case
+          
+          Left(var left) -> genericCast(this);
+      case Right(var right) -> f.map(fn -> fn.apply(right));
+    };
+  }
+
+  default <U extends @NonNull Object> Either<? extends U, ? extends R> apA(final Either<@NonNull NonNullFunction<? super L, ? extends U>, ? extends R> f) {
+    parameterIsNotNull(f, "Function cannot be null");
+    
+    return switch (this) {
+      case Left(var left) -> f.mapA(fn -> fn.apply(left));
+      case Right(var right) -> genericCast(this);
+    };
+  }
+
+  default <U extends @NonNull Object> Either<? extends L, ? extends U> apB(final Either<L, @NonNull NonNullFunction<? super R, ? extends U>> f) {
+    parameterIsNotNull(f, "Function cannot be null");
+    
+    return switch (this) {
+      case Left(var left) -> genericCast(this);
+      case Right(var right) -> f.mapB(fn -> fn.apply(right));
+    };
+  }
+  
   record Left<L extends @NonNull Object, R extends @NonNull Object>(L value) implements Either<L, R> {
     @Override
-    public <U extends @NonNull Object> Either<? extends L, ? extends U> map(final NonNullFunction<? super R, ? extends U> mapping) {
+    public <U extends @NonNull Object> Either<? extends L, ? extends U> map(
+        final NonNullFunction<? super R, ? extends U> mapping
+    ) {
       return genericCast(this);
     }
     
     @Override
-    public <U extends @NonNull Object> Either<? extends U, ? extends R> mapLeft(final NonNullFunction<? super L, ? extends U> mapping) {
+    public <U extends @NonNull Object> Either<? extends U, ? extends R> mapLeft(
+        final NonNullFunction<? super L, ? extends U> mapping
+    ) {
       return new Left<>(mapping.apply(value()));
     }
     
     @Override
-    public <U extends @NonNull Object> Either<? extends L, ? extends U> flatMap(final NonNullFunction<? super R, ? extends Either<? extends L, ? extends U>> mapping) {
+    public <U extends @NonNull Object> Either<? extends L, ? extends U> flatMap(
+        final NonNullFunction<? super R, ? extends Either<? extends L, ? extends U>> mapping
+    ) {
       return genericCast(this);
     }
     
     @Override
-    public <U extends @NonNull Object> Either<? extends U, ? extends R> flatMapLeft(final NonNullFunction<? super L, ? extends Either<? extends U, ? extends R>> mapping) {
+    public <U extends @NonNull Object> Either<? extends U, ? extends R> flatMapLeft(
+        final NonNullFunction<? super L, ? extends Either<? extends U, ? extends R>> mapping
+    ) {
       return mapping.apply(value());
     }
     
@@ -172,13 +246,15 @@ public sealed interface Either<L extends @NonNull Object, R extends @NonNull Obj
     }
   }
   
-  interface k extends Bifunctor.k, Functor2.k {}
+  interface k extends Bifunctor.k, FlatMap2.k, Monad.k {
+  }
 }
 
 final class either_bifunctor implements Bifunctor<Either.k> {
   private static final either_bifunctor instance = new either_bifunctor();
   
-  private either_bifunctor() {}
+  private either_bifunctor() {
+  }
   
   public static either_bifunctor instance() {
     return instance;
@@ -195,24 +271,172 @@ final class either_bifunctor implements Bifunctor<Either.k> {
   }
 }
 
-final class either_functor2 implements Functor2<Either.k> {
+class either_functor2 implements Functor2<Either.k> {
   private static final either_functor2 instance = new either_functor2();
   
-  private either_functor2() {}
+  either_functor2() { }
   
   public static either_functor2 instance() {
     return instance;
   }
   
   @Override
-  public <A extends @NonNull Object, B extends @NonNull Object, T extends @NonNull Object> Either<? extends T, ? extends B> mapA(Kind2<Either.k, A, B> fa, NonNullFunction<? super A, ? extends T> f) {
+  public <A extends @NonNull Object, B extends @NonNull Object, T extends @NonNull Object> Either<? extends T, ? extends B> mapA(
+      Kind2<Either.k, A, B> fa,
+      NonNullFunction<? super A, ? extends T> f
+  ) {
     final Either<A, B> either = fa.fix();
     return either.mapLeft(f);
   }
   
   @Override
-  public <A extends @NonNull Object, B extends @NonNull Object, T extends @NonNull Object> Either<? extends A, ? extends T> mapB(Kind2<Either.k, A, B> fa, NonNullFunction<? super B, ? extends T> f) {
+  public <A extends @NonNull Object, B extends @NonNull Object, T extends @NonNull Object> Either<? extends A, ? extends T> mapB(
+      Kind2<Either.k, A, B> fa,
+      NonNullFunction<? super B, ? extends T> f
+  ) {
     final Either<A, B> either = fa.fix();
     return either.map(f);
   }
 }
+
+class either_functor implements Functor<Either.k> {
+  private static final either_functor instance = new either_functor();
+  
+  either_functor() {}
+  
+  public static either_functor instance() {
+    return instance;
+  }
+  
+  @Override
+  public <A, B> Kind<wildcat.control.Either.k, ? extends B> map(
+      Kind<wildcat.control.Either.k, A> fa,
+      NonNullFunction<? super A, ? extends B> f
+  ) {
+    final Either<?, A> either = fa.fix();
+    return genericCast(either.map(f));
+  }
+}
+
+class either_apply extends either_functor implements Apply<Either.k> {
+  private static final either_apply instance = new either_apply();
+  
+  either_apply() {}
+  
+  public static either_apply instance() {
+    return instance;
+  }
+  
+  @Override
+  public <A, B> Kind<wildcat.control.Either.k, ? extends B> ap(
+      Kind<wildcat.control.Either.k, ? extends A> fa,
+      Kind<wildcat.control.Either.k, ? extends @NonNull NonNullFunction<? super A, ? extends B>> f
+  ) {
+    final Either<?, A> either = genericCast(fa.fix());
+    final Either<?, @NonNull NonNullFunction<? super A, ? extends B>> function = genericCast(f.fix());
+    return either.ap(function);
+  }
+}
+
+class either_apply2 extends either_functor2 implements Apply2<Either.k> {
+  private static final either_apply2 instance = new either_apply2();
+  
+  either_apply2() {}
+  
+  public static either_apply2 instance() {
+    return instance;
+  }
+
+  @Override
+  public <C, A, B> Either<? extends C, ? extends B> apA(
+      Kind2<Either.k, A, B> fa,
+      Kind2<Either.k, NonNullFunction<? super A, ? extends C>, B> f) {
+    final Either<A, B> either = fa.fix();
+    final Either<NonNullFunction<? super A, ? extends C>, B> fixedF = f.fix();
+    return either.apA(fixedF);
+  }
+
+  @Override
+  public <D, A, B> Either<? extends A, ? extends D> abB(
+      Kind2<wildcat.control.Either.k, A, B> fa,
+      Kind2<wildcat.control.Either.k, A, NonNullFunction<? super B, ? extends D>> f) {
+    final Either<A, B> either = fa.fix();
+    final Either<A, NonNullFunction<? super B, ? extends D>> fixedF = f.fix();
+    return either.apB(fixedF);
+  }
+}
+
+class either_applicative extends either_apply implements Applicative<Either.k> {
+  private static final either_applicative instance = new either_applicative();
+  
+  either_applicative() {}
+  
+  public static either_applicative instance() {
+    return instance;
+  }
+  
+  @Override
+  public <T> Kind<wildcat.control.Either.k, ? extends T> pure(T value) {
+    return Either.right(value);
+  }
+}
+
+class either_flatmap2 extends either_apply2 implements FlatMap2<Either.k> {
+  private static final either_flatmap2 instance = new either_flatmap2();
+  
+  either_flatmap2() {}
+  
+  public static either_flatmap2 instance() {
+    return instance;
+  }
+
+  @Override
+  public <C, A, B> Either<? extends C, ? extends B> flatMapA(
+      Kind2<wildcat.control.Either.k, A, B> fa,
+      NonNullFunction<? super A, ? extends @NonNull Kind2<wildcat.control.Either.k, ? extends C, ? extends B>> f) {
+    final Either<A, B> either = fa.fix();
+    final NonNullFunction<? super A, ? extends Either<C, B>> fixedF = t -> {
+      return f.apply(t).fix();
+    };
+    return either.flatMapA(fixedF);
+  }
+
+  @Override
+  public <D, A, B> Either<? extends A, ? extends D> flatMapB(
+      Kind2<wildcat.control.Either.k, A, B> fa,
+      NonNullFunction<? super B, ? extends @NonNull Kind2<wildcat.control.Either.k, ? extends A, ? extends D>> f) {
+    final Either<A, B> either = fa.fix();
+    final NonNullFunction<? super B, ? extends Either<A, D>> fixedF = t -> {
+      return f.apply(t).fix();
+    };
+    return either.flatMapB(fixedF);
+  }
+}
+
+class either_flatmap extends either_apply implements wildcat.typeclasses.core.FlatMap<Either.k> {
+  private static final either_flatmap instance = new either_flatmap();
+  
+  either_flatmap() {}
+  
+  public static either_flatmap instance() {
+    return instance;
+  }
+  
+  @Override
+  public <A, B> Kind<Either.k, ? extends B> flatMap(
+      final Kind<Either.k, A> fa,
+      final NonNullFunction<? super A, ? extends @NonNull Kind<Either.k, ? extends B>> f
+  ) {
+    final Either<?, A> either = fa.fix();
+    final NonNullFunction<? super A, ? extends Either<?, B>> fixedF = t -> {
+      final Kind<Either.k, ? extends B> applied = f.apply(t);
+      return genericCast(applied.fix());
+    };
+    
+    return either.flatMap(fixedF);
+  }
+}
+
+// class either_monad implements Monad<Either.k> {
+
+// }
