@@ -4,7 +4,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import wildcat.fns.nonnull.NonNullFunction;
 import wildcat.hkt.Kind2;
 import wildcat.typeclasses.algebraic.Bifunctor;
-import wildcat.typeclasses.algebraic.Functor2;
+import wildcat.typeclasses.core.Functor2;
 
 /**
  * A tuple of two values.
