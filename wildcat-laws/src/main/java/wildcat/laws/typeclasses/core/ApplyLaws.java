@@ -20,19 +20,19 @@ public interface ApplyLaws<For extends Apply.k, T extends @NonNull Object> exten
   ) {
     // Given
     final Apply<For> instance = instance();
-    final Kind<For, ? extends T> fa = unit(a);
-    final Kind<For, ? extends NonNullFunction<? super T, ? extends @NonNull String>> fab = unit(ab);
-    final Kind<For, ? extends NonNullFunction<? super @NonNull String, ? extends @NonNull Integer>> fbc = unit(bc);
+    final Kind<For, T> fa = unit(a);
+    final Kind<For, NonNullFunction<? super T, ? extends @NonNull String>> fab = unit(ab);
+    final Kind<For, NonNullFunction<? super @NonNull String, ? extends @NonNull Integer>> fbc = unit(bc);
     
     // Intermediate values for left-hand side
-    final Kind<For, ? extends String> u = instance.ap(fa, fab); // ap(fa, fab)
-    final Kind<For, ? extends Integer> lhs = instance.ap(u, fbc); // ap(ap(fa, fab), fbc)
+    final Kind<For, String> u = instance.ap(fa, fab); // ap(fa, fab)
+    final Kind<For, Integer> lhs = instance.ap(u, fbc); // ap(ap(fa, fab), fbc)
     
     // Intermediate value for right-hand side
     final NonNullBiFunction<@NonNull NonNullFunction<? super @NonNull String, ? extends @NonNull Integer>, @NonNull NonNullFunction<? super T, ? extends @NonNull String>, @NonNull NonNullFunction<? super T, ? extends @NonNull Integer>> composed = NonNullFunction::compose;
-    final Kind<For, ? extends NonNullFunction<? super T, ? extends Integer>> v = instance.map(fab, t -> composed.apply(bc, t)); // map(fab,
+    final Kind<For, NonNullFunction<? super T, ? extends Integer>> v = instance.map(fab, t -> composed.apply(bc, t)); // map(fab,
     // composed(bc))
-    final Kind<For, ? extends Integer> rhs = instance.ap(fa, v); // ap(fa, map(fab, composed(bc)))
+    final Kind<For, Integer> rhs = instance.ap(fa, v); // ap(fa, map(fab, composed(bc)))
     
     // Assertion
     verifyEquals(lhs, rhs); // ap(ap(fa, fab), fbc) == ap(fa, map(fab, composed(bc)))

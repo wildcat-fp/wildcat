@@ -16,22 +16,19 @@ public class OptionalFunctorLawsTest implements FunctorLaws<OptionalK.k, @NonNul
   }
   
   @Override
-  public <U extends @NonNull Object> Kind<OptionalK.k, ? extends U> unit(final U a) {
+  public <U extends @NonNull Object> Kind<OptionalK.k, U> unit(final U a) {
     final Optional<U> optional = Optional.of(a);
     return OptionalK.of(optional);
   }
   
   @Override
-  @SuppressWarnings(
-    "unchecked"
-  )
   public <A extends @NonNull Object> void verifyEquals(
-      final Kind<OptionalK.k, ? extends A> a,
-      final Kind<OptionalK.k, ? extends A> b
+      final Kind<OptionalK.k, A> a,
+      final Kind<OptionalK.k, A> b
   ) {
-    final OptionalK<A> aKind = (OptionalK<A>) a.fix();
+    final OptionalK<A> aKind = a.fix();
     
-    final OptionalK<A> bKind = (OptionalK<A>) b.fix();
+    final OptionalK<A> bKind = b.fix();
     
     final Optional<A> aValue = aKind.value();
     final Optional<A> bValue = bKind.value();

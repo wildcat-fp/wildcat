@@ -7,11 +7,11 @@ import wildcat.hkt.Kind;
 public interface Monad<For extends Monad.k> extends FlatMap<For>, Applicative<For> {
   
   @Override
-  default <A extends @NonNull Object, B extends @NonNull Object> Kind<For, ? extends B> map(
+  default <A extends @NonNull Object, B extends @NonNull Object> Kind<For, B> map(
       final Kind<For, A> fa,
       final NonNullFunction<? super A, ? extends B> f
   ) {
-    final NonNullFunction<A, @NonNull Kind<For, ? extends B>> fn = t -> pure(f.apply(t));
+    final NonNullFunction<A, @NonNull Kind<For, B>> fn = t -> pure(f.apply(t));
     return flatMap(fa, fn);
   }
   

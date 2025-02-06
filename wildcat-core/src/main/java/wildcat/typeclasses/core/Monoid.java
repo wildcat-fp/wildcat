@@ -80,7 +80,7 @@ public interface Monoid<T extends @NonNull Object> extends Semigroup<T> {
    *
    * @implSpec The returned monoid will use the provided empty element as its identity element and the provided combine function as its binary operation.
    */
-  static <T extends @NonNull Object> Monoid<? extends T> forT(final T empty, final NonNullBiFunction<? super T, ? super T, ? extends T> combine) {
+  static <T extends @NonNull Object> Monoid<T> forT(final T empty, final NonNullBiFunction<? super T, ? super T, ? extends T> combine) {
     return new Monoid<T>() {
       @Override
       public T identity() {
@@ -114,7 +114,7 @@ public interface Monoid<T extends @NonNull Object> extends Semigroup<T> {
    *
    * @see #forT(Object, NonNullBiFunction) forT
    */
-  static <T extends @NonNull Object> Monoid<? extends T> forT(final NonNullSupplier<? extends T> empty, final NonNullBiFunction<? super T, ? super T, ? extends T> combine) {
+  static <T extends @NonNull Object> Monoid<T> forT(final NonNullSupplier<? extends T> empty, final NonNullBiFunction<? super T, ? super T, ? extends T> combine) {
     return new Monoid<T>() {
       @Override
       public T identity() {

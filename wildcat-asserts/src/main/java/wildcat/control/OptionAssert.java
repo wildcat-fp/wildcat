@@ -2,7 +2,6 @@ package wildcat.control;
 
 import static org.assertj.core.error.ShouldMatch.shouldMatch;
 
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
@@ -10,6 +9,7 @@ import org.assertj.core.api.Condition;
 import org.assertj.core.internal.Conditions;
 import org.assertj.core.presentation.PredicateDescription;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import wildcat.fns.nonnull.NonNullConsumer;
 
 public class OptionAssert<T extends @NonNull Object> extends AbstractAssert<OptionAssert<T>, Option<T>> {
   
@@ -42,21 +42,17 @@ public class OptionAssert<T extends @NonNull Object> extends AbstractAssert<Opti
   public OptionAssert<T> hasValue(final T expected) {
     isNotNull();
     
-    switch (actual) {
-      case Option.Empty() -> failWithMessage("Expected present with value %s but was empty", expected);
-      case Option.Present(var value) -> Assertions.assertThat(value).isEqualTo(expected);
-    }
+    actual.whenEmpty(() -> failWithMessage("Expected present with value %s but was empty", expected))
+          .whenPresent(value -> Assertions.assertThat(value).isEqualTo(expected));
     
     return this;
   }
   
-  public OptionAssert<T> hasValueSatisfying(final Consumer<? super T> specifications) {
+  public OptionAssert<T> hasValueSatisfying(final NonNullConsumer<? super T> specifications) {
     isNotNull();
     
-    switch (actual) {
-      case Option.Empty() -> failWithMessage("Expected present with value satisfying specifications but was empty");
-      case Option.Present(var value) -> specifications.accept(value);
-    }
+    actual.whenEmpty(() -> failWithMessage("Expected present with value satisfying specifications but was empty"))
+          .whenPresent(specifications);
     
     return this;
   }
@@ -64,10 +60,8 @@ public class OptionAssert<T extends @NonNull Object> extends AbstractAssert<Opti
   public OptionAssert<T> hasValueSatisfying(final Condition<? super T> condition) {
     isNotNull();
     
-    switch (actual) {
-      case Option.Empty() -> failWithMessage("Expected present with value satisfying condition but was empty");
-      case Option.Present(var value) -> Conditions.instance().assertSatisfies(info, value, condition);
-    }
+    actual.whenEmpty(() -> failWithMessage("Expected present with value satisfying condition but was empty"))
+          .whenPresent(value -> Conditions.instance().assertSatisfies(info, value, condition));
     
     return this;
   }
@@ -80,17 +74,18 @@ public class OptionAssert<T extends @NonNull Object> extends AbstractAssert<Opti
     return hasValueMatching(predicate, new PredicateDescription(predicateDescription));
   }
   
-  public OptionAssert<T> hasValueMatching(final Predicate<? super T> predicate, final PredicateDescription predicateDiscription) {
+  public OptionAssert<T> hasValueMatching(
+      final Predicate<? super T> predicate,
+      final PredicateDescription predicateDiscription
+  ) {
     isNotNull();
     
-    switch (actual) {
-      case Option.Empty() -> failWithMessage("Expected present with value matching predicate but was empty");
-      case Option.Present(var value) -> {
-        if (!predicate.test(value)) {
-          throwAssertionError(shouldMatch(value, predicate, predicateDiscription));
-        }
-      }
-    }
+    actual.whenEmpty(() -> failWithMessage("Expected present with value matching predicate but was empty"))
+          .whenPresent(value -> {
+            if (!predicate.test(value)) {
+              throwAssertionError(shouldMatch(value, predicate, predicateDiscription));
+            }
+          });
     
     return this;
   }

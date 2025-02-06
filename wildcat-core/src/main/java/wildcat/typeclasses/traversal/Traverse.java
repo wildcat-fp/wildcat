@@ -8,7 +8,7 @@ import wildcat.typeclasses.core.Functor;
 
 public interface Traverse<For extends Traverse.k> extends Functor<For>, Foldable<For> {
   
-  <G extends Applicative.k, A extends @NonNull Object, B extends @NonNull Object> @NonNull Kind<G, ? extends Kind<For, B>> traverse(
+  <G extends Applicative.k, A extends @NonNull Object, B extends @NonNull Object> @NonNull Kind<G, Kind<For, B>> traverse(
       Applicative<G> applicative,
       NonNullFunction<? super A, ? extends Kind<G, B>> f,
       Kind<For, A> traversable

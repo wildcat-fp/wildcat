@@ -73,9 +73,9 @@ public interface Apply<For extends Apply.k> extends Functor<For> {
    * @return A new value of type {@code Kind<For, ? extends B>} representing the result of the function
    *   application within the context {@code For}.
    */
-  <A extends @NonNull Object, B extends @NonNull Object> Kind<For, ? extends B> ap(
-      Kind<For, ? extends A> fa,
-      Kind<For, ? extends @NonNull NonNullFunction<? super A, ? extends B>> f
+  <A extends @NonNull Object, B extends @NonNull Object> Kind<For, B> ap(
+      Kind<For, A> fa,
+      Kind<For, @NonNull NonNullFunction<? super A, ? extends B>> f
   );
   
   /**

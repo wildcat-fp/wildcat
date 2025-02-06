@@ -55,7 +55,7 @@ public record Id<T extends @NonNull Object>(T value) implements Kind<Id.k, T> {
     return genericCast(f.apply(value()));
   }
   
-  public <B extends @NonNull Object> Id<B> ap(final Id<? extends @NonNull NonNullFunction<? super T, ? extends B>> f) {
+  public <B extends @NonNull Object> Id<B> ap(final Id<@NonNull NonNullFunction<? super T, ? extends B>> f) {
     return f.map(fn -> fn.apply(value()));
   }
   
@@ -91,12 +91,12 @@ class id_apply extends id_functor implements Apply<Id.k> {
   }
   
   @Override
-  public final <A extends @NonNull Object, B extends @NonNull Object> Id<? extends B> ap(
-      final Kind<Id.k, ? extends A> fa,
-      final Kind<Id.k, ? extends @NonNull NonNullFunction<? super A, ? extends B>> f
+  public final <A extends @NonNull Object, B extends @NonNull Object> Id<B> ap(
+      final Kind<Id.k, A> fa,
+      final Kind<Id.k, @NonNull NonNullFunction<? super A, ? extends B>> f
   ) {
     final Id<A> id = genericCast(fa.fix());
-    final Id<@NonNull NonNullFunction<? super A, ? extends B>> idF = genericCast(f.fix());
+    final Id<@NonNull NonNullFunction<? super A, ? extends B>> idF = f.fix();
     return id.ap(idF);
   }
 }
@@ -126,15 +126,12 @@ class id_flatmap extends id_apply implements FlatMap<Id.k> {
   }
   
   @Override
-  public final <A extends @NonNull Object, B extends @NonNull Object> Id<? extends B> flatMap(
+  public final <A extends @NonNull Object, B extends @NonNull Object> Id<B> flatMap(
       final Kind<Id.k, A> fa,
-      final NonNullFunction<? super A, ? extends @NonNull Kind<Id.k, ? extends B>> f
+      final NonNullFunction<? super A, ? extends @NonNull Kind<Id.k, B>> f
   ) {
     final Id<A> id = fa.fix();
-    final NonNullFunction<? super A, ? extends Id<? extends B>> fixedF = t -> {
-      final Kind<Id.k, ? extends B> applied = f.apply(t);
-      return genericCast(applied.fix());
-    };
+    final NonNullFunction<? super A, ? extends Id<B>> fixedF = t -> f.apply(t).fix();
     
     return id.flatMap(fixedF);
   }
@@ -151,7 +148,7 @@ class id_monad extends id_flatmap implements Monad<Id.k> {
   }
   
   @Override
-  public <T extends @NonNull Object> Kind<Id.k, ? extends T> pure(T value) {
+  public <T extends @NonNull Object> Kind<Id.k, T> pure(T value) {
     return id_applicative.applicative_instance().pure(value);
   }
 }

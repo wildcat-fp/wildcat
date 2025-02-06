@@ -12,24 +12,20 @@ import wildcat.typeclasses.core.Monad;
 public class TryLawsTest<T extends @NonNull Object> implements MonadLaws<Try.k, T> {
   
   @Override
-  public <A extends @NonNull Object> void verifyEquals(Kind<k, ? extends A> a, Kind<k, ? extends A> b) {
+  public <A extends @NonNull Object> void verifyEquals(Kind<k, A> a, Kind<k, A> b) {
     final Try<A> tryA = genericCast(a.fix());
     final Try<A> tryB = genericCast(b.fix());
     
-    switch (tryA) {
-      case Try.Failure(var exA) -> {
-        switch (tryB) {
-          case Try.Success(var ignored) -> Assertions.fail("Expected Failure Try.");
-          case Try.Failure(var exB) -> Assertions.assertThat(exA).isEqualTo(exB);
-        }
-      }
-      case Try.Success(var valA) -> {
-        switch (tryB) {
-          case Try.Success(var valB) -> Assertions.assertThat(valA).isEqualTo(valB);
-          case Try.Failure(var ignored) -> Assertions.fail("Expected Success Try.");
-        }
-      }
-    }
+    tryA.fold(
+        exA -> tryB.fold(
+            exB -> Assertions.assertThat(exA).isEqualTo(exB),
+            ignored -> Assertions.fail("Expected Failure Try.")
+        ),
+        valA -> tryB.fold(
+            ignored -> Assertions.fail("Expected Success Try."),
+            valB -> Assertions.assertThat(valA).isEqualTo(valB)
+        )
+    );
   }
   
   @Override
@@ -38,7 +34,7 @@ public class TryLawsTest<T extends @NonNull Object> implements MonadLaws<Try.k, 
   }
   
   @Override
-  public <U extends @NonNull Object> Kind<k, ? extends U> unit(U a) {
+  public <U extends @NonNull Object> Kind<k, U> unit(U a) {
     return Try.success(a);
   }
 }

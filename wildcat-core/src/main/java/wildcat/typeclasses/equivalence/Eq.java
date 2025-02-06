@@ -11,7 +11,7 @@ public interface Eq<T extends @NonNull Object> {
     return !eqv(a, b);
   }
   
-  static <T extends @NonNull Object> Eq<? extends T> forT(final NonNullBiFunction<? super T, ? super T, ? extends Boolean> check) {
+  static <T extends @NonNull Object> Eq<T> forT(final NonNullBiFunction<? super T, ? super T, ? extends Boolean> check) {
     return (a, b) -> check.apply(a, b);
   }
 }

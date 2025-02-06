@@ -7,7 +7,7 @@ import wildcat.hkt.Kinded2;
 
 public interface Invariant2<For extends Invariant2.k> extends Kinded2<For> {
   
-  default <A extends @NonNull Object, B extends @NonNull Object, FirstValue extends @NonNull Object> @NonNull Kind2<For, ? extends FirstValue, ? extends B> imap(
+  default <A extends @NonNull Object, B extends @NonNull Object, FirstValue extends @NonNull Object> @NonNull Kind2<For, FirstValue, B> imap(
       final Kind2<For, A, B> fa,
       final NonNullFunction<? super A, ? extends FirstValue> f,
       final NonNullFunction<? super FirstValue, ? extends A> g
@@ -15,13 +15,13 @@ public interface Invariant2<For extends Invariant2.k> extends Kinded2<For> {
     return imapA(fa, f, g);
   }
   
-  <A extends @NonNull Object, B extends @NonNull Object, FirstValue extends @NonNull Object> @NonNull Kind2<For, ? extends FirstValue, ? extends B> imapA(
+  <A extends @NonNull Object, B extends @NonNull Object, FirstValue extends @NonNull Object> @NonNull Kind2<For, FirstValue, B> imapA(
       Kind2<For, A, B> fa,
       NonNullFunction<? super A, ? extends FirstValue> f,
       NonNullFunction<? super FirstValue, ? extends A> g
   );
   
-  <A extends @NonNull Object, B extends @NonNull Object, SecondValue extends @NonNull Object> @NonNull Kind2<For, ? extends A, ? extends SecondValue> imapB(
+  <A extends @NonNull Object, B extends @NonNull Object, SecondValue extends @NonNull Object> @NonNull Kind2<For, A, SecondValue> imapB(
       Kind2<For, A, B> fa,
       NonNullFunction<? super B, ? extends SecondValue> f,
       NonNullFunction<? super SecondValue, ? extends B> g

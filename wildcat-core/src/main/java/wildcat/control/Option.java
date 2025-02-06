@@ -199,76 +199,125 @@ public sealed interface Option<T extends @NonNull Object> extends
   }
   
   @Override
-  default <U extends @NonNull Object> Option<U> map(
+  <U extends @NonNull Object> Option<U> map(
       final NonNullFunction<? super T, ? extends U> mapping
-  ) {
-    parameterIsNotNull(mapping, "Mapping function cannot be null");
-    return switch (this) {
-      case Empty() -> genericCast(this);
-      case Present(var it) -> new Present<>(mapping.apply(it));
-    };
-  }
+  );
   
-  default <U extends @NonNull Object> Option<U> flatMap(
-      final NonNullFunction<? super T, ? extends @NonNull Option<? extends U>> mapping
-  ) {
-    parameterIsNotNull(mapping, "Mapping function cannot be null");
-    return switch (this) {
-      case Empty() -> genericCast(this);
-      case Present(var it) -> genericCast(mapping.apply(it));
-    };
-  }
+  <U extends @NonNull Object> Option<U> flatMap(
+      final NonNullFunction<? super T, ? extends @NonNull Option<U>> mapping
+  );
   
-  default <C extends @NonNull Object> C fold(
+  <C extends @NonNull Object> C fold(
       final NonNullSupplier<? extends C> onEmpty,
       final NonNullFunction<? super T, ? extends C> onPresent
-  ) {
-    parameterIsNotNull(onEmpty, "On empty function cannot be null");
-    parameterIsNotNull(onPresent, "On present function cannot be null");
+  );
+  
+  Option<T> whenPresent(final NonNullConsumer<? super T> action);
+  
+  Option<T> whenEmpty(final Runnable action);
+  
+  <B extends @NonNull Object> Option<B> ap(final Option<@NonNull NonNullFunction<? super T, ? extends B>> f);
+  
+  record Present<T extends @NonNull Object>(T value) implements Option<T> {
     
-    return switch (this) {
-      case Empty() -> onEmpty.get();
-      case Present(var it) -> onPresent.apply(it);
-    };
-  }
-  
-  default Option<T> whenPresent(final NonNullConsumer<? super T> action) {
-    parameterIsNotNull(action, "Action cannot be null");
-    return switch (this) {
-      case Empty() -> this;
-      case Present(var it) -> {
-        action.accept(it);
-        yield this;
-      }
-    };
-  }
-  
-  default Option<T> whenEmpty(final Runnable action) {
-    parameterIsNotNull(action, "Action cannot be null");
+    @Override
+    public <U extends @NonNull Object> Option<U> map(NonNullFunction<? super T, ? extends U> mapping) {
+      parameterIsNotNull(mapping, "Mapping function cannot be null");
+      
+      return new Present<>(mapping.apply(value()));
+    }
     
-    return switch (this) {
-      case Empty() -> {
-        action.run();
-        yield this;
-      }
-      case Present(var __) -> this;
-    };
-  }
-  
-  default <B extends @NonNull Object> Option<B> ap(final Option<? extends @NonNull NonNullFunction<? super T, ? extends B>> f) {
-    parameterIsNotNull(f, "Function cannot be null");
+    @Override
+    public <U extends @NonNull Object> Option<U> flatMap(
+        NonNullFunction<? super T, ? extends @NonNull Option<U>> mapping
+    ) {
+      parameterIsNotNull(mapping, "Mapping function cannot be null");
+      
+      return mapping.apply(value());
+    }
     
-    return switch (this) {
-      case Empty() -> genericCast(this);
-      case Present(var it) -> f.map(fn -> fn.apply(it));
-    };
+    @Override
+    public <C extends @NonNull Object> C fold(NonNullSupplier<? extends C> onEmpty, NonNullFunction<? super T, ? extends C> onPresent) {
+      parameterIsNotNull(onEmpty, "On empty function cannot be null");
+      parameterIsNotNull(onPresent, "On present function cannot be null");
+      
+      return onPresent.apply(value());
+    }
+    
+    @Override
+    public Option<T> whenPresent(NonNullConsumer<? super T> action) {
+      parameterIsNotNull(action, "Action cannot be null");
+      
+      action.accept(value());
+      
+      return this;
+    }
+    
+    @Override
+    public Option<T> whenEmpty(Runnable action) {
+      parameterIsNotNull(action, "Action cannot be null");
+      
+      return this;
+    }
+    
+    @Override
+    public <B extends @NonNull Object> Option<B> ap(Option<@NonNull NonNullFunction<? super T, ? extends B>> f) {
+      parameterIsNotNull(f, "Function Option cannot be null");
+      
+      return f.map(fn -> fn.apply(value()));
+    }
+    
   }
   
-  record Present<T extends @NonNull Object>(T value) implements Option<T> {}
+  record Empty<T extends @NonNull Object>() implements Option<T> {
+    
+    @Override
+    public <U extends @NonNull Object> Option<U> map(NonNullFunction<? super T, ? extends U> mapping) {
+      parameterIsNotNull(mapping, "Mapping function cannot be null");
+      
+      return genericCast(this);
+    }
+    
+    @Override
+    public <U extends @NonNull Object> Option<U> flatMap(NonNullFunction<? super T, ? extends @NonNull Option<U>> mapping) {
+      parameterIsNotNull(mapping, "Mapping function cannot be null");
+      
+      return genericCast(this);
+    }
+    
+    @Override
+    public <C extends @NonNull Object> C fold(NonNullSupplier<? extends C> onEmpty, NonNullFunction<? super T, ? extends C> onPresent) {
+      parameterIsNotNull(onEmpty, "On empty function cannot be null");
+      parameterIsNotNull(onPresent, "On present function cannot be null");
+      
+      return onEmpty.get();
+    }
+    
+    @Override
+    public Option<T> whenPresent(NonNullConsumer<? super T> action) {
+      parameterIsNotNull(action, "Action cannot be null");
+      
+      return this;
+    }
+    
+    @Override
+    public Option<T> whenEmpty(Runnable action) {
+      parameterIsNotNull(action, "Action cannot be null");
+      
+      action.run();
+      
+      return this;
+    }
+    
+    @Override
+    public <B extends @NonNull Object> Option<B> ap(Option<@NonNull NonNullFunction<? super T, ? extends B>> f) {
+      parameterIsNotNull(f, "Function Option cannot be null");
+      return genericCast(this);
+    }
+  }
   
-  record Empty<T extends @NonNull Object>() implements Option<T> {}
-  
-  interface k extends Monad.k, EqK.k {}
+  interface k extends Monad.k, EqK.k {
+  }
 }
 
 final class option_eqk implements EqK<Option.k> {
@@ -294,23 +343,24 @@ final class option_eqk implements EqK<Option.k> {
     final Option<A> optionA = a.fix();
     final Option<A> optionB = b.fix();
     
-    return switch (optionA) {
-      case Option.Empty() -> switch (optionB) {
-        case Option.Empty() -> true;
-        case Option.Present(var __) -> false;
-      };
-      case Option.Present(var valueA) -> switch (optionB) {
-        case Option.Empty() -> false;
-        case Option.Present(var valueB) -> eq.eqv(valueA, valueB);
-      };
-    };
+    return optionA.fold(
+        () -> optionB.fold(
+            () -> true,
+            it -> false
+        ),
+        valueA -> optionB.fold(
+            () -> false,
+            valueB -> eq.eqv(valueA, valueB)
+        )
+    );
   }
 }
 
 class option_functor implements Functor<Option.k> {
   private static final option_functor instance = new option_functor();
   
-  option_functor() {}
+  option_functor() {
+  }
   
   static option_functor functor_instance() {
     return instance;
@@ -329,16 +379,17 @@ class option_functor implements Functor<Option.k> {
 class option_apply extends option_functor implements Apply<Option.k> {
   private static final option_apply instance = new option_apply();
   
-  option_apply() {}
+  option_apply() {
+  }
   
   static option_apply apply_instance() {
     return instance;
   }
   
   @Override
-  public final <A extends @NonNull Object, B extends @NonNull Object> Option<? extends B> ap(
-      final Kind<Option.k, ? extends A> fa,
-      final Kind<Option.k, ? extends @NonNull NonNullFunction<? super A, ? extends B>> f
+  public final <A extends @NonNull Object, B extends @NonNull Object> Option<B> ap(
+      final Kind<Option.k, A> fa,
+      final Kind<Option.k, @NonNull NonNullFunction<? super A, ? extends B>> f
   ) {
     final Option<A> option = genericCast(fa.fix());
     final Option<@NonNull NonNullFunction<? super A, ? extends B>> optionF = genericCast(f.fix());
@@ -349,7 +400,8 @@ class option_apply extends option_functor implements Apply<Option.k> {
 class option_applicative extends option_apply implements Applicative<Option.k> {
   private static final option_applicative instance = new option_applicative();
   
-  option_applicative() {}
+  option_applicative() {
+  }
   
   static option_applicative applicative_instance() {
     return instance;
@@ -364,22 +416,21 @@ class option_applicative extends option_apply implements Applicative<Option.k> {
 class option_flatmap extends option_apply implements FlatMap<Option.k> {
   private static final option_flatmap instance = new option_flatmap();
   
-  option_flatmap() {}
+  option_flatmap() {
+  }
   
   static option_flatmap flatmap_instance() {
     return instance;
   }
   
   @Override
-  public <A extends @NonNull Object, B extends @NonNull Object> Option<? extends B> flatMap(
+  public <A extends @NonNull Object, B extends @NonNull Object> Option<B> flatMap(
       final Kind<Option.k, A> fa,
-      final NonNullFunction<? super A, ? extends @NonNull Kind<Option.k, ? extends B>> f
+      final NonNullFunction<? super A, ? extends @NonNull Kind<Option.k, B>> f
   ) {
     final Option<A> option = fa.fix();
-    final NonNullFunction<? super A, ? extends Option<? extends B>> fixedF = t -> {
-      final Kind<Option.k, ? extends B> applied = f.apply(t);
-      return genericCast(applied.fix());
-    };
+    final NonNullFunction<? super A, ? extends Option<B>> fixedF = t -> f.apply(t).fix();
+    
     return option.flatMap(fixedF);
   }
 }
@@ -387,14 +438,15 @@ class option_flatmap extends option_apply implements FlatMap<Option.k> {
 class option_monad extends option_flatmap implements Monad<Option.k> {
   private static final option_monad instance = new option_monad();
   
-  option_monad() {}
+  option_monad() {
+  }
   
   static option_monad monad_instance() {
     return instance;
   }
   
   @Override
-  public <T extends @NonNull Object> Kind<Option.k, ? extends T> pure(T value) {
+  public <T extends @NonNull Object> Kind<Option.k, T> pure(T value) {
     return option_applicative.applicative_instance().pure(value);
   }
 }

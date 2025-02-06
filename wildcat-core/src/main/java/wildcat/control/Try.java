@@ -1,5 +1,6 @@
 package wildcat.control;
 
+import static wildcat.utils.Assert.parameterIsNotNull;
 import static wildcat.utils.Types.genericCast;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -78,70 +79,153 @@ public sealed interface Try<T extends @NonNull Object>
     }
   }
   
-  default <U extends @NonNull Object> Try<U> map(
+  <U extends @NonNull Object> Try<U> map(
       final NonNullFunction<? super T, ? extends U> mapping
-  ) {
-    return switch (this) {
-      case Success<T> success -> {
-        final U mapped = mapping.apply(success.value());
-        yield new Success<>(mapped);
-      }
-      case Failure<T> failure -> genericCast(this);
-    };
-  }
+  );
   
-  default <U extends @NonNull Object> Try<? extends U> flatMap(
-      final @NonNull NonNullFunction<? super T, ? extends @NonNull Try<? extends U>> mapping
-  ) {
-    return switch (this) {
-      case Success<T> success -> {
-        final Try<? extends U> mapped = mapping.apply(success.value());
-        yield genericCast(mapped);
-      }
-      case Failure<T> failure -> genericCast(this);
-    };
-  }
+  // default <U extends @NonNull Object> Try<U> map(
+  // final NonNullFunction<? super T, ? extends U> mapping
+  // ) {
+  // return switch (this) {
+  // case Success<T> success -> {
+  // final U mapped = mapping.apply(success.value());
+  // yield new Success<>(mapped);
+  // }
+  // case Failure<T> failure -> genericCast(this);
+  // };
+  // }
   
-  default <C extends @NonNull Object> C fold(
+  <U extends @NonNull Object> Try<U> flatMap(
+      
+      final @NonNull NonNullFunction<? super T, ? extends @NonNull Try<U>> mapping
+  
+  );
+  
+  // default <U extends @NonNull Object> Try<U> flatMap(
+  
+  // final @NonNull NonNullFunction<? super T, ? extends @NonNull Try<? extends
+  // U>> mapping
+  // ) {
+  // return switch (this) {
+  // case Success<T> success -> {
+  // final Try<U> mapped = mapping.apply(success.value());
+  
+  // yield genericCast(mapped);
+  // }
+  // case Failure<T> failure -> genericCast(this);
+  // };
+  // }
+  
+  <C extends @NonNull Object> C fold(
       final NonNullFunction<? super @NonNull Exception, ? extends C> whenFailed,
       final NonNullFunction<? super T, ? extends C> whenSucceeded
-  ) {
-    return switch (this) {
-      case Success<T> success -> whenSucceeded.apply(success.value());
-      case Failure<T> failure -> whenFailed.apply(failure.exception());
-    };
-  }
+  );
   
-  default @This Try<T> whenSuccessful(final @NonNull NonNullConsumer<? super T> action) {
-    return switch (this) {
-      case Success<T> success -> {
-        action.accept(success.value());
-        yield this;
-      }
-      case Failure<T> failure -> this;
-    };
-  }
+  // default <C extends @NonNull Object> C fold(
+  // final NonNullFunction<? super @NonNull Exception, ? extends C> whenFailed,
+  // final NonNullFunction<? super T, ? extends C> whenSucceeded
+  // ) {
+  // return switch (this) {
+  // case Success<T> success -> whenSucceeded.apply(success.value());
+  // case Failure<T> failure -> whenFailed.apply(failure.exception());
+  // };
+  // }
   
-  default @This Try<T> whenFailed(final @NonNull NonNullConsumer<? super @NonNull Exception> action) {
-    return switch (this) {
-      case Success<T> success -> this;
-      case Failure<T> failure -> {
-        action.accept(failure.exception());
-        yield this;
-      }
-    };
-  }
+  @This Try<T> whenSuccessful(final @NonNull NonNullConsumer<? super T> action);
   
-  default <B extends @NonNull Object> Try<? extends B> ap(
+  // default @This Try<T> whenSuccessful(final @NonNull NonNullConsumer<? super T>
+  // action) {
+  // return switch (this) {
+  // case Success<T> success -> {
+  // action.accept(success.value());
+  // yield this;
+  // }
+  // case Failure<T> failure -> this;
+  // };
+  // }
+  
+  @This Try<T> whenFailed(final @NonNull NonNullConsumer<? super @NonNull Exception> action);
+  
+  // default @This Try<T> whenFailed(final @NonNull NonNullConsumer<? super
+  // @NonNull Exception> action) {
+  // return switch (this) {
+  // case Success<T> success -> this;
+  // case Failure<T> failure -> {
+  // action.accept(failure.exception());
+  // yield this;
+  // }
+  // };
+  // }
+  
+  <B extends @NonNull Object> Try<B> ap(
+      
       final @NonNull Try<@NonNull NonNullFunction<? super T, ? extends B>> f
-  ) {
-    return switch (this) {
-      case Success<T> success -> f.map(fn -> fn.apply(success.value()));
-      case Failure<T> failure -> genericCast(this);
-    };
-  }
+  );
+  
+  // default <B extends @NonNull Object> Try<B> ap(
+  
+  // final @NonNull Try<@NonNull NonNullFunction<? super T, ? extends B>> f
+  // ) {
+  // return switch (this) {
+  // case Success<T> success -> f.map(fn -> fn.apply(success.value()));
+  // case Failure<T> failure -> genericCast(this);
+  // };
+  // }
   
   record Success<T extends @NonNull Object>(T value) implements Try<T> {
+    
+    @Override
+    public <U extends @NonNull Object> Try<U> map(NonNullFunction<? super T, ? extends U> mapping) {
+      parameterIsNotNull(mapping, "Mapping cannot be null");
+      
+      return Try.success(mapping.apply(value()));
+    }
+    
+    @Override
+    public <U extends @NonNull Object> Try<U> flatMap(
+        
+        @NonNull NonNullFunction<? super T, ? extends @NonNull Try<U>> mapping
+        
+    ) {
+      parameterIsNotNull(mapping, "Mapping cannot be null");
+      
+      return mapping.apply(value());
+    }
+    
+    @Override
+    public <C extends @NonNull Object> C fold(
+        NonNullFunction<? super @NonNull Exception, ? extends C> whenFailed,
+        NonNullFunction<? super T, ? extends C> whenSucceeded
+    ) {
+      parameterIsNotNull(whenFailed, "When Failed cannot be null");
+      parameterIsNotNull(whenSucceeded, "When Succeeded cannot be null");
+      
+      return whenSucceeded.apply(value());
+    }
+    
+    @Override
+    public @This Try<T> whenSuccessful(@NonNull NonNullConsumer<? super T> action) {
+      parameterIsNotNull(action, "Action cannot be null");
+      
+      action.accept(value());
+      
+      return this;
+    }
+    
+    @Override
+    public @This Try<T> whenFailed(@NonNull NonNullConsumer<? super @NonNull Exception> action) {
+      parameterIsNotNull(action, "Action cannot be null");
+      
+      return this;
+    }
+    
+    @Override
+    public <B extends @NonNull Object> Try<B> ap(@NonNull Try<@NonNull NonNullFunction<? super T, ? extends B>> f) {
+      
+      parameterIsNotNull(f, "Function Try cannot be null");
+      
+      return f.map(fn -> fn.apply(value()));
+    }
   }
   
   @SuppressFBWarnings(
@@ -152,6 +236,59 @@ public sealed interface Try<T extends @NonNull Object>
       justification = "Exception mutability is not a concern in this context"
   )
   record Failure<T extends @NonNull Object>(Exception exception) implements Try<T> {
+    
+    @Override
+    public <U extends @NonNull Object> Try<U> map(NonNullFunction<? super T, ? extends U> mapping) {
+      parameterIsNotNull(mapping, "Mapping cannot be null");
+      
+      return genericCast(this);
+    }
+    
+    @Override
+    public <U extends @NonNull Object> Try<U> flatMap(
+        
+        @NonNull NonNullFunction<? super T, ? extends @NonNull Try<U>> mapping
+        
+    ) {
+      parameterIsNotNull(mapping, "Mapping cannot be null");
+      
+      return genericCast(this);
+    }
+    
+    @Override
+    public <C extends @NonNull Object> C fold(
+        NonNullFunction<? super @NonNull Exception, ? extends C> whenFailed,
+        NonNullFunction<? super T, ? extends C> whenSucceeded
+    ) {
+      parameterIsNotNull(whenFailed, "When Failed cannot be null");
+      parameterIsNotNull(whenSucceeded, "When Succeeded cannot be null");
+      
+      return whenFailed.apply(exception());
+    }
+    
+    @Override
+    public @This Try<T> whenSuccessful(@NonNull NonNullConsumer<? super T> action) {
+      parameterIsNotNull(action, "Action cannot be null");
+      
+      return this;
+    }
+    
+    @Override
+    public @This Try<T> whenFailed(@NonNull NonNullConsumer<? super @NonNull Exception> action) {
+      parameterIsNotNull(action, "Action cannot be null");
+      
+      action.accept(exception());
+      
+      return this;
+    }
+    
+    @Override
+    public <B extends @NonNull Object> Try<B> ap(@NonNull Try<@NonNull NonNullFunction<? super T, ? extends B>> f) {
+      
+      parameterIsNotNull(f, "Function Try cannot be null");
+      
+      return genericCast(this);
+    }
   }
   
   interface k extends Monad.k, EqK.k {
@@ -189,12 +326,13 @@ class try_apply extends try_functor implements Apply<Try.k> {
   }
   
   @Override
-  public final <A extends @NonNull Object, B extends @NonNull Object> Try<? extends B> ap(
-      final Kind<Try.k, ? extends A> fa,
-      final Kind<Try.k, ? extends @NonNull NonNullFunction<? super A, ? extends B>> f
+  public final <A extends @NonNull Object, B extends @NonNull Object> Try<B> ap(
+      
+      final Kind<Try.k, A> fa,
+      final Kind<Try.k, @NonNull NonNullFunction<? super A, ? extends B>> f
   ) {
-    final Try<A> t = genericCast(fa.fix());
-    final Try<@NonNull NonNullFunction<? super A, ? extends B>> tF = genericCast(f.fix());
+    final Try<A> t = fa.fix();
+    final Try<@NonNull NonNullFunction<? super A, ? extends B>> tF = f.fix();
     return t.ap(tF);
   }
 }
@@ -226,14 +364,15 @@ class try_flatmap extends try_apply implements FlatMap<Try.k> {
   }
   
   @Override
-  public <A extends @NonNull Object, B extends @NonNull Object> Try<? extends B> flatMap(
+  public <A extends @NonNull Object, B extends @NonNull Object> Try<B> flatMap(
+      
       final Kind<Try.k, A> fa,
-      final NonNullFunction<? super A, ? extends @NonNull Kind<Try.k, ? extends B>> f
+      final NonNullFunction<? super A, ? extends @NonNull Kind<Try.k, B>> f
   ) {
     final Try<A> tryA = fa.fix();
-    final NonNullFunction<? super A, ? extends Try<? extends B>> fixedF = t -> {
-      final Kind<Try.k, ? extends B> applied = f.apply(t);
-      return genericCast(applied.fix());
+    final NonNullFunction<? super A, ? extends Try<B>> fixedF = t -> {
+      
+      return f.apply(t).fix();
     };
     return tryA.flatMap(fixedF);
   }
@@ -250,7 +389,7 @@ class try_monad extends try_flatmap implements Monad<Try.k> {
   }
   
   @Override
-  public <T extends @NonNull Object> Try<? extends T> pure(T value) {
+  public <T extends @NonNull Object> Try<T> pure(T value) {
     return Try.success(value);
   }
 }
@@ -297,15 +436,15 @@ final class try_eqk implements EqK<Try.k> {
     final Try<A> tryA = a.fix();
     final Try<A> tryB = b.fix();
     
-    return switch (tryA) {
-      case Try.Success<A> successA -> switch (tryB) {
-        case Try.Success<A> successB -> eq.eqv(successA.value(), successB.value());
-        case Try.Failure<A> ignored -> false;
-      };
-      case Try.Failure<A> failureA -> switch (tryB) {
-        case Try.Success<A> ignored -> false;
-        case Try.Failure<A> failureB -> exceptionEq.eqv(failureA.exception(), failureB.exception());
-      };
-    };
+    return tryA.fold(
+        exA -> tryB.fold(
+            exB -> exceptionEq.eqv(exA, exB),
+            ignored -> false
+        ),
+        valueA -> tryB.fold(
+            ignored -> false,
+            valueB -> eq.eqv(valueA, valueB)
+        )
+    );
   }
 }

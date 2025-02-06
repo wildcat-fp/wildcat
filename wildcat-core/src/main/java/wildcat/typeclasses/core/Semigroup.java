@@ -62,7 +62,7 @@ public interface Semigroup<T extends @NonNull Object> {
    * 
    * @return a new {@code Semigroup} instance
    */
-  static <T extends @NonNull Object> Semigroup<? extends T> forT(
+  static <T extends @NonNull Object> Semigroup<T> forT(
       final NonNullBiFunction<? super T, ? super T, ? extends T> combine
   ) {
     return (a, b) -> combine.apply(a, b);

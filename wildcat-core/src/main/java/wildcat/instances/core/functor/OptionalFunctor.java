@@ -16,7 +16,7 @@ public final class OptionalFunctor implements Functor<OptionalK.k> {
     return instance;
   }
   
-  public <A extends @NonNull Object, B extends @NonNull Object> Optional<? extends B> map(
+  public <A extends @NonNull Object, B extends @NonNull Object> Optional<B> map(
       final Optional<A> fa,
       final NonNullFunction<? super A, ? extends B> f
   ) {
@@ -24,7 +24,7 @@ public final class OptionalFunctor implements Functor<OptionalK.k> {
   }
   
   @Override
-  public <A extends @NonNull Object, B extends @NonNull Object> Kind<OptionalK.k, ? extends B> map(
+  public <A extends @NonNull Object, B extends @NonNull Object> Kind<OptionalK.k, B> map(
       final Kind<OptionalK.k, A> fa,
       final NonNullFunction<? super A, ? extends B> f
   ) {

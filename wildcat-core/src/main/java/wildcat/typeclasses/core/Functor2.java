@@ -6,12 +6,12 @@ import wildcat.hkt.Kind2;
 
 public interface Functor2<For extends Functor2.k> {
   
-  <A extends @NonNull Object, B extends @NonNull Object, T extends @NonNull Object> Kind2<For, ? extends T, ? extends B> mapA(
+  <A extends @NonNull Object, B extends @NonNull Object, T extends @NonNull Object> Kind2<For, T, B> mapA(
       Kind2<For, A, B> fa,
       NonNullFunction<? super A, ? extends T> f
   );
   
-  <A extends @NonNull Object, B extends @NonNull Object, T extends @NonNull Object> Kind2<For, ? extends A, ? extends T> mapB(
+  <A extends @NonNull Object, B extends @NonNull Object, T extends @NonNull Object> Kind2<For, A, T> mapB(
       Kind2<For, A, B> fa,
       NonNullFunction<? super B, ? extends T> f
   );

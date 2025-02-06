@@ -45,7 +45,7 @@ public interface Functor<For extends Functor.k> {
    * 
    * @return A new structure with the transformed value.
    */
-  <A extends @NonNull Object, B extends @NonNull Object> Kind<For, ? extends B> map(
+  <A extends @NonNull Object, B extends @NonNull Object> Kind<For, B> map(
       Kind<For, A> fa,
       NonNullFunction<? super A, ? extends B> f
   );
