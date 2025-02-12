@@ -16,7 +16,7 @@ The main goals of Wildcat are:
 
 ## Modules
 
-This repository is divided into two main modules:
+This repository is divided into three main modules:
 
 ### wildcat-core
 
@@ -45,6 +45,11 @@ instances and other functional abstractions. It includes:
 - **Property-Based Testing:** Leverages property-based testing libraries to generate random test cases 
   and verify that type class instances adhere to their laws. This helps to ensure that the library's 
   core abstractions are robust and reliable.
+
+
+### wildcat-assert
+
+This module provides AssertJ assertions to help with unit testing.
 
 
 ## Getting Started
