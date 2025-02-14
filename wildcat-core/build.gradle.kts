@@ -17,3 +17,14 @@ testing {
 pitest {
   excludedGroups = setOf("laws")
 }
+
+publishing {
+  publications {
+      named<MavenPublication>("mavenJava") {
+          pom {
+              name.set("Wildcat Core")
+              description.set("Core functional programming utilities for Java.")
+          }
+      }
+  }
+}
