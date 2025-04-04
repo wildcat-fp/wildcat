@@ -54,7 +54,7 @@ public interface Functor<For extends Functor.k> {
    * A marker interface used to constrain the type parameter 'For' of the Functor interface.
    * 
    * This ensures that 'For' is a valid higher-kinded type (Kind.k)
-   * and can be used with the `Kind<For, A>` type.
+   * and can be used with the {@code Kind<For, A>} type.
    */
   interface k extends Kind.k {}
 }

@@ -9,9 +9,30 @@ import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Apply;
 
 public interface ApplyLaws<For extends Apply.k, T extends @NonNull Object> extends FunctorLaws<For, T> {
+  /**
+   * Provides an instance of the {@link Apply} typeclass for the given type constructor {@code For}.
+   * This method should be implemented by concrete implementations of {@link ApplyLaws}.
+   *
+   * @return An instance of {@link Apply<For>}.
+   */
   @Override
   Apply<For> instance();
   
+  /**
+   * Tests the associative composition law for the {@link Apply} typeclass.
+   * The law states that for any applicative functor, applying a function to the result of another
+   * application is equivalent to composing the functions and applying the result.
+   *
+   * <p>Formally, this law can be represented as:
+   * {@code ap(ap(fa, fab), fbc) == ap(fa, map(fab, composed(bc)))}
+   *
+   * @param a
+   *   An arbitrary value of type {@code T}.
+   * @param ab
+   *   A function from {@code T} to {@code String}.
+   * @param bc
+   *   A function from {@code String} to {@code Integer}.
+   */
   @Property
   default void applyAssociativeComposition(
       final @ForAll T a,

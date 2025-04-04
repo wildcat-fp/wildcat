@@ -11,16 +11,45 @@ import org.assertj.core.presentation.PredicateDescription;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import wildcat.fns.nonnull.NonNullConsumer;
 
+/**
+ * Provides assertions for {@link Option} instances.
+ *
+ * @param <T>
+ *   the type of the value in the {@link Option}
+ */
+
 public class OptionAssert<T extends @NonNull Object> extends AbstractAssert<OptionAssert<T>, Option<T>> {
   
+  /**
+   * Creates a new {@link OptionAssert} for the given {@link Option}.
+   *
+   * @param actual
+   *   the {@link Option} to assert on
+   */
   protected OptionAssert(final Option<T> actual) {
     super(actual, OptionAssert.class);
   }
   
+  /**
+   * Static factory method for creating {@link OptionAssert} instances.
+   *
+   * @param actual
+   *   the {@link Option} to assert on
+   * @param <T>
+   *   the type of the value in the {@link Option}
+   * 
+   * @return a new {@link OptionAssert} instance
+   */
   public static <T extends @NonNull Object> OptionAssert<T> assertThat(final Option<T> actual) {
     return new OptionAssert<>(actual);
   }
   
+  /**
+   * Asserts that the {@link Option} is empty.
+   *
+   * @throws AssertionError
+   *   if the {@link Option} is null or present.
+   */
   public void isEmpty() {
     isNotNull();
     
@@ -29,6 +58,14 @@ public class OptionAssert<T extends @NonNull Object> extends AbstractAssert<Opti
     }
   }
   
+  /**
+   * Asserts that the {@link Option} is present.
+   *
+   * @return this assertion object.
+   * 
+   * @throws AssertionError
+   *   if the {@link Option} is null or empty.
+   */
   public OptionAssert<T> isPresent() {
     isNotNull();
     
@@ -39,6 +76,18 @@ public class OptionAssert<T extends @NonNull Object> extends AbstractAssert<Opti
     return this;
   }
   
+  /**
+   * Asserts that the {@link Option} has a present value equal to the given expected value.
+   *
+   * @param expected
+   *   the expected value
+   * 
+   * @return this assertion object.
+   * 
+   * @throws AssertionError
+   *   if the {@link Option} is null, empty, or has a value not equal to the
+   *   expected value.
+   */
   public OptionAssert<T> hasValue(final T expected) {
     isNotNull();
     
@@ -48,6 +97,19 @@ public class OptionAssert<T extends @NonNull Object> extends AbstractAssert<Opti
     return this;
   }
   
+  /**
+   * Asserts that the {@link Option} has a present value that satisfies the given
+   * specifications.
+   *
+   * @param specifications
+   *   the specifications to check
+   * 
+   * @return this assertion object.
+   * 
+   * @throws AssertionError
+   *   if the {@link Option} is null, empty, or its value does not satisfy the
+   *   specifications.
+   */
   public OptionAssert<T> hasValueSatisfying(final NonNullConsumer<? super T> specifications) {
     isNotNull();
     
@@ -57,6 +119,18 @@ public class OptionAssert<T extends @NonNull Object> extends AbstractAssert<Opti
     return this;
   }
   
+  /**
+   * Asserts that the {@link Option} has a present value that satisfies the given condition.
+   *
+   * @param condition
+   *   the condition to check
+   * 
+   * @return this assertion object.
+   * 
+   * @throws AssertionError
+   *   if the {@link Option} is null, empty, or its value does not satisfy the
+   *   condition.
+   */
   public OptionAssert<T> hasValueSatisfying(final Condition<? super T> condition) {
     isNotNull();
     
@@ -66,14 +140,56 @@ public class OptionAssert<T extends @NonNull Object> extends AbstractAssert<Opti
     return this;
   }
   
+  /**
+   * Asserts that the {@link Option} has a present value that matches the given predicate.
+   *
+   * @param predicate
+   *   the predicate to check
+   * 
+   * @return this assertion object.
+   * 
+   * @throws AssertionError
+   *   if the {@link Option} is null, empty, or its value does not match the
+   *   predicate.
+   */
   public OptionAssert<T> hasValueMatching(final Predicate<? super T> predicate) {
     return hasValueMatching(predicate, PredicateDescription.GIVEN);
   }
   
+  /**
+   * Asserts that the {@link Option} has a present value that matches the given predicate with the
+   * given description.
+   *
+   * @param predicate
+   *   the predicate to check
+   * @param predicateDescription
+   *   the description of the predicate
+   * 
+   * @return this assertion object.
+   * 
+   * @throws AssertionError
+   *   if the {@link Option} is null, empty, or its value does not match the
+   *   predicate.
+   */
   public OptionAssert<T> hasValueMatching(final Predicate<? super T> predicate, final String predicateDescription) {
     return hasValueMatching(predicate, new PredicateDescription(predicateDescription));
   }
   
+  /**
+   * Asserts that the {@link Option} has a present value that matches the given predicate with the
+   * given description.
+   *
+   * @param predicate
+   *   the predicate to check
+   * @param predicateDiscription
+   *   the description of the predicate
+   * 
+   * @return this assertion object.
+   * 
+   * @throws AssertionError
+   *   if the {@link Option} is null, empty, or its value does not match the
+   *   predicate.
+   */
   public OptionAssert<T> hasValueMatching(
       final Predicate<? super T> predicate,
       final PredicateDescription predicateDiscription

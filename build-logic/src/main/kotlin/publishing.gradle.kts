@@ -7,6 +7,14 @@ publishing {
     publications {
         register<MavenPublication>("mavenJava") {
             from(components["java"])
+
+            artifact(tasks.getByName("sourcesJar"))
+
+            artifact(tasks.getByName("javadocJar")) {
+                classifier = "javadoc"
+            }
+
+
             // Add extra metadata to the POM
             pom {
                 url.set("https://github.com/wildcat-fp/wildcat")
@@ -39,10 +47,13 @@ publishing {
         }
     }
     repositories {
-      // This is where you define where you publish your artifact
-      maven {
-          name = "MyRepo"
-          url = uri("file://${project.rootDir}/localrepo")
-      }
-   }
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/wildcat-fp/wildcat")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
 }

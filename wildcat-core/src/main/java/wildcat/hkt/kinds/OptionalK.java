@@ -5,6 +5,12 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Functor;
 
+/**
+ * Represents a higher-kinded type for {@link Optional}.
+ *
+ * @param <T>
+ *   The type parameter of the {@link Optional}.
+ */
 public class OptionalK<T extends @NonNull Object> implements Kind<OptionalK.k, T> {
   
   private final Optional<T> value;
@@ -13,10 +19,25 @@ public class OptionalK<T extends @NonNull Object> implements Kind<OptionalK.k, T
     this.value = value;
   }
   
+  /**
+   * Creates an {@link OptionalK} instance from an {@link Optional}.
+   *
+   * @param <T>
+   *   The type parameter of the {@link Optional}.
+   * @param value
+   *   The {@link Optional} value.
+   * 
+   * @return An {@link OptionalK} instance.
+   */
   public static <T extends @NonNull Object> OptionalK<T> of(final Optional<T> value) {
     return new OptionalK<>(value);
   }
   
+  /**
+   * Retrieves the underlying {@link Optional} value.
+   *
+   * @return The {@link Optional} value.
+   */
   public Optional<T> value() {
     return value;
   }
@@ -30,6 +51,7 @@ public class OptionalK<T extends @NonNull Object> implements Kind<OptionalK.k, T
     }
   }
   
+  /** The {@link Kind} marker for {@link OptionalK}. */
   public interface k extends Functor.k {
   }
 }

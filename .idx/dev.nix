@@ -40,6 +40,7 @@
       "vscjava.vscode-java-pack"
       "vscjava.vscode-java-test"
       "vscjava.vscode-maven"
+      "redhat.vscode-yaml"
     ];
 
     # Enable previews

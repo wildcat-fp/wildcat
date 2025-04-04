@@ -29,7 +29,6 @@ import wildcat.typeclasses.oop.core.Mappable;
  * missing or invalid. It provides
  * a safe and convenient way to handle these situations without resorting to
  * null checks or exceptions.
- * </p>
  *
  * <p>
  * The Option type has two possible states:
@@ -38,9 +37,8 @@ import wildcat.typeclasses.oop.core.Mappable;
  * <li><b>Present</b>: The Option contains a value.
  * <li><b>Empty</b>: The Option does not contain a value.
  * </ul>
- * </p>
  * 
- * <p>
+ * 
  * While Option is normally described in terms of null vs. non-null values, that
  * is somewhat limiting.
  * A better way of interpreting it is to consider it like an {@code if} block
@@ -59,15 +57,15 @@ import wildcat.typeclasses.oop.core.Mappable;
  * Option.of(value).whenPresent(doSomething());
  * </pre>
  * 
- * <p>
+ * 
  * The Option type is a powerful tool for working with values that may be
  * missing or invalid. It provides
  * a safe and convenient way to handle these situations without resorting to
  * null checks or exceptions.
- * </p>
  * 
- * <p>
- * The Option type provides a number of methods for working with its values.
+ * 
+ * 
+ * The Option type provides a number of methods for working with values.
  * These methods include:
  *
  * <ul>
@@ -80,7 +78,6 @@ import wildcat.typeclasses.oop.core.Mappable;
  * <li><b>whenPresent</b>: Executes an action if the value is present.
  * <li><b>whenEmpty</b>: Executes an action if the value is empty.
  * </ul>
- * </p>
  * 
  * @param <T>
  *   The type of the value that may be present.
@@ -89,68 +86,143 @@ import wildcat.typeclasses.oop.core.Mappable;
  *   "https://en.wikipedia.org/wiki/Monad_(functional_programming)">Monad</a>
  * @see <a href="https://en.wikipedia.org/wiki/Option_type">Option Type</a>
  */
-public sealed interface Option<T extends @NonNull Object> extends
-                              Kind<Option.k, T>,
-                              Mappable<T>
+public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k, T>, Mappable<T>
     permits Option.Present, Option.Empty {
-  
+  /**
+   * Returns a {@link Functor} instance for {@link Option}.
+   *
+   * @return A {@link Functor} instance for {@link Option}.
+   */
   static @NonNull Functor<Option.k> functor() {
     return option_functor.functor_instance();
   }
   
+  /**
+   * Returns an {@link Apply} instance for {@link Option}.
+   *
+   * @return An {@link Apply} instance for {@link Option}.
+   */
   static @NonNull Apply<Option.k> apply() {
     return option_apply.apply_instance();
   }
   
+  /**
+   * Returns an {@link Applicative} instance for {@link Option}.
+   *
+   * @return An {@link Applicative} instance for {@link Option}.
+   */
   static @NonNull Applicative<Option.k> applicative() {
     return option_applicative.applicative_instance();
   }
   
+  /**
+   * Returns a {@link FlatMap} instance for {@link Option}.
+   *
+   * @return A {@link FlatMap} instance for {@link Option}.
+   */
   static @NonNull FlatMap<Option.k> flatmap() {
     return option_flatmap.flatmap_instance();
   }
   
+  /**
+   * Returns a {@link Monad} instance for {@link Option}.
+   *
+   * @return A {@link Monad} instance for {@link Option}.
+   */
   static @NonNull Monad<Option.k> monad() {
     return option_monad.monad_instance();
   }
   
-  static @NonNull EqK<Option.k> eqk() {
+  /**
+   * Returns an {@link EqK} instance for {@link Option}.
+   *
+   * @return An {@link EqK} instance for {@link Option}.
+   */
+  static @NonNull EqK<Option.k> eqK() {
     return option_eqk.eqk_instance();
   }
   
+  /**
+   * Creates an {@link Option} with the given value if the condition is true,
+   * otherwise returns an empty {@link Option}.
+   *
+   * @param <T>
+   *   The type of the value.
+   * @param condition
+   *   The condition to check.
+   * @param value
+   *   The value to wrap in an {@link Option} if the condition is
+   *   true.
+   * 
+   * @return An {@link Option} containing the value if the condition is true,
+   *   otherwise an empty {@link Option}.
+   */
   static <T extends @NonNull Object> Option<T> when(
       final boolean condition,
       final T value
   ) {
     parameterIsNotNull(value, "Value cannot be null");
-    if (condition) {
-      return present(value);
-    } else {
-      return empty();
-    }
+    return condition ? present(value) : empty();
   }
   
+  /**
+   * Creates an {@link Option} with a value obtained from the supplier if the
+   * condition is true, otherwise returns an empty {@link Option}.
+   *
+   * @param <T>
+   *   The type of the value.
+   * @param condition
+   *   The condition to check.
+   * @param supplier
+   *   The supplier that provides the value to wrap in an
+   *   {@link Option} if the
+   *   condition is true.
+   * 
+   * @return An {@link Option} containing the supplied value if the condition is
+   *   true, otherwise an empty {@link Option}.
+   */
   static <T extends @NonNull Object> Option<T> when(
       final boolean condition,
       final NonNullSupplier<? extends T> supplier
   ) {
     parameterIsNotNull(supplier, "Supplier cannot be null");
-    
-    if (condition) {
-      return present(supplier);
-    } else {
-      return empty();
-    }
+    return condition ? present(supplier) : empty();
   }
   
+  /**
+   * Creates an {@link Option} from a nullable value. If the value is null, it
+   * returns an empty {@link Option}, otherwise it returns an {@link Option}
+   * containing the value.
+   *
+   * @param <T>
+   *   The type of the value.
+   * @param value
+   *   The nullable value to wrap in an {@link Option}.
+   * 
+   * @return An {@link Option} containing the value if it is not null, otherwise
+   *   an empty {@link Option}.
+   */
   static <T extends @NonNull Object> Option<T> of(final @Nullable T value) {
-    if (value == null) {
-      return empty();
-    }
-    
-    return present(value);
+    return value == null ? empty() : present(value);
   }
   
+  /**
+   * Creates an {@link Option} from a supplier. The supplier's result is checked
+   * for nullity. If the result is null, an empty {@link Option} is returned;
+   * otherwise, an {@link Option} containing the result is returned.
+   *
+   * @param <T>
+   *   The type of the value.
+   * @param supplier
+   *   The supplier that provides the value to wrap in an
+   *   {@link Option}.
+   * 
+   * @return An {@link Option} containing the supplied value if it is not null,
+   *   otherwise an empty {@link Option}.
+   * 
+   * @throws NullPointerException
+   *   If the supplier itself is null.
+   */
   static <T extends @NonNull Object> Option<T> of(final NonNullSupplier<? extends T> supplier) {
     parameterIsNotNull(supplier, "Supplier cannot be null");
     final T value = supplier.get();
@@ -159,37 +231,103 @@ public sealed interface Option<T extends @NonNull Object> extends
     return of(value);
   }
   
+  /**
+   * Creates an {@link Option} from an {@link Optional}. If the {@link Optional}
+   * is present, its value is wrapped in an {@link Option}; otherwise, an empty
+   * {@link Option} is returned.
+   *
+   * @param <T>
+   *   The type of the value.
+   * @param optional
+   *   The {@link Optional} from which to create the {@link Option}.
+   * 
+   * @return An {@link Option} containing the value of the {@link Optional} if it
+   *   is present, otherwise an empty {@link Option}.
+   * 
+   * @throws NullPointerException
+   *   If the {@link Optional} itself is null.
+   */
   static <T extends @NonNull Object> Option<T> ofOptional(final Optional<T> optional) {
     parameterIsNotNull(optional, "Optional cannot be null");
-    if (optional.isPresent()) {
-      return present(optional.get());
-    } else {
-      return empty();
-    }
+    return optional.isPresent() ? present(optional.get()) : empty();
   }
   
+  /**
+   * Lifts a function into an {@link Option} context, applying it to a nullable
+   * value. If the value is null, an empty {@link Option} is returned; otherwise,
+   * the function is applied to the value, and the result is wrapped in an
+   * {@link Option}.
+   *
+   * @param <T>
+   *   The input type of the function.
+   * @param <U>
+   *   The output type of the function.
+   * @param function
+   *   The function to lift and apply.
+   * @param value
+   *   The nullable value to which the function should be applied.
+   * 
+   * @return An {@link Option} containing the result of applying the function to
+   *   the value if the value is not null, otherwise an empty
+   *   {@link Option}.
+   * 
+   * @throws NullPointerException
+   *   If the function itself is null.
+   */
   static <T extends @NonNull Object, U extends @NonNull Object> Option<U> lift(
       final NonNullFunction<? super T, ? extends U> function,
       final @Nullable T value
   ) {
     parameterIsNotNull(function, "Function cannot be null");
     
-    if (value == null) {
-      return empty();
-    } else {
-      return of(() -> function.apply(value));
-    }
+    return value == null ? empty() : of(() -> function.apply(value));
   }
   
+  /**
+   * Returns an empty {@link Option}.
+   *
+   * @param <T>
+   *   The type of the value that would have been present.
+   * 
+   * @return An empty {@link Option}.
+   */
   static <T extends @NonNull Object> Option<T> empty() {
     return new Empty<>();
   }
   
+  /**
+   * Returns an {@link Option} containing the given non-null value.
+   *
+   * @param <T>
+   *   The type of the value.
+   * @param value
+   *   The non-null value to wrap in an {@link Option}.
+   * 
+   * @return An {@link Option} containing the value.
+   * 
+   * @throws NullPointerException
+   *   If the value is null.
+   */
   static <T extends @NonNull Object> Option<T> present(final T value) {
     parameterIsNotNull(value, "Value cannot be null");
     return new Present<>(value);
   }
   
+  /**
+   * Returns an {@link Option} containing a value obtained from the supplier. The
+   * supplier must return a non-null value.
+   *
+   * @param <T>
+   *   The type of the value.
+   * @param supplier
+   *   The supplier that provides the non-null value to wrap in an
+   *   {@link Option}.
+   * 
+   * @return An {@link Option} containing the supplied value.
+   * 
+   * @throws NullPointerException
+   *   If the supplier or the value supplied is null.
+   */
   static <T extends @NonNull Object> Option<T> present(final NonNullSupplier<? extends @NonNull T> supplier) {
     parameterIsNotNull(supplier, "Supplier cannot be null");
     final T value = supplier.get();
@@ -198,26 +336,131 @@ public sealed interface Option<T extends @NonNull Object> extends
     return present(value);
   }
   
+  /**
+   * Applies a mapping function to the value contained in this {@link Option} if
+   * it is present, returning a new {@link Option} containing the result. If this
+   * {@link Option} is empty, the mapping function is not applied, and an empty
+   * {@link Option} is returned.
+   *
+   * @param <U>
+   *   The type of the value in the resulting {@link Option}.
+   * @param mapping
+   *   The function to apply to the value if it is present.
+   * 
+   * @return An {@link Option} containing the result of applying the mapping
+   *   function, or an empty {@link Option} if this {@link Option} is empty.
+   * 
+   * @throws NullPointerException
+   */
   @Override
   <U extends @NonNull Object> Option<U> map(
       final NonNullFunction<? super T, ? extends U> mapping
   );
   
+  /**
+   * Applies a mapping function that returns an {@link Option} to the value
+   * contained in this {@link Option} if it is present, effectively flattening
+   * the result. If this {@link Option} is empty, the mapping function is not
+   * applied, and an empty {@link Option} is returned.
+   *
+   * @param <U>
+   *   The type of the value in the resulting {@link Option}.
+   * @param mapping
+   *   The function to apply to the value if it is present, which
+   *   should return an {@link Option}.
+   * 
+   * @return The result of applying the mapping function, or an empty
+   *   {@link Option} if this {@link Option} is empty.
+   * 
+   * @throws NullPointerException
+   *   If the mapping function is null.
+   */
   <U extends @NonNull Object> Option<U> flatMap(
       final NonNullFunction<? super T, ? extends @NonNull Option<U>> mapping
   );
   
+  /**
+   * Applies one of two functions based on whether this {@link Option} is empty or
+   * present. If this {@link Option} is empty, the {@code onEmpty} function is
+   * called, and its result is returned. If this {@link Option} is present, the
+   * {@code onPresent} function is called with the contained value, and its
+   * result is returned.
+   * 
+   * @param <C>
+   *   The result type of both functions.
+   * @param onEmpty
+   *   The function to call if this {@link Option} is empty.
+   * @param onPresent
+   *   The function to call with the contained value if this
+   *   {@link Option} is present.
+   * 
+   * @return The result of calling either {@code onEmpty} or {@code onPresent}.
+   * 
+   * @throws NullPointerException
+   *   If either function is null.
+   */
   <C extends @NonNull Object> C fold(
       final NonNullSupplier<? extends C> onEmpty,
       final NonNullFunction<? super T, ? extends C> onPresent
   );
   
+  /**
+   * Executes an action if this {@link Option} is present. If this
+   * {@link Option} contains a value, the specified action is performed with the
+   * value. If this {@link Option} is empty, no action is taken.
+   *
+   * @param action
+   *   The action to perform with the value if it is present.
+   * 
+   * @return This {@link Option}, unchanged.
+   * 
+   * @throws NullPointerException
+   *   If the action is null.
+   */
   Option<T> whenPresent(final NonNullConsumer<? super T> action);
   
+  /**
+   * Executes an action if this {@link Option} is empty. If this {@link Option}
+   * does not contain a value, the specified action is performed. If this
+   * {@link Option} is present, no action is taken.
+   *
+   * @param action
+   *   The action to perform if this {@link Option} is empty.
+   * 
+   * @return This {@link Option}, unchanged.
+   * 
+   * @throws NullPointerException
+   *   If the action is null.
+   */
   Option<T> whenEmpty(final Runnable action);
   
+  /**
+   * Applies a function wrapped in another {@link Option} to the value contained
+   * in this {@link Option} if both are present. If either this {@link Option} or
+   * the function {@link Option} is empty, an empty {@link Option} is returned.
+   *
+   * @param <B>
+   *   The result type of the function.
+   * @param f
+   *   An {@link Option} containing a function to apply to the value in
+   *   this {@link Option}.
+   * 
+   * @return An {@link Option} containing the result of applying the function if
+   *   both {@link Option}s are present, otherwise an empty {@link Option}.
+   * 
+   * @throws NullPointerException
+   *   If the function {@link Option} is null.
+   */
   <B extends @NonNull Object> Option<B> ap(final Option<@NonNull NonNullFunction<? super T, ? extends B>> f);
   
+  /**
+   * Represents a present {@link Option}, containing a non-null value.
+   *
+   * @param value
+   *   The non-null value contained in this {@link Option}.
+   * @param <T>
+   *   The type of the value.
+   */
   record Present<T extends @NonNull Object>(T value) implements Option<T> {
     
     @Override
@@ -237,7 +480,10 @@ public sealed interface Option<T extends @NonNull Object> extends
     }
     
     @Override
-    public <C extends @NonNull Object> C fold(NonNullSupplier<? extends C> onEmpty, NonNullFunction<? super T, ? extends C> onPresent) {
+    public <C extends @NonNull Object> C fold(
+        NonNullSupplier<? extends C> onEmpty,
+        NonNullFunction<? super T, ? extends C> onPresent
+    ) {
       parameterIsNotNull(onEmpty, "On empty function cannot be null");
       parameterIsNotNull(onPresent, "On present function cannot be null");
       
@@ -266,9 +512,14 @@ public sealed interface Option<T extends @NonNull Object> extends
       
       return f.map(fn -> fn.apply(value()));
     }
-    
   }
   
+  /**
+   * Represents an empty {@link Option}, containing no value.
+   *
+   * @param <T>
+   *   The type of the value that would have been present.
+   */
   record Empty<T extends @NonNull Object>() implements Option<T> {
     
     @Override
@@ -279,14 +530,19 @@ public sealed interface Option<T extends @NonNull Object> extends
     }
     
     @Override
-    public <U extends @NonNull Object> Option<U> flatMap(NonNullFunction<? super T, ? extends @NonNull Option<U>> mapping) {
+    public <U extends @NonNull Object> Option<U> flatMap(
+        NonNullFunction<? super T, ? extends @NonNull Option<U>> mapping
+    ) {
       parameterIsNotNull(mapping, "Mapping function cannot be null");
       
       return genericCast(this);
     }
     
     @Override
-    public <C extends @NonNull Object> C fold(NonNullSupplier<? extends C> onEmpty, NonNullFunction<? super T, ? extends C> onPresent) {
+    public <C extends @NonNull Object> C fold(
+        NonNullSupplier<? extends C> onEmpty,
+        NonNullFunction<? super T, ? extends C> onPresent
+    ) {
       parameterIsNotNull(onEmpty, "On empty function cannot be null");
       parameterIsNotNull(onPresent, "On present function cannot be null");
       
@@ -316,6 +572,9 @@ public sealed interface Option<T extends @NonNull Object> extends
     }
   }
   
+  /**
+   * Marker interface for {@link Option}.
+   */
   interface k extends Monad.k, EqK.k {
   }
 }

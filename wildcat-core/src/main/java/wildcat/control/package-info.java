@@ -1,3 +1,8 @@
+
+/**
+ * This package contains classes for controlling program flow and handling optional
+ * values or errors.
+ */
 @SuppressFBWarnings(
     value = {
               "SING_SINGLETON_HAS_NONPRIVATE_CONSTRUCTOR"

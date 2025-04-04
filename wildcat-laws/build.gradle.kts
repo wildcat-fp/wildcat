@@ -11,16 +11,16 @@ dependencies {
     api(project(":wildcat-core"))
 }
 
-publishing {
-  publications {
-      named<MavenPublication>("mavenJava") {
-          pom {
-              name.set("Wildcat Laws")
-              description.set("Laws for validating Wildcat type class instances.")
-          }
-      }
-  }
-}
+// publishing {
+//   publications {
+//       named<MavenPublication>("mavenJava") {
+//           pom {
+//               name.set("Wildcat Laws")
+//               description.set("Laws for validating Wildcat type class instances.")
+//           }
+//       }
+//   }
+// }
 
 tasks.withType<Test> {
     testLogging {

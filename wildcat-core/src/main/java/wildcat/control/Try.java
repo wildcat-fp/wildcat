@@ -24,6 +24,9 @@ public sealed interface Try<T extends @NonNull Object>
                            extends
                            Kind<Try.k, T>
     permits Try.Success, Try.Failure {
+  /*
+   * Static methods and definitions for the Try interface.
+   */
   
   static Functor<Try.k> functor() {
     return try_functor.instance();
@@ -61,6 +64,17 @@ public sealed interface Try<T extends @NonNull Object>
     return new Failure<>(exception);
   }
   
+  /**
+   * Creates a {@link Try} instance from a {@link NonNullSupplier}.
+   * If the supplier successfully provides a value, a {@link Success} is created.
+   * If the supplier throws an exception, a {@link Failure} is created with the
+   * exception.
+   *
+   * @param supplier
+   *   The non-null supplier to get the value from.
+   * 
+   * @return A {@link Try} instance representing the result of the supplier.
+   */
   static <T extends @NonNull Object> Try<T> of(final NonNullSupplier<T> supplier) {
     try {
       return new Success<>(supplier.get());
@@ -69,6 +83,20 @@ public sealed interface Try<T extends @NonNull Object>
     }
   }
   
+  /**
+   * Creates a {@link Try} instance from a {@link CheckedSupplier} which may throw
+   * a checked exception.
+   * If the supplier successfully provides a value, a {@link Success} is created.
+   * If the supplier throws an exception, a {@link Failure} is created with the
+   * exception.
+   *
+   * @param supplier
+   *   The checked supplier to get the value from.
+   * @param <T>
+   *   The type of the value.
+   * @param <E>
+   *   The type of the exception that might be thrown.
+   */
   static <T extends @NonNull Object, E extends @NonNull Exception> Try<T> of(
       final CheckedSupplier<T, E> supplier
   ) {
@@ -79,99 +107,77 @@ public sealed interface Try<T extends @NonNull Object>
     }
   }
   
+  /**
+   * Transforms the value inside the {@link Try} if it is a {@link Success}.
+   * If the {@link Try} is a {@link Failure}, the failure is propagated unchanged.
+   *
+   * @param mapping
+   *   A non-null function to transform the value.
+   * @param <U>
+   *   The type of the new value after transformation.
+   * 
+   * @return A new {@link Try} instance with the transformed value if it was a
+   *   success,
+   *   or the same failure if it was a failure.
+   */
   <U extends @NonNull Object> Try<U> map(
       final NonNullFunction<? super T, ? extends U> mapping
   );
   
-  // default <U extends @NonNull Object> Try<U> map(
-  // final NonNullFunction<? super T, ? extends U> mapping
-  // ) {
-  // return switch (this) {
-  // case Success<T> success -> {
-  // final U mapped = mapping.apply(success.value());
-  // yield new Success<>(mapped);
-  // }
-  // case Failure<T> failure -> genericCast(this);
-  // };
-  // }
-  
   <U extends @NonNull Object> Try<U> flatMap(
       
       final @NonNull NonNullFunction<? super T, ? extends @NonNull Try<U>> mapping
-  
   );
   
-  // default <U extends @NonNull Object> Try<U> flatMap(
-  
-  // final @NonNull NonNullFunction<? super T, ? extends @NonNull Try<? extends
-  // U>> mapping
-  // ) {
-  // return switch (this) {
-  // case Success<T> success -> {
-  // final Try<U> mapped = mapping.apply(success.value());
-  
-  // yield genericCast(mapped);
-  // }
-  // case Failure<T> failure -> genericCast(this);
-  // };
-  // }
-  
+  /**
+   * Folds the {@link Try} into a value of type {@code C} by applying different
+   * functions
+   * based on whether it is a {@link Success} or a {@link Failure}.
+   */
   <C extends @NonNull Object> C fold(
       final NonNullFunction<? super @NonNull Exception, ? extends C> whenFailed,
       final NonNullFunction<? super T, ? extends C> whenSucceeded
   );
   
-  // default <C extends @NonNull Object> C fold(
-  // final NonNullFunction<? super @NonNull Exception, ? extends C> whenFailed,
-  // final NonNullFunction<? super T, ? extends C> whenSucceeded
-  // ) {
-  // return switch (this) {
-  // case Success<T> success -> whenSucceeded.apply(success.value());
-  // case Failure<T> failure -> whenFailed.apply(failure.exception());
-  // };
-  // }
-  
   @This Try<T> whenSuccessful(final @NonNull NonNullConsumer<? super T> action);
   
-  // default @This Try<T> whenSuccessful(final @NonNull NonNullConsumer<? super T>
-  // action) {
-  // return switch (this) {
-  // case Success<T> success -> {
-  // action.accept(success.value());
-  // yield this;
-  // }
-  // case Failure<T> failure -> this;
-  // };
-  // }
-  
+  /**
+   * Performs an action if the {@link Try} is a {@link Success}, otherwise does
+   * nothing.
+   *
+   * @param action
+   *   A non-null consumer to perform the action with the value.
+   * 
+   * @return The same {@link Try} instance.
+   */
   @This Try<T> whenFailed(final @NonNull NonNullConsumer<? super @NonNull Exception> action);
   
-  // default @This Try<T> whenFailed(final @NonNull NonNullConsumer<? super
-  // @NonNull Exception> action) {
-  // return switch (this) {
-  // case Success<T> success -> this;
-  // case Failure<T> failure -> {
-  // action.accept(failure.exception());
-  // yield this;
-  // }
-  // };
-  // }
-  
+  /**
+   * Applies a function wrapped in a {@link Try} to the value of this {@link Try}
+   * if both are {@link Success}.
+   * If either this {@link Try} or the function {@link Try} is a {@link Failure},
+   * the failure is propagated.
+   *
+   * @param f
+   *   A {@link Try} containing a non-null function that takes a value of
+   *   type {@code T}
+   *   and returns a value of type {@code B}.
+   * @param <B>
+   *   The type of the value returned by the function.
+   * 
+   * @return A {@link Try} containing the result of applying the function to the
+   *   value,
+   *   or the failure if either this {@link Try} or the function {@link Try}
+   *   is a failure.
+   */
   <B extends @NonNull Object> Try<B> ap(
-      
       final @NonNull Try<@NonNull NonNullFunction<? super T, ? extends B>> f
   );
   
-  // default <B extends @NonNull Object> Try<B> ap(
-  
-  // final @NonNull Try<@NonNull NonNullFunction<? super T, ? extends B>> f
-  // ) {
-  // return switch (this) {
-  // case Success<T> success -> f.map(fn -> fn.apply(success.value()));
-  // case Failure<T> failure -> genericCast(this);
-  // };
-  // }
-  
+  /**
+   * Represents a successful outcome of a computation, containing a non-null
+   * value.
+   */
   record Success<T extends @NonNull Object>(T value) implements Try<T> {
     
     @Override
@@ -228,6 +234,9 @@ public sealed interface Try<T extends @NonNull Object>
     }
   }
   
+  /**
+   * Represents a failed outcome of a computation, containing an exception.
+   */
   @SuppressFBWarnings(
       value = {
                 "EI_EXPOSE_REP",
@@ -291,6 +300,9 @@ public sealed interface Try<T extends @NonNull Object>
     }
   }
   
+  /**
+   * Witness type for HKT.
+   */
   interface k extends Monad.k, EqK.k {
   }
 }
@@ -429,22 +441,16 @@ final class try_eqk implements EqK<Try.k> {
   
   @Override
   public <A extends @NonNull Object> boolean eqK(
-      final Kind<Try.k, A> a,
-      final Kind<Try.k, A> b,
-      final Eq<A> eq
+      Kind<Try.k, A> a,
+      Kind<Try.k, A> b,
+      Eq<A> eq
   ) {
-    final Try<A> tryA = a.fix();
-    final Try<A> tryB = b.fix();
+    Try<A> tryA = a.fix();
+    Try<A> tryB = b.fix();
     
     return tryA.fold(
-        exA -> tryB.fold(
-            exB -> exceptionEq.eqv(exA, exB),
-            ignored -> false
-        ),
-        valueA -> tryB.fold(
-            ignored -> false,
-            valueB -> eq.eqv(valueA, valueB)
-        )
+        exA -> tryB.fold(exB -> exceptionEq.eqv(exA, exB), ignored -> false),
+        valueA -> tryB.fold(ignored -> false, valueB -> eq.eqv(valueA, valueB))
     );
   }
 }

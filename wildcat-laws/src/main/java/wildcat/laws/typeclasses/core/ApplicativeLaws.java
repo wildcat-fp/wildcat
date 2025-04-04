@@ -7,12 +7,31 @@ import wildcat.fns.nonnull.NonNullFunction;
 import wildcat.hkt.Kind;
 import wildcat.typeclasses.core.Applicative;
 
-
+/**
+ * Defines laws for the {@link Applicative} typeclass.
+ *
+ * @param <For>
+ *   The witness type of the {@link Applicative} instance.
+ * @param <T>
+ *   The type of the values inside the {@link Applicative}.
+ */
 public interface ApplicativeLaws<For extends Applicative.k, T extends @NonNull Object> extends ApplyLaws<For, T> {
   
+  /**
+   * Retrieves an instance of the {@link Applicative} typeclass.
+   *
+   * @return An instance of {@link Applicative}.
+   */
   @Override
   Applicative<For> instance();
   
+  /**
+   * Verifies the 'pure identity' law for {@link Applicative}. This law states that
+   * `pure(identity).ap(fa) == fa`, where `fa` is an applicative value.
+   *
+   * @param a
+   *   A value of type {@code T}.
+   */
   @Property
   default void applicativePureIdentity(final @ForAll T a) {
     final Applicative<For> instance = instance();
@@ -23,6 +42,15 @@ public interface ApplicativeLaws<For extends Applicative.k, T extends @NonNull O
     verifyEquals(fa, applied);
   }
   
+  /**
+   * Verifies the 'homomorphism' law for {@link Applicative}. This law states that
+   * `pure(f).ap(pure(a)) == pure(f(a))`, where `f` is a function and `a` is a value.
+   *
+   * @param a
+   *   A value of type {@code T}.
+   * @param f
+   *   A non-null function from {@code T} to {@code String}.
+   */
   @Property
   default void applicativeHomomorphism(final @ForAll T a, final @ForAll NonNullFunction<? super T, ? extends @NonNull String> f) {
     final Applicative<For> instance = instance();
@@ -32,6 +60,17 @@ public interface ApplicativeLaws<For extends Applicative.k, T extends @NonNull O
     verifyEquals(lhs, rhs);
   }
   
+  /**
+   * Verifies the 'interchange' law for {@link Applicative}. This law states that
+   * `fa.ap(pure(f)) == pure(apply(a)).ap(ff)`, where `fa` is an applicative value,
+   * `f` is a function, `a` is a value, and `ff` is an applicative value containing
+   * a function that applies `a` to a function.
+   *
+   * @param a
+   *   A value of type {@code T}.
+   * @param f
+   *   A non-null function from {@code T} to {@code String}.
+   */
   @Property
   default void applicativeInterchange(final @ForAll T a, final @ForAll NonNullFunction<? super T, ? extends @NonNull String> f) {
     final Applicative<For> instance = instance();
@@ -39,7 +78,8 @@ public interface ApplicativeLaws<For extends Applicative.k, T extends @NonNull O
     final Kind<For, T> fa = instance.pure(a);
     final Kind<For, String> lhs = instance.ap(fa, instance.pure(f));
     
-    final Kind<For, NonNullFunction<? super @NonNull NonNullFunction<? super T, ? extends String>, ? extends String>> v = instance.pure(ff -> ff.apply(a));
+    final Kind<For, NonNullFunction<? super @NonNull NonNullFunction<? super T, ? extends String>, ? extends String>> v =
+        instance.pure(ff -> ff.apply(a));
     
     final Kind<For, String> rhs = instance.ap(instance.pure(f), v);
     verifyEquals(lhs, rhs);

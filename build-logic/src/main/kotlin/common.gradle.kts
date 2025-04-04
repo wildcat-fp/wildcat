@@ -29,6 +29,13 @@ dependencies {
 tasks.withType<Javadoc> {
     // Specify the encoding to avoid warnings
     options.encoding = "UTF-8"
+
+    (options as StandardJavadocDocletOptions).tags(
+        "implSpec:a:Implementation Specification",
+        "implNote:a:Implementation Note",
+        "apiSpec:a:API Specification",
+        "apiNote:a:API Note"
+    )
 }
 
 // Configure source jar generation
