@@ -1,14 +1,30 @@
 package io.github.wildcat.fp.laws.typeclasses.core;
 
-import net.jqwik.api.ForAll;
-import net.jqwik.api.Property;
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
 import io.github.wildcat.fp.hkt.Kind;
 import io.github.wildcat.fp.laws.LawsTest;
 import io.github.wildcat.fp.typeclasses.core.Functor;
+import net.jqwik.api.ForAll;
+import net.jqwik.api.Property;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
+/**
+ * Defines laws for instances of the {@link Functor} type class.
+ *
+ * <p>A Functor is a type constructor which supports a mapping operation called {@code map}.
+ * The instances of a Functor should obey two laws:
+ * <ul>
+ * <li><b>Identity:</b> Mapping with the identity function should not change the Functor value.</li>
+ * <li><b>Composition:</b> Mapping with {@code f} after {@code g} should be the same as mapping with the composition of {@code f} and {@code g}.</li>
+ * </ul>
+ *
+ * @param <For>
+ *   The higher-kinded type representing the Functor.
+ * @param <T>
+ *   The type of the value inside the Functor.
+ * 
+ * @see Functor
+ */
 @LawsTest
 public interface FunctorLaws<For extends Functor.k, T extends @NonNull Object> {
   /**

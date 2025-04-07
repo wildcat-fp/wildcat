@@ -1,6 +1,5 @@
 package io.github.wildcat.fp.instances.core.semigroup;
 
-import io.github.wildcat.fp.instances.core.semigroup.Semigroups;
 import io.github.wildcat.fp.laws.typeclasses.core.SemigroupLaws;
 import io.github.wildcat.fp.typeclasses.core.Semigroup;
 

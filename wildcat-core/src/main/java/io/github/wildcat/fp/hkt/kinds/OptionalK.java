@@ -1,10 +1,9 @@
 package io.github.wildcat.fp.hkt.kinds;
 
-import java.util.Optional;
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.hkt.Kind;
 import io.github.wildcat.fp.typeclasses.core.Functor;
+import java.util.Optional;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Represents a higher-kinded type for {@link Optional}.

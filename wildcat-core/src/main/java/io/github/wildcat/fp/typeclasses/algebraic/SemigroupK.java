@@ -1,9 +1,34 @@
 package io.github.wildcat.fp.typeclasses.algebraic;
 
+import io.github.wildcat.fp.hkt.Kind;
+import io.github.wildcat.fp.typeclasses.core.Monoid;
+import io.github.wildcat.fp.typeclasses.core.Semigroup;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import io.github.wildcat.fp.hkt.Kind;
-
+/**
+ * Represents a type class for combining (reducing) values of a data type into a single value of
+ * the same type. It provides a {@code combineK} operation that takes two values of type {@code
+ * Kind<For, T>} and returns a new value of the same type representing their combination.
+ *
+ * <p>Instances of {@code SemigroupK} should ensure that the {@code combineK} operation is
+ * associative, meaning that for any values {@code a}, {@code b}, and {@code c} of type {@code
+ * Kind<For, T>}, the following holds:
+ *
+ * <pre>{@code combineK(a, combineK(b, c)) == combineK(combineK(a, b), c) }</pre>
+ *
+ * <p>This interface is particularly useful for types that can be "appended" or "concatenated" in
+ * some meaningful way, such as lists, streams, or other collection-like types. It allows for
+ * the creation of more complex structures by combining simpler ones, and is a key component in
+ * functional programming for building composable and reusable operations.
+ *
+ * @param <For>
+ *   the higher-kinded type witness, allowing {@code SemigroupK} to work with a variety of data
+ *   types
+ *
+ * @see Semigroup
+ * @see Monoid
+ * @see MonoidK
+ */
 public interface SemigroupK<For extends SemigroupK.k> {
   
   /**

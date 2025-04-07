@@ -1,10 +1,9 @@
 package io.github.wildcat.fp.typeclasses.algebraic;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
 import io.github.wildcat.fp.hkt.Kind;
 import io.github.wildcat.fp.hkt.Kinded;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Represents a type class for types that support invariant mapping.

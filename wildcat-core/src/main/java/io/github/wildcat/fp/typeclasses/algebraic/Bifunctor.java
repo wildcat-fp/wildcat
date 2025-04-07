@@ -1,9 +1,8 @@
 package io.github.wildcat.fp.typeclasses.algebraic;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
 import io.github.wildcat.fp.hkt.Kind2;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Represents a type constructor that takes two type arguments and supports mapping over both of

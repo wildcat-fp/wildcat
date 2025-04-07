@@ -2,8 +2,6 @@ package io.github.wildcat.fp.control;
 
 import static io.github.wildcat.fp.utils.Types.genericCast;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullConsumer;
 import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
 import io.github.wildcat.fp.hkt.Kind;
@@ -14,6 +12,7 @@ import io.github.wildcat.fp.typeclasses.core.Functor;
 import io.github.wildcat.fp.typeclasses.core.Functor2;
 import io.github.wildcat.fp.typeclasses.core.Monad;
 import io.github.wildcat.fp.typeclasses.oop.core.Mappable;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Represents a value that can be one of two types: {@code Left} or

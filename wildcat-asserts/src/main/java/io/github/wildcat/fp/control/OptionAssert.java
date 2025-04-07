@@ -2,6 +2,7 @@ package io.github.wildcat.fp.control;
 
 import static org.assertj.core.error.ShouldMatch.shouldMatch;
 
+import io.github.wildcat.fp.fns.nonnull.NonNullConsumer;
 import java.util.function.Predicate;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
@@ -9,9 +10,6 @@ import org.assertj.core.api.Condition;
 import org.assertj.core.internal.Conditions;
 import org.assertj.core.presentation.PredicateDescription;
 import org.checkerframework.checker.nullness.qual.NonNull;
-
-import io.github.wildcat.fp.control.Option;
-import io.github.wildcat.fp.fns.nonnull.NonNullConsumer;
 
 /**
  * Provides assertions for {@link Option} instances.

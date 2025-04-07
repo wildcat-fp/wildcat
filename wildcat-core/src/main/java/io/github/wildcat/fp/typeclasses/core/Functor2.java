@@ -1,9 +1,8 @@
 package io.github.wildcat.fp.typeclasses.core;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
 import io.github.wildcat.fp.hkt.Kind2;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Represents a functor for types with two type parameters.

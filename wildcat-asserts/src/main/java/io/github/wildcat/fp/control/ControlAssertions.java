@@ -2,8 +2,6 @@ package io.github.wildcat.fp.control;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import io.github.wildcat.fp.control.Option;
-
 /**
  * Provides assertion methods for Wildcat control types.
  */

@@ -2,15 +2,13 @@ package io.github.wildcat.fp.control;
 
 import static io.github.wildcat.fp.control.ControlAssertions.assertThat;
 
+import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
+import io.github.wildcat.fp.fns.nonnull.NonNullSupplier;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import io.github.wildcat.fp.control.Option;
-import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
-import io.github.wildcat.fp.fns.nonnull.NonNullSupplier;
 
 public class OptionTests {
   

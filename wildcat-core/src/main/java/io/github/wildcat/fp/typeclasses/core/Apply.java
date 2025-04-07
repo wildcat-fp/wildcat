@@ -1,9 +1,8 @@
 package io.github.wildcat.fp.typeclasses.core;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
 import io.github.wildcat.fp.hkt.Kind;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * The {@code Apply} type class extends the {@code Functor} type class and provides a way to apply a function

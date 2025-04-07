@@ -1,11 +1,10 @@
 package io.github.wildcat.fp.control;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
 import io.github.wildcat.fp.hkt.Kind2;
 import io.github.wildcat.fp.typeclasses.algebraic.Bifunctor;
 import io.github.wildcat.fp.typeclasses.core.Functor2;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A tuple of two values.

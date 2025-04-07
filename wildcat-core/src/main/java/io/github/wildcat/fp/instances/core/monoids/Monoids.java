@@ -1,10 +1,9 @@
 package io.github.wildcat.fp.instances.core.monoids;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullBiFunction;
 import io.github.wildcat.fp.typeclasses.core.Monoid;
 import io.github.wildcat.fp.typeclasses.core.Semigroup;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Provides instances of {@link Monoid} for common types and ways to create custom monoids.

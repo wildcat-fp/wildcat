@@ -2,8 +2,6 @@ package io.github.wildcat.fp.control;
 
 import static io.github.wildcat.fp.utils.Types.genericCast;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
 import io.github.wildcat.fp.hkt.Kind;
 import io.github.wildcat.fp.typeclasses.core.Applicative;
@@ -13,6 +11,7 @@ import io.github.wildcat.fp.typeclasses.core.Functor;
 import io.github.wildcat.fp.typeclasses.core.Monad;
 import io.github.wildcat.fp.typeclasses.equivalence.Eq;
 import io.github.wildcat.fp.typeclasses.equivalence.EqK;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * The `Id` type represents the identity functor, monad, and other typeclasses.

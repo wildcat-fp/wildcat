@@ -1,8 +1,7 @@
 package io.github.wildcat.fp.typeclasses.oop.core;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Represents a typeclass for types that can be transformed by applying a

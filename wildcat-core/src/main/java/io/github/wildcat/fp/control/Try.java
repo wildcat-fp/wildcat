@@ -1,5 +1,8 @@
 package io.github.wildcat.fp.control;
 
+import static io.github.wildcat.fp.utils.Assert.parameterIsNotNull;
+import static io.github.wildcat.fp.utils.Types.genericCast;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.wildcat.fp.fns.checked.CheckedSupplier;
 import io.github.wildcat.fp.fns.nonnull.NonNullConsumer;
@@ -13,56 +16,162 @@ import io.github.wildcat.fp.typeclasses.core.Functor;
 import io.github.wildcat.fp.typeclasses.core.Monad;
 import io.github.wildcat.fp.typeclasses.equivalence.Eq;
 import io.github.wildcat.fp.typeclasses.equivalence.EqK;
-
-import static io.github.wildcat.fp.utils.Assert.parameterIsNotNull;
-import static io.github.wildcat.fp.utils.Types.genericCast;
-
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.common.returnsreceiver.qual.This;
 
+/**
+ * Represents a computation that may either succeed with a value of type
+ * {@code T}
+ * or fail with an exception.
+ * This interface is part of a sealed hierarchy, with two possible
+ * implementations:
+ * {@link Try.Success} to represent a successful outcome and {@link Try.Failure}
+ * to represent a failed outcome.
+ *
+ * <p>
+ * The {@code Try} type is particularly useful for handling operations that may
+ * throw exceptions, providing a way to manage and propagate errors in a
+ * functional
+ * and composable manner. It allows for operations to be chained together, with
+ * the
+ * possibility of short-circuiting and propagating any encountered exceptions.
+ *
+ * <p>
+ * Common operations on {@code Try} include:
+ * <ul>
+ * <li>{@link #map(NonNullFunction)}: Transforms the successful value using a
+ * provided function.
+ * <li>{@link #flatMap(NonNullFunction)}: Transforms the successful value into
+ * another {@code Try}, allowing for sequencing of operations.
+ * <li>{@link #fold(NonNullFunction, NonNullFunction)}: Applies a function to
+ * the value in case of success or a different function to the exception in case
+ * of
+ * failure, yielding a result of a common type.
+ * <li>{@link #whenSuccessful(NonNullConsumer)}: Performs an action if the
+ * {@code Try} is a success, otherwise does nothing.
+ * <li>{@link #whenFailed(NonNullConsumer)}: Performs an action with the
+ * exception if the {@code Try} is a failure, otherwise does nothing.
+ * <li>{@link #ap(Try)}: Applies a function wrapped in a {@code Try} to the
+ * value of this {@code Try}, if both are successes.
+ * </ul>
+ *
+ * <p>
+ * Instances of {@code Try} can be created using the static factory methods:
+ * <ul>
+ * <li>{@link #success(Object)}: Creates a {@code Try} representing a successful
+ * outcome with the provided value.
+ * <li>{@link #failure(Exception)}: Creates a {@code Try} representing a failed
+ * outcome with the provided exception.
+ * <li>{@link #of(NonNullSupplier)}: Creates a {@code Try} by attempting to
+ * evaluate the provided supplier.
+ * </ul>
+ */
 public sealed interface Try<T extends @NonNull Object>
                            extends
                            Kind<Try.k, T>
-    permits Try.Success, Try.Failure {
-  /*
-   * Static methods and definitions for the Try interface.
-   */
+    permits
+    Try.Success, Try.Failure {
   
+  /**
+   * Provides access to the {@link Functor} instance for {@link Try}.
+   *
+   * <p>
+   * The {@link Functor} typeclass allows for mapping a function over the value
+   * contained within a {@link Try}, transforming it if the {@link Try} is a
+   * {@link Success}.
+   * </p>
+   *
+   * @return A {@link Functor} instance for {@link Try}.
+   */
   static Functor<Try.k> functor() {
     return try_functor.instance();
   }
   
+  /**
+   * Provides access to the {@link Apply} instance for {@link Try}.
+   *
+   * <p>
+   * The {@link Apply} typeclass extends {@link Functor} and allows for applying a
+   * function
+   * contained within a {@link Try} to a value contained within another
+   * {@link Try},
+   * combining the values if both are {@link Success}.
+   * </p>
+   *
+   * @return An {@link Apply} instance for {@link Try}.
+   */
   static Apply<Try.k> apply() {
     return try_apply.instance();
   }
   
+  /**
+   * Provides access to the {@link Applicative} instance for {@link Try}.
+   *
+   * <p>
+   * The {@link Applicative} typeclass extends {@link Apply} and allows for
+   * lifting
+   * a value
+   * into a {@link Try}, as well as applying a function in a {@link Try} to a
+   * value
+   * in
+   * a {@link Try}.
+   * </p>
+   *
+   * @return An {@link Applicative} instance for {@link Try}.
+   */
   static Applicative<Try.k> applicative() {
     return try_applicative.instance();
   }
   
+  /**
+   * Provides access to the {@link FlatMap} instance for {@link Try}.
+   *
+   * <p>
+   * The {@link FlatMap} typeclass allows for sequencing operations that return a
+   * {@link Try},
+   * chaining them together and handling potential failures.
+   * </p>
+   *
+   * @return A {@link FlatMap} instance for {@link Try}.
+   */
   static FlatMap<Try.k> flatmap() {
     return try_flatmap.instance();
   }
   
+  /**
+   * Provides access to the {@link Monad} instance for {@link Try}.
+   *
+   * <p>
+   * The {@link Monad} typeclass extends {@link Applicative} and {@link FlatMap},
+   * providing
+   * a comprehensive set of operations for working with {@link Try}, including
+   * lifting
+   * values, applying functions, and sequencing operations.
+   * </p>
+   *
+   * @return A {@link Monad} instance for {@link Try}.
+   */
   static Monad<Try.k> monad() {
     return try_monad.instance();
   }
   
+  /**
+   * Provides access to the {@link EqK} instance for {@link Try}, using default
+   * equality for exceptions.
+   *
+   * <p>
+   * The {@link EqK} typeclass allows for comparing two {@link Try} instances for
+   * equality,
+   * even if they contain different types, by providing a way to compare the
+   * contained
+   * values or exceptions.
+   * </p>
+   *
+   * @return An {@link EqK} instance for {@link Try}.
+   */
   static EqK<Try.k> eqk() {
     return try_eqk.instance();
-  }
-  
-  static EqK<Try.k> eqk(final Eq<? super @NonNull Throwable> exceptionEq) {
-    return new try_eqk(exceptionEq);
-  }
-  
-  static <T extends @NonNull Object> Try<T> success(final T value) {
-    return new Success<>(value);
-  }
-  
-  static <T extends @NonNull Object> Try<T> failure(final Exception exception) {
-    return new Failure<>(exception);
   }
   
   /**
@@ -73,15 +182,72 @@ public sealed interface Try<T extends @NonNull Object>
    *
    * @param supplier
    *   The non-null supplier to get the value from.
+   * @param <T>
+   *   The type of the value.
    * 
    * @return A {@link Try} instance representing the result of the supplier.
    */
-  static <T extends @NonNull Object> Try<T> of(final NonNullSupplier<T> supplier) {
+  
+  static <T extends @NonNull Object> Try<T> of(
+      final @NonNull NonNullSupplier<T> supplier
+  ) {
     try {
       return new Success<>(supplier.get());
     } catch (final Exception e) {
       return new Failure<>(e);
     }
+  }
+  
+  /**
+   * Provides access to the {@link EqK} instance for {@link Try}, allowing custom
+   * equality for exceptions.
+   *
+   * <p>
+   * This method allows specifying a custom {@link Eq} instance for comparing
+   * exceptions,
+   * providing flexibility in how equality between {@link Try} failures is
+   * determined.
+   * </p>
+   *
+   * @param exceptionEq
+   *   An {@link Eq} instance for comparing exceptions.
+   * 
+   * @return An {@link EqK} instance for {@link Try} with custom exception
+   *   equality.
+   */
+  static EqK<Try.k> eqk(final Eq<? super @NonNull Throwable> exceptionEq) {
+    return new try_eqk(exceptionEq);
+  }
+  
+  /**
+   * Creates a {@link Try} representing a successful outcome with the given value.
+   *
+   * @param value
+   *   The non-null value representing the successful outcome.
+   * 
+   * @param <T>
+   *   The type of the value.
+   * 
+   * @return A {@link Try.Success} instance containing the given value.
+   */
+  static <T extends @NonNull Object> Try<T> success(final T value) {
+    return new Success<>(value);
+  }
+  
+  /**
+   * Creates a {@link Try} representing a failed outcome with the given exception.
+   *
+   * @param exception
+   *   The non-null exception representing the failed outcome.
+   * 
+   * @param <T>
+   *   The type of the value (though in failure, no value is
+   *   present).
+   * 
+   * @return A {@link Try.Failure} instance containing the given exception.
+   */
+  static <T extends @NonNull Object> Try<T> failure(final Exception exception) {
+    return new Failure<>(exception);
   }
   
   /**
@@ -97,6 +263,8 @@ public sealed interface Try<T extends @NonNull Object>
    *   The type of the value.
    * @param <E>
    *   The type of the exception that might be thrown.
+   * 
+   * @return A {@link Try} instance representing the result of the supplier.
    */
   static <T extends @NonNull Object, E extends @NonNull Exception> Try<T> of(
       final CheckedSupplier<T, E> supplier
@@ -125,25 +293,66 @@ public sealed interface Try<T extends @NonNull Object>
       final NonNullFunction<? super T, ? extends U> mapping
   );
   
+  /**
+   * Sequentially compose two {@link Try} operations, passing the result of the
+   * first operation to the second.
+   * If the first {@link Try} is a {@link Success}, apply the given function to
+   * its value to produce a new {@link Try}.
+   * If the first {@link Try} is a {@link Failure}, propagate the failure
+   * unchanged.
+   *
+   * @param mapping
+   *   A non-null function that takes the successful value of the
+   *   first
+   *   {@link Try}
+   *   and returns a new {@link Try}.
+   * @param <U>
+   *   The type of the value contained in the resulting {@link Try}.
+   * 
+   * @return A new {@link Try} resulting from applying the function if the first
+   *   {@link Try} was a success,
+   *   or the original failure if the first {@link Try} was a failure.
+   */
   <U extends @NonNull Object> Try<U> flatMap(
-      
       final @NonNull NonNullFunction<? super T, ? extends @NonNull Try<U>> mapping
   );
   
   /**
    * Folds the {@link Try} into a value of type {@code C} by applying different
-   * functions
-   * based on whether it is a {@link Success} or a {@link Failure}.
+   * functions based on whether it is a {@link Success} or a {@link Failure}.
+   * 
+   * @param whenFailed
+   *   A non-null function to apply if the {@link Try} is a
+   *   {@link Failure}.
+   * @param whenSucceeded
+   *   A non-null function to apply if the {@link Try} is a
+   *   {@link Success}.
+   * @param <C>
+   *   The type of the result of applying the appropriate
+   *   function.
+   * 
+   * @return The result of applying the appropriate function based on the state
+   *   of the {@link Try}.
    */
   <C extends @NonNull Object> C fold(
       final NonNullFunction<? super @NonNull Exception, ? extends C> whenFailed,
       final NonNullFunction<? super T, ? extends C> whenSucceeded
   );
   
+  /**
+   * Performs an action if the {@link Try} is a {@link Success}, otherwise does
+   * nothing.
+   *
+   * @param action
+   *   A non-null consumer to perform the action with the value.
+   * 
+   * @return The same {@link Try} instance.
+   */
   @This Try<T> whenSuccessful(final @NonNull NonNullConsumer<? super T> action);
   
   /**
-   * Performs an action if the {@link Try} is a {@link Success}, otherwise does
+   * Performs an action if the {@link Try} is a {@link Success}, otherwise
+   * does
    * nothing.
    *
    * @param action

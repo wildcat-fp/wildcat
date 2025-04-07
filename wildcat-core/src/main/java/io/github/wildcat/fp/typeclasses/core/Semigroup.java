@@ -1,8 +1,7 @@
 package io.github.wildcat.fp.typeclasses.core;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullBiFunction;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A {@code Semigroup} is a type class that represents a set of types that have

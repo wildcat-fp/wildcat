@@ -1,8 +1,7 @@
 package io.github.wildcat.fp.typeclasses.core;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.hkt.Kind;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * The {@link Applicative} typeclass abstracts over types that can be lifted

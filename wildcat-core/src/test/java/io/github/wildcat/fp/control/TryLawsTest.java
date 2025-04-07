@@ -2,14 +2,12 @@ package io.github.wildcat.fp.control;
 
 import static io.github.wildcat.fp.utils.Types.genericCast;
 
-import org.assertj.core.api.Assertions;
-import org.checkerframework.checker.nullness.qual.NonNull;
-
-import io.github.wildcat.fp.control.Try;
 import io.github.wildcat.fp.control.Try.k;
 import io.github.wildcat.fp.hkt.Kind;
 import io.github.wildcat.fp.laws.typeclasses.core.MonadLaws;
 import io.github.wildcat.fp.typeclasses.core.Monad;
+import org.assertj.core.api.Assertions;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class TryLawsTest<T extends @NonNull Object> implements MonadLaws<Try.k, T> {
   

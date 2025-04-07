@@ -2,10 +2,9 @@ package io.github.wildcat.fp.typeclasses.algebraic;
 
 import static io.github.wildcat.fp.utils.Types.genericCast;
 
+import io.github.wildcat.fp.hkt.Kind;
 import java.util.stream.Stream;
 import org.checkerframework.checker.nullness.qual.NonNull;
-
-import io.github.wildcat.fp.hkt.Kind;
 
 /**
  * Represents a type class for combining values of a type constructor

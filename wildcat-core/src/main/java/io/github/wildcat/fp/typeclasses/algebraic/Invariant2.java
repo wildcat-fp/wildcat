@@ -1,10 +1,9 @@
 package io.github.wildcat.fp.typeclasses.algebraic;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
 import io.github.wildcat.fp.hkt.Kind2;
 import io.github.wildcat.fp.hkt.Kinded2;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * The {@link Invariant2} typeclass represents a type constructor with two type parameters that

@@ -1,10 +1,9 @@
 package io.github.wildcat.fp.typeclasses.traversal;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullBiFunction;
 import io.github.wildcat.fp.hkt.Kind;
 import io.github.wildcat.fp.typeclasses.core.Monoid;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * The {@link Foldable} typeclass abstracts the ability to fold a data structure into a summary value.

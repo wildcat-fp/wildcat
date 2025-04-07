@@ -1,11 +1,10 @@
 package io.github.wildcat.fp.typeclasses.traversal;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
 import io.github.wildcat.fp.hkt.Kind;
 import io.github.wildcat.fp.typeclasses.core.Applicative;
 import io.github.wildcat.fp.typeclasses.core.Functor;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * The {@link Traverse} type class abstracts over data structures that can be traversed from left to

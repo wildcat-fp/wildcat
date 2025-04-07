@@ -17,7 +17,6 @@ import io.github.wildcat.fp.typeclasses.core.Monad;
 import io.github.wildcat.fp.typeclasses.equivalence.Eq;
 import io.github.wildcat.fp.typeclasses.equivalence.EqK;
 import io.github.wildcat.fp.typeclasses.oop.core.Mappable;
-
 import java.util.Optional;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -352,6 +351,7 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
    *   function, or an empty {@link Option} if this {@link Option} is empty.
    * 
    * @throws NullPointerException
+   *   If the mapping function is null.
    */
   @Override
   <U extends @NonNull Object> Option<U> map(

@@ -1,9 +1,8 @@
 package io.github.wildcat.fp.instances.core.semigroup;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullBiFunction;
 import io.github.wildcat.fp.typeclasses.core.Semigroup;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Provides factory methods for creating instances of {@link Semigroup} for various types.

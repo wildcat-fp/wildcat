@@ -1,8 +1,7 @@
 package io.github.wildcat.fp.typeclasses.equivalence;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.hkt.Kind2;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Typeclass for comparing higher-kinded types with two type parameters for
@@ -13,6 +12,24 @@ import io.github.wildcat.fp.hkt.Kind2;
  *   The higher-kinded type
  */
 public interface EqK2<F extends EqK2.k> {
+  /**
+   * Compare two higher-kinded types for equality.
+   *
+   * @param a
+   *   The first higher-kinded type
+   * @param b
+   *   The second higher-kinded type
+   * @param eqA
+   *   An Eq instance for type A
+   * @param eqB
+   *   An Eq instance for type B
+   * @param <A>
+   *   The type of the first type parameter of the higher-kinded type
+   * @param <B>
+   *   The type of the second type parameter of the higher-kinded type
+   *
+   * @return true if the two higher-kinded types are equal, false otherwise
+   */
   <A extends @NonNull Object, B extends @NonNull Object> boolean eqK(
       Kind2<F, A, B> a,
       Kind2<F, A, B> b,

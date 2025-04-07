@@ -1,14 +1,30 @@
 package io.github.wildcat.fp.laws.typeclasses.core;
 
-import net.jqwik.api.ForAll;
-import net.jqwik.api.Property;
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullBiFunction;
 import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
 import io.github.wildcat.fp.hkt.Kind;
 import io.github.wildcat.fp.typeclasses.core.Apply;
+import io.github.wildcat.fp.typeclasses.core.Functor;
+import net.jqwik.api.ForAll;
+import net.jqwik.api.Property;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
+/**
+ * Provides laws for testing the properties of an {@link Apply} typeclass.
+ * The {@link Apply} typeclass extends the {@link Functor} typeclass and introduces the {@code ap}
+ * (apply) operation, which allows for the application of a function wrapped in a context to a value
+ * wrapped in the same context.
+ *
+ * <p>This interface defines a set of properties (laws) that should hold for any valid
+ * implementation of {@link Apply}. These laws ensure that the {@code ap} operation behaves
+ * consistently and predictably.
+ *
+ * @param <For>
+ *   The type constructor representing the context (e.g., {@code Option.µ}, {@code List.µ}). This
+ *   should be a concrete type that implements {@link Apply.k}.
+ * @param <T>
+ *   The type of the value contained within the context.
+ */
 public interface ApplyLaws<For extends Apply.k, T extends @NonNull Object> extends FunctorLaws<For, T> {
   /**
    * Provides an instance of the {@link Apply} typeclass for the given type constructor {@code For}.

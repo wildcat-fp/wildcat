@@ -1,8 +1,7 @@
 package io.github.wildcat.fp.typeclasses.equivalence;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.hkt.Kind;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Represents type class for equality between higher-kinded types.

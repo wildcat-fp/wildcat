@@ -1,11 +1,10 @@
 package io.github.wildcat.fp.laws.typeclasses.core;
 
+import io.github.wildcat.fp.typeclasses.core.Monoid;
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
 import org.assertj.core.api.Assertions;
 import org.checkerframework.checker.nullness.qual.NonNull;
-
-import io.github.wildcat.fp.typeclasses.core.Monoid;
 
 /**
  * Defines laws that should hold for any {@link Monoid}.

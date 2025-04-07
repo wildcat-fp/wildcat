@@ -1,12 +1,11 @@
 package io.github.wildcat.fp.instances.core.functor;
 
-import java.util.Optional;
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
 import io.github.wildcat.fp.hkt.Kind;
 import io.github.wildcat.fp.hkt.kinds.OptionalK;
 import io.github.wildcat.fp.typeclasses.core.Functor;
+import java.util.Optional;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Provides a {@link Functor} instance for {@link Optional}.
@@ -42,6 +41,11 @@ public final class OptionalFunctor implements Functor<OptionalK.k> {
    *   The {@link Optional} whose value should be transformed.
    * @param f
    *   The function used to transform the value.
+   * 
+   * @param <A>
+   *   The original type of the value in the {@link Optional}.
+   * @param <B>
+   *   The target type to be transformed to.
    * 
    * @return An {@link Optional} containing the transformed value, or an empty {@link Optional}.
    */

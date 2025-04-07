@@ -1,14 +1,12 @@
 package io.github.wildcat.fp.instances.core.functor;
 
+import io.github.wildcat.fp.hkt.Kind;
+import io.github.wildcat.fp.hkt.kinds.OptionalK;
+import io.github.wildcat.fp.laws.typeclasses.core.FunctorLaws;
+import io.github.wildcat.fp.typeclasses.core.Functor;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.checkerframework.checker.nullness.qual.NonNull;
-
-import io.github.wildcat.fp.hkt.Kind;
-import io.github.wildcat.fp.hkt.kinds.OptionalK;
-import io.github.wildcat.fp.instances.core.functor.OptionalFunctor;
-import io.github.wildcat.fp.laws.typeclasses.core.FunctorLaws;
-import io.github.wildcat.fp.typeclasses.core.Functor;
 
 public class OptionalFunctorLawsTest implements FunctorLaws<OptionalK.k, @NonNull String> {
   

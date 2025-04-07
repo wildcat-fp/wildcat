@@ -1,10 +1,9 @@
 package io.github.wildcat.fp.typeclasses.core;
 
-import java.util.stream.Stream;
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import io.github.wildcat.fp.fns.nonnull.NonNullBiFunction;
 import io.github.wildcat.fp.fns.nonnull.NonNullSupplier;
+import java.util.stream.Stream;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Represents a monoid, an algebraic structure with an associative binary operation and an identity element.
