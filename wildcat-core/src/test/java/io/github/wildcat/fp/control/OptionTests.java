@@ -1,6 +1,6 @@
 package io.github.wildcat.fp.control;
 
-import static wildcat.control.ControlAssertions.assertThat;
+import static io.github.wildcat.fp.control.ControlAssertions.assertThat;
 
 import java.util.Optional;
 import org.assertj.core.api.Assertions;

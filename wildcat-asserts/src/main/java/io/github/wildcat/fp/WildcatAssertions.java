@@ -1,10 +1,10 @@
-package wildcat;
+package io.github.wildcat.fp;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import io.github.wildcat.fp.control.ControlAssertions;
 import io.github.wildcat.fp.control.Option;
-import wildcat.control.ControlAssertions;
-import wildcat.control.OptionAssert;
+import io.github.wildcat.fp.control.OptionAssert;
 
 /**
  * Entry point for assertion methods for {@link Option} from Wildcat library. Each method in this

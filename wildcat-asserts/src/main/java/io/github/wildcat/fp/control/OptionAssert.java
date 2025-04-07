@@ -1,4 +1,4 @@
-package wildcat.control;
+package io.github.wildcat.fp.control;
 
 import static org.assertj.core.error.ShouldMatch.shouldMatch;
 

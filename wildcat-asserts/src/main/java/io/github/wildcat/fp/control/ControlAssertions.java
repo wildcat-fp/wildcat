@@ -1,4 +1,4 @@
-package wildcat.control;
+package io.github.wildcat.fp.control;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
