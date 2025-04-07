@@ -1,22 +1,20 @@
 [versions]
-junit-jupiter = "5.10.1"
-lombok = "1.18.32"
-assertj = "3.25.0"
-jqwik = "1.9.1"
-spotbugs = "4.8.6"
-errorprone = "2.34.0"
-checkerframework-checker = "3.49.0"
+junit-jupiter = "5.12.1"
+assertj = "3.27.3"
+jqwik = "1.9.2"
+spotbugs = "4.9.3"
+errorprone = "2.37.0"
+checkerframework-checker = "3.49.2"
 
-spotbugs-plugin = "6.0.25"
+spotbugs-plugin = "6.1.7"
 findsecbugs = "1.13.0"
-spotless = "7.0.0.BETA4"
-checkerframework-plugin = "0.6.49"
+spotless = "7.0.2"
+checkerframework-plugin = "0.6.53"
 errorprone-plugin = "4.1.0"
 pitest-plugin = "1.15.0"
 
 [libraries]
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
-lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 jqwik = { module = "net.jqwik:jqwik", version.ref = "jqwik" }
 checkerframework-checker = { module = "org.checkerframework:checker", version.ref = "checkerframework-checker" }

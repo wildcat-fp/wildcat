@@ -13,9 +13,6 @@ testing {
             useJUnitJupiter()
 
             dependencies {
-                compileOnly(libs.lombok)
-                annotationProcessor(libs.lombok)
-
                 implementation(libs.assertj)
                 implementation(libs.jqwik)
             }

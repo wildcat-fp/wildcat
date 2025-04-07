@@ -21,8 +21,7 @@ java {
 }
 
 dependencies {
-    compileOnly(libs.lombok)
-    annotationProcessor(libs.lombok)
+    
 }
 
 // Configure Javadoc generation
