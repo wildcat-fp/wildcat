@@ -1,4 +1,4 @@
-package wildcat.laws.typeclasses.core;
+package io.github.wildcat.fp.laws.typeclasses.core;
 
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
@@ -6,8 +6,8 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
 import io.github.wildcat.fp.hkt.Kind;
+import io.github.wildcat.fp.laws.LawsTest;
 import io.github.wildcat.fp.typeclasses.core.Functor;
-import wildcat.laws.LawsTest;
 
 @LawsTest
 public interface FunctorLaws<For extends Functor.k, T extends @NonNull Object> {

@@ -8,8 +8,8 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import io.github.wildcat.fp.control.Option;
 import io.github.wildcat.fp.control.Option.k;
 import io.github.wildcat.fp.hkt.Kind;
+import io.github.wildcat.fp.laws.typeclasses.core.MonadLaws;
 import io.github.wildcat.fp.typeclasses.core.Monad;
-import wildcat.laws.typeclasses.core.MonadLaws;
 
 public class OptionLawsTest<T extends @NonNull Object> implements MonadLaws<Option.k, T> {
   @Override

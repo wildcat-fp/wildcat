@@ -1,4 +1,4 @@
-package wildcat.laws.typeclasses.core;
+package io.github.wildcat.fp.laws.typeclasses.core;
 
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;

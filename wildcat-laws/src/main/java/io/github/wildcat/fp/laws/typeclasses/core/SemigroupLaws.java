@@ -1,12 +1,12 @@
-package wildcat.laws.typeclasses.core;
+package io.github.wildcat.fp.laws.typeclasses.core;
 
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
 import org.assertj.core.api.Assertions;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import io.github.wildcat.fp.laws.LawsTest;
 import io.github.wildcat.fp.typeclasses.core.Semigroup;
-import wildcat.laws.LawsTest;
 
 /**
  * Defines laws that should hold for any {@link Semigroup}.

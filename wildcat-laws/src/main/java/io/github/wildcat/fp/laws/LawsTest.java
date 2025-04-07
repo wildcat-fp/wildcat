@@ -1,4 +1,4 @@
-package wildcat.laws;
+package io.github.wildcat.fp.laws;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
