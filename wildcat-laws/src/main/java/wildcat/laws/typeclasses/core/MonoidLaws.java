@@ -4,7 +4,8 @@ import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
 import org.assertj.core.api.Assertions;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import wildcat.typeclasses.core.Monoid;
+
+import io.github.wildcat.fp.typeclasses.core.Monoid;
 
 /**
  * Defines laws that should hold for any {@link Monoid}.

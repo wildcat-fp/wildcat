@@ -1,8 +1,9 @@
 package wildcat;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+
+import io.github.wildcat.fp.control.Option;
 import wildcat.control.ControlAssertions;
-import wildcat.control.Option;
 import wildcat.control.OptionAssert;
 
 /**

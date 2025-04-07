@@ -9,7 +9,9 @@ import org.assertj.core.api.Condition;
 import org.assertj.core.internal.Conditions;
 import org.assertj.core.presentation.PredicateDescription;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import wildcat.fns.nonnull.NonNullConsumer;
+
+import io.github.wildcat.fp.control.Option;
+import io.github.wildcat.fp.fns.nonnull.NonNullConsumer;
 
 /**
  * Provides assertions for {@link Option} instances.

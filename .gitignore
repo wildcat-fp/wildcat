@@ -41,6 +41,8 @@ replay_pid*
 .history
 .ionide
 
+bin/
+
 ### Gradle ###
 .gradle
 **/build/

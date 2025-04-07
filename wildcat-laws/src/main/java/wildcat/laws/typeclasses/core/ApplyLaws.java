@@ -3,10 +3,11 @@ package wildcat.laws.typeclasses.core;
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import wildcat.fns.nonnull.NonNullBiFunction;
-import wildcat.fns.nonnull.NonNullFunction;
-import wildcat.hkt.Kind;
-import wildcat.typeclasses.core.Apply;
+
+import io.github.wildcat.fp.fns.nonnull.NonNullBiFunction;
+import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
+import io.github.wildcat.fp.hkt.Kind;
+import io.github.wildcat.fp.typeclasses.core.Apply;
 
 public interface ApplyLaws<For extends Apply.k, T extends @NonNull Object> extends FunctorLaws<For, T> {
   /**
