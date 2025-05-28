@@ -6,17 +6,17 @@
 
   # Use https://search.nixos.org/packages to find packages
   packages = [
-    # pkgs.go
     pkgs.python3
-    # pkgs.python311Packages.pip
-    # pkgs.nodejs_20
-    # pkgs.nodePackages.nodemon
+    
     pkgs.zulu
     pkgs.zsh
-    pkgs.oh-my-zsh
+    
     pkgs.bat
     pkgs.tree
     pkgs.gh
+
+    pkgs.chezmoi
+    pkgs.util-linux
   ];
 
   # Sets environment variables in the workspace
@@ -41,6 +41,7 @@
       "vscjava.vscode-java-test"
       "vscjava.vscode-maven"
       "redhat.vscode-yaml"
+      "zjffun.snippetsmanager"
     ];
 
     # Enable previews
@@ -51,17 +52,6 @@
           command = ["python3" "-m" "http.server" "$PORT" "--bind" "0.0.0.0"];
           manager = "web";
         };
-        # 
-        # web = {
-        #   # Example: run "npm run dev" with PORT set to IDX's defined port for previews,
-        #   # and show it in IDX's web preview panel
-        #   command = ["npm" "run" "dev"];
-        #   manager = "web";
-        #   env = {
-        #     # Environment variables to set for your server
-        #     PORT = "$PORT";
-        #   };
-        # };
       };
     };
 
