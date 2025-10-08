@@ -70,7 +70,11 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
+# End of https://www.toptal.com/developers/gitignore/api/java,visualstudiocode,gradle
+
 ### jqwik Property Testing ###
 .jqwik-database
 
-# End of https://www.toptal.com/developers/gitignore/api/java,visualstudiocode,gradle
+### .env Files ###
+.env
+.env.local
