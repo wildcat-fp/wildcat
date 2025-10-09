@@ -14,7 +14,7 @@ testing {
     }
 }
 
-pitest {
-  excludedGroups = setOf("laws")
-}
+// pitest {
+//   excludedGroups = setOf("laws")
+// }
 

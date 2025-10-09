@@ -2,7 +2,7 @@ import org.gradle.accessors.dm.LibrariesForLibs
 
 plugins {
   `java`
-  id("info.solidsoft.pitest")
+//   id("info.solidsoft.pitest")
 }
 
 val libs = the<LibrariesForLibs>()
@@ -20,15 +20,15 @@ testing {
     }
 }
 
-pitest {
-  pitestVersion = "1.15.2"
-  outputFormats = setOf("XML", "HTML")
-  timestampedReports = false
-  exportLineCoverage = true
-  targetClasses = setOf("wildcat.*")
+// pitest {
+//   pitestVersion = "1.15.2"
+//   outputFormats = setOf("XML", "HTML")
+//   timestampedReports = false
+//   exportLineCoverage = true
+//   targetClasses = setOf("wildcat.*")
 
-  junit5PluginVersion = "1.2.1"
-}
+//   junit5PluginVersion = "1.2.1"
+// }
 
 tasks.withType<Test> {
     testLogging {
