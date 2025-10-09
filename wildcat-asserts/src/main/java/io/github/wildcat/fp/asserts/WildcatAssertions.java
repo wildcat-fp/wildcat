@@ -10,9 +10,9 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * class is a static factory for the type-specific assertion objects.
  */
 public final class WildcatAssertions {
-
+  
   private WildcatAssertions() {}
-
+  
   /**
    * Creates a new instance of {@link OptionAssert}.
    *

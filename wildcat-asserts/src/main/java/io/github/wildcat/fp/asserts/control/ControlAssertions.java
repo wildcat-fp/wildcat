@@ -7,12 +7,12 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * Provides assertion methods for Wildcat control types.
  */
 public final class ControlAssertions {
-
+  
   /**
    * Private constructor to prevent instantiation.
    */
   private ControlAssertions() {}
-
+  
   /**
    * Creates an {@link OptionAssert} for performing assertions on {@link Option}
    * instances.

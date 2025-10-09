@@ -1,6 +1,6 @@
 package io.github.wildcat.fp.control;
 
-import static io.github.wildcat.fp.control.ControlAssertions.assertThat;
+import static io.github.wildcat.fp.asserts.control.ControlAssertions.assertThat;
 
 import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
 import io.github.wildcat.fp.fns.nonnull.NonNullSupplier;
