@@ -11,3 +11,5 @@ include(
     "wildcat-laws",
     "wildcat-asserts"
 )
+
+enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
