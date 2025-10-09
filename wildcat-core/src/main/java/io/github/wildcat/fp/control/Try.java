@@ -449,8 +449,7 @@ public sealed interface Try<T extends @NonNull Object>
    */
   @SuppressFBWarnings(
       value = {
-                "EI_EXPOSE_REP",
-                "EI_EXPOSE_REP2"
+                "EI_EXPOSE_REP"
       },
       justification = "Exception mutability is not a concern in this context"
   )

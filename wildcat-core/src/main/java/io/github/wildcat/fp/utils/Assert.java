@@ -1,6 +1,5 @@
 package io.github.wildcat.fp.utils;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -35,10 +34,6 @@ public final class Assert {
    * @throws IllegalArgumentException
    *   if the parameter is null
    */
-  @SuppressFBWarnings(
-      value = "NP_NONNULL_PARAM_VIOLATION",
-      justification = "value will be non-null if no exception is thrown"
-  )
   @EnsuresNonNull(
     "#1"
   )

@@ -4,7 +4,6 @@ import static io.github.wildcat.fp.utils.Assert.parameterIsNotNull;
 import static io.github.wildcat.fp.utils.Types.genericCast;
 import static java.util.Objects.requireNonNull;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.wildcat.fp.fns.nonnull.NonNullConsumer;
 import io.github.wildcat.fp.fns.nonnull.NonNullFunction;
 import io.github.wildcat.fp.fns.nonnull.NonNullSupplier;
@@ -591,10 +590,10 @@ final class option_eqk implements EqK<Option.k> {
   }
   
   @Override
-  @SuppressFBWarnings(
-      value = "DLS_DEAD_LOCAL_STORE",
-      justification = "Compiler-generated variable in switch expression"
-  )
+  // @SuppressFBWarnings(
+  //     value = "DLS_DEAD_LOCAL_STORE",
+  //     justification = "Compiler-generated variable in switch expression"
+  // )
   public <A extends @NonNull Object> boolean eqK(
       final Kind<Option.k, A> a,
       final Kind<Option.k, A> b,
