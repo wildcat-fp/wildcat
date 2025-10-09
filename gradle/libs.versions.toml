@@ -1,31 +1,32 @@
 [versions]
-junit-jupiter = "5.12.1"
-assertj = "3.27.3"
-jqwik = "1.9.2"
-spotbugs = "4.9.3"
-errorprone = "2.37.0"
-checkerframework-checker = "3.49.2"
-
-spotbugs-plugin = "6.1.7"
-findsecbugs = "1.13.0"
-spotless = "7.0.2"
-checkerframework-plugin = "0.6.53"
-errorprone-plugin = "4.1.0"
-pitest-plugin = "1.15.0"
+assertj = "3.27.6"
+checkerframework-checker = "3.51.1"
+checkerframework-plugin = "0.6.60"
+errorprone = "2.42.0"
+errorprone-plugin = "4.3.0"
+findsecbugs = "1.14.0"
+jqwik = "1.9.3"
+junit-jupiter = "6.0.0"
+openrewrite-plugin = "7.7.0"
+pitest-plugin = "1.19.0-rc2"
+spotbugs = "4.9.6"
+spotbugs-plugin = "6.4.2"
+spotless = "8.0.0"
+version-catalog-update-plugin = "1.0.1"
 
 [libraries]
-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
-jqwik = { module = "net.jqwik:jqwik", version.ref = "jqwik" }
 checkerframework-checker = { module = "org.checkerframework:checker", version.ref = "checkerframework-checker" }
-spotbugs-annotations = { module = "com.github.spotbugs:spotbugs-annotations", version.ref = "spotbugs" }
 errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }
-
 findsecbugs = { module = "com.h3xstream.findsecbugs:findsecbugs-plugin", version.ref = "findsecbugs" }
+jqwik = { module = "net.jqwik:jqwik", version.ref = "jqwik" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
+spotbugs-annotations = { module = "com.github.spotbugs:spotbugs-annotations", version.ref = "spotbugs" }
 
 [plugins]
-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 checkerframework = { id = "org.checkerframework", version.ref = "checkerframework-plugin" }
-spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs-plugin" }
 errorprone-plugin = { id = "net.ltgt.errorprone", version.ref = "errorprone-plugin" }
 pitest-plugin = { id = "info.solidsoft.pitest", version.ref = "pitest-plugin" }
+spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs-plugin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+version-catalog-update-plugin = { id = "nl.littlerobots.version-catalog-update", version.ref = "version-catalog-update-plugin" }
