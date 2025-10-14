@@ -1,5 +1,6 @@
 plugins {
   id("common")
+  id("release")
 }
 
 dependencies {
@@ -8,13 +9,13 @@ dependencies {
     api(project(":wildcat-core"))
 }
 
-// publishing {
-//   publications {
-//       named<MavenPublication>("mavenJava") {
-//           pom {
-//               name.set("Wildcat Assert")
-//               description.set("Custom AssertJ assertions for Wildcat types.")
-//           }
-//       }
-//   }
-// }
+publishing {
+  publications {
+      named<MavenPublication>("mavenJava") {
+          pom {
+              name.set("Wildcat Assert")
+              description.set("Custom AssertJ assertions for Wildcat types.")
+          }
+      }
+  }
+}

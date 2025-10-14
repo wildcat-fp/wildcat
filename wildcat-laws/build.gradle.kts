@@ -1,6 +1,7 @@
 plugins {
   id("common")
   id("static-analysis")
+  id("release")
 }
 
 dependencies {

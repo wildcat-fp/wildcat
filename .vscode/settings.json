@@ -1,0 +1,24 @@
+{
+  "IDX.aI.enableInlineCompletion": true,
+  "IDX.aI.enableCodebaseIndexing": true,
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.format.settings.url": "java-formatter.xml",
+  "java.debug.settings.onBuildFailureProceed": true,
+  "java.compile.nullAnalysis.mode": "disabled",
+  "java.dependency.packagePresentation": "hierarchical",
+  "mcp": {
+    
+    "inputs": [],
+    "servers": {
+      "mcp-server-time": {
+        "command": "python",
+        "args": [
+          "-m",
+          "mcp_server_time",
+          "--local-timezone=America/Los_Angeles"
+        ],
+        "env": {}
+      }
+    }
+  }
+}
