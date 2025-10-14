@@ -1,7 +1,6 @@
 plugins {
   id("common")
   id("static-analysis")
-  id("release")
 }
 
 dependencies {
@@ -9,5 +8,5 @@ dependencies {
     implementation(libs.jqwik)
     implementation(libs.junit.jupiter)
 
-    api(project(":wildcat-core"))
+    implementation(project(":wildcat-core"))
 }

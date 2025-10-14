@@ -1,7 +1,6 @@
 plugins {
   id("common")
   id("static-analysis")
-  id("release")
 }
 
 testing {
@@ -13,15 +12,4 @@ testing {
             }
         }
     }
-}
-
-publishing {
-  publications {
-      named<MavenPublication>("mavenJava") {
-          pom {
-              name.set("Wildcat Core")
-              description.set("Core data structures and type classes for functional programming in Java.")
-          }
-      }
-  }
 }
