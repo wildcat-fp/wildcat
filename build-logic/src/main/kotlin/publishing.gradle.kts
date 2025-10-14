@@ -22,8 +22,8 @@ publishing {
                 // Configure licensing information
                 licenses {
                     license {
-                        name.set("Apache-2.0")
-                        url.set("https://opensource.org/licenses/Apache-2.0")
+                        name.set("MIT")
+                        url.set("https://opensource.org/licenses/MIT")
                     }
                 }
                 developers {
