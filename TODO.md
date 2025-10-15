@@ -8,54 +8,34 @@ Items are organized by theme. New contributors are encouraged to pick an item, c
 
 Expand the set of foundational, type-safe data structures available in `wildcat-core`.
 
-- [ ] **Implement `Validated`:**
-    - **Description:** A data structure similar to `Either` but designed to accumulate errors. This is invaluable for use cases like form validation where you want to report all errors at once.
-    - **Files to create/modify:** `wildcat-core/src/main/java/io/github/wildcat/fp/control/Validated.java`, plus corresponding law tests in `wildcat-laws`.
-    - **Type classes to implement:** `Functor`, `Applicative`, `Bifunctor`.
-
-- [ ] **Implement `IO` Monad:**
-    - **Description:** A data structure for encapsulating and composing side-effectful computations. This is the cornerstone of writing purely functional applications.
-    - **Files to create/modify:** `wildcat-core/src/main/java/io/github/wildcat/fp/effect/IO.java`, plus corresponding law tests.
-    - **Type classes to implement:** `Functor`, `Applicative`, `Monad`.
-
-- [ ] **Implement `State` Monad:**
-    - **Description:** A monad for managing stateful computations in a purely functional way, passing state from one computation to the next without mutable variables.
-    - **Files to create/modify:** `wildcat-core/src/main/java/io/github/wildcat/fp/control/State.java`, plus law tests.
-    - **Type classes to implement:** `Functor`, `Applicative`, `Monad`.
+*   **[ ]** Implement `Validated` for accumulating errors.
+*   **[ ]** Implement `State` for stateful computations.
+*   **[ ]** Implement `Reader` for dependency injection.
+*   **[ ]** Implement `Writer` for logging.
+*   **[ ]** Implement `IO` for representing side-effects.
 
 ## Type Class Instances
 
-To make Wildcat useful, its abstractions must apply to common JDK types.
+Increase the number of available type class instances for both JDK and Wildcat types to make the library more practical.
 
-- [ ] **Create `Functor` instance for `java.util.List`:**
-    - **Description:** Allow `map` operations on a standard `java.util.List` through the `Functor` type class.
+*   **[ ]** Provide instances for more JDK types (e.g., `List`, `Stream`, `CompletableFuture`).
+*   **[ ]** Systematically provide instances for all relevant type classes for the data structures in `wildcat-core` (e.g., `Monad` for `Either`, `Traverse` for `Option`).
 
-- [ ] **Create `Monad` instance for `java.util.concurrent.CompletableFuture`:**
-    - **Description:** Allow `CompletableFuture` to be used in monadic compositions (e.g., for-comprehensions), making asynchronous code cleaner.
+## Documentation
 
-- [ ] **Create `Traverse` and `Foldable` instances for `Option` and `Either`:**
-    - **Description:** Implement `traverse` and `fold` operations for the library's core data types.
+Improve the documentation to make the library more accessible to new users.
 
-## Ergonomics & Ease of Use
+*   **[ ]** Write a comprehensive user guide explaining the core concepts and how to use the library.
+*   **[ ]** Add more Javadoc examples for all public APIs.
+*   **[ ]** Create a dedicated documentation module with tutorials and articles.
 
-Features that make the library more intuitive and less verbose for developers.
+## Tooling and Developer Experience
 
-- [ ] **Simulate For-Comprehensions / Do-Notation:**
-    - **Description:** Create a fluent API that simulates the `for-comprehension` (Scala) or `do` notation (Haskell). This is syntactic sugar over chains of `flatMap` and `map` and is a massive quality-of-life improvement for monadic code.
-    - **Example Goal:** `For.with(someOption).flatMap(v -> anotherOption).yield(result)`.
+*   **[ ]** Investigate and potentially implement an annotation processor to reduce boilerplate for creating `Kinded` types and type class instances.
 
-- [ ] **Enhance Pattern Matching API:**
-    - **Description:** While Java has introduced pattern matching, a more expressive, functional-style API can provide more power, such as matching on the contents of `Option` or `Either` in a single expression.
+## Advanced Features
 
-## Documentation & Examples
-
-A library is only as good as its documentation.
-
-- [ ] **Write a Comprehensive "Getting Started" Guide:**
-    - **Description:** Create a new documentation file (`TUTORIAL.md` or in a `docs` folder) that walks a user through solving a real-world problem using Wildcat's features.
-
-- [ ] **Add Javadoc Examples:**
-    - **Description:** Go through existing public classes and methods (e.g., `Option`, `Either`, `Try`) and add concrete usage examples within the Javadoc comments.
-
-- [ ] **Set up a Microsite for Documentation:**
-    - **Description:** Use a static site generator (like Jekyll or Docusaurus) to create a dedicated documentation website. This will eventually replace README and other markdown files as the primary source of documentation.
+*   **[ ] Allow for different computation methods:**
+    *   Investigate and implement a mechanism to allow for different computation methods, such as "regular" (eager), "lazy", and "async".
+    *   The goal is to allow users to "plug-and-play" these methods, for example, chaining a regular `Option` into a lazy `Either`, and then into an async `IO`.
+    *   This will likely involve some deeper thought into the semantics and practical issues of such a system, but it would be a powerful feature for the library.
