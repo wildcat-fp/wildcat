@@ -12,7 +12,6 @@ openrewrite-plugin = "7.7.0"
 pitest-plugin = "1.19.0-rc2"
 spotbugs = "4.9.6"
 spotbugs-plugin = "6.4.2"
-spotless = "8.0.0"
 version-catalog-update-plugin = "1.0.1"
 
 [libraries]
@@ -30,5 +29,4 @@ errorprone-plugin = { id = "net.ltgt.errorprone", version.ref = "errorprone-plug
 nexus-publish = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus-publish" }
 pitest-plugin = { id = "info.solidsoft.pitest", version.ref = "pitest-plugin" }
 spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs-plugin" }
-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 version-catalog-update-plugin = { id = "nl.littlerobots.version-catalog-update", version.ref = "version-catalog-update-plugin" }

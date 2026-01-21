@@ -8,7 +8,7 @@ Wildcat is a Java library that brings functional programming concepts to Java. I
 
 ## Tech Stack
 
-- **Language:** Java 17
+- **Language:** Java 21
 - **Build Tool:** Gradle (using the Gradle wrapper)
 - **Testing:** JUnit, AssertJ, and property-based testing.
 

@@ -27,7 +27,7 @@ If you encounter a bug, please open an issue on GitHub and provide the following
 
 ## Coding Conventions and Code Style
 
-Contributions should try to conform to the style of the existing code. The code style is generally enforced during the build by the various static analysis plugins.
+Contributions should try to conform to the style of the existing code. When in doubt, use your best judgment - it can always be fixed later.
 
 ## Other Ways to Contribute
 
