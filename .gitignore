@@ -73,7 +73,7 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/java,visualstudiocode,gradle
 
 ### jqwik Property Testing ###
-.jqwik-database
+**/.jqwik-database
 
 ### .env Files ###
 .env
