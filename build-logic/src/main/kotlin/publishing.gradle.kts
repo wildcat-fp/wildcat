@@ -1,5 +1,7 @@
+
 plugins {
   `maven-publish`
+  signing
 }
 
 // Configure publishing for all sub-modules
@@ -47,6 +49,7 @@ publishing {
         }
     }
     repositories {
+        // Publish to GitHub Packages for development snapshots
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/wildcat-fp/wildcat")
@@ -55,5 +58,35 @@ publishing {
                 password = System.getenv("GITHUB_TOKEN")
             }
         }
+
+        // Publish to Sonatype for releases to Maven Central
+        val ossrhUsername = System.getenv("OSSRH_USERNAME")
+        val ossrhToken = System.getenv("OSSRH_TOKEN")
+        if (!ossrhUsername.isNullOrBlank()) {
+            maven {
+                name = "Sonatype"
+                val isSnapshot = project.version.toString().endsWith("-SNAPSHOT")
+                url = if (isSnapshot) {
+                    uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                } else {
+                    uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                }
+                credentials {
+                    username = ossrhUsername
+                    password = ossrhToken
+                }
+            }
+        }
+    }
+}
+
+// Configure signing for all publications
+val gpgKey = System.getenv("GPG_SIGNING_KEY")
+val gpgPassword = System.getenv("GPG_SIGNING_PASSWORD")
+
+if (!gpgKey.isNullOrBlank()) {
+    signing {
+        useInMemoryPgpKeys(gpgKey, gpgPassword)
+        sign(publishing.publications["mavenJava"])
     }
 }

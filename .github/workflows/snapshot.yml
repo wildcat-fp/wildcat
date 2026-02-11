@@ -1,8 +1,9 @@
-name: Release and Publish
+name: Publish Snapshot
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
 
 jobs:
   publish:
@@ -15,13 +16,15 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: ''21''
-          distribution: ''temurin''
+          java-version: '21'
+          distribution: 'temurin'
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Publish to Sonatype
+      - name: Publish to Sonatype Snapshots
+        # Only run if the version is a snapshot
+        if: endsWith(github.ref, '/main') && startsWith(github.event.head_commit.message, '[snapshot]')
         run: ./gradlew publish
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
