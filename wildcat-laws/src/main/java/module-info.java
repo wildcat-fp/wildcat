@@ -1,14 +1,14 @@
 
 module io.github.wildcat.fp.laws {
-  // Wildcat dependencies
   requires transitive io.github.wildcat.fp.core;
-  
+
   // Third-party dependencies
-  requires org.assertj.core;
   requires static org.checkerframework.checker.qual;
-  requires org.junit.jupiter.api;
-  requires net.jqwik.api;
-  
-  // Public API
+  requires static com.github.spotbugs.annotations;
+  requires transitive org.junit.jupiter.api;
+  requires transitive net.jqwik.api;
+  requires transitive org.assertj.core;
+
+  // Exports
   exports io.github.wildcat.fp.laws.typeclasses.core;
 }
