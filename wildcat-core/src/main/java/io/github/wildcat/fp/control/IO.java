@@ -39,7 +39,7 @@ public sealed interface IO<A extends @NonNull Object> extends Kind<IO.k, A> {
      *
      * @return The result of the computation.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     default A unsafeRunSync() {
         IO<A> current = this;
         while (true) {
@@ -52,25 +52,19 @@ public sealed interface IO<A extends @NonNull Object> extends Kind<IO.k, A> {
                 }
                 case FlatMap<?, A> flatMap -> {
                     final IO<?> io = flatMap.io();
-                    final NonNullFunction<?, ? extends IO<?>> f = flatMap.f();
+                    final NonNullFunction<Object, IO<A>> f = (NonNullFunction) flatMap.f();
 
-                    // The core of the trampoline: we avoid deep recursion by re-associating
-                    // the flatMap operations in a loop.
                     switch (io) {
                         case Pure<?> pureIo -> {
-                            pureIo.
-                            current = (IO<A>) f.apply(pureIo.value());
+                            current = f.apply(pureIo.value());
                         }
                         case Suspend<?> suspendIo -> {
-                            current = (IO<A>) f.apply(suspendIo.run().get());
+                            current = f.apply(suspendIo.run().get());
                         }
                         case FlatMap<?, ?> innerFlatMap -> {
-                            final IO<?> innerIO = innerFlatMap.io();
-                            final NonNullFunction<?, ? extends IO<?>> innerF = innerFlatMap.f();
-
-                            // Re-associate to the right: (io.flatMap(f)).flatMap(g) -> io.flatMap(x -> f(x).flatMap(g))
-                            // This is the key to preventing stack growth.
-                            current = (IO<A>) innerIO.flatMap(x -> ((IO<?>)innerF.apply(x)).flatMap((NonNullFunction) f));
+                            final IO<Object> innerIO = (IO<Object>) innerFlatMap.io();
+                            final NonNullFunction<Object, IO<Object>> innerF = (NonNullFunction) innerFlatMap.f();
+                            current = (IO<A>) innerIO.flatMap(x -> innerF.apply(x).flatMap(f));
                         }
                     }
                 }
@@ -144,7 +138,7 @@ class io_functor implements Functor<IO.k> {
     }
 
     @Override
-    public <A, B> Kind<IO.k, B> map(
+    public <A extends @NonNull Object, B extends @NonNull Object> Kind<IO.k, B> map(
         final Kind<IO.k, A> fa,
         final NonNullFunction<? super A, ? extends B> f
     ) {
@@ -165,7 +159,7 @@ class io_apply extends io_functor implements Apply<IO.k> {
     }
 
     @Override
-    public <A, B> Kind<IO.k, B> ap(
+    public <A extends @NonNull Object, B extends @NonNull Object> Kind<IO.k, B> ap(
         final Kind<IO.k, A> fa,
         final Kind<IO.k, @NonNull NonNullFunction<? super A, ? extends B>> f
     ) {
@@ -186,7 +180,7 @@ class io_applicative extends io_apply implements Applicative<IO.k> {
     }
 
     @Override
-    public <T> Kind<IO.k, T> pure(T value) {
+    public <T extends @NonNull Object> Kind<IO.k, T> pure(T value) {
         return IO.pure(value);
     }
 }
@@ -197,12 +191,13 @@ class io_flatmap extends io_apply implements FlatMap<IO.k> {
     io_flatmap() {
     }
 
+
     static io_flatmap instance() {
         return instance;
     }
 
     @Override
-    public <A, B> Kind<IO.k, B> flatMap(
+    public <A extends @NonNull Object, B extends @NonNull Object> Kind<IO.k, B> flatMap(
         final Kind<IO.k, A> fa,
         final NonNullFunction<? super A, ? extends @NonNull Kind<IO.k, B>> f) {
         final IO<A> ioA = fa.fix();
