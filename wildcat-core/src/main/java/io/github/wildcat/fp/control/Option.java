@@ -407,7 +407,7 @@ public sealed interface Option<T extends @NonNull Object> extends Kind<Option.k,
   /**
    * Executes an action if this {@link Option} is present. If this
    * {@link Option} contains a value, the specified action is performed with the
-   * value. If this {@link Optio<>      n} is empty, no action is taken.
+   * value. If this {@link Option} is empty, no action is taken.
    *
    * @param action
    *   The action to perform with the value if it is present.
