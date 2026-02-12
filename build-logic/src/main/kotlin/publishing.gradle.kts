@@ -60,25 +60,6 @@ publishing {
             }
         }
     }
-    repositories {
-        val ossrhUsername = System.getenv("OSSRH_USERNAME")
-        val ossrhToken = System.getenv("OSSRH_TOKEN")
-        if (!ossrhUsername.isNullOrBlank()) {
-            maven {
-                name = "Sonatype"
-                val isSnapshot = project.version.toString().endsWith("-SNAPSHOT")
-                url = if (isSnapshot) {
-                    uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-                } else {
-                    uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                }
-                credentials {
-                    username = ossrhUsername
-                    password = ossrhToken
-                }
-            }
-        }
-    }
 }
 
 // Configure signing for all publications
