@@ -1,0 +1,41 @@
+name: Publish to Maven Central
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  publish:
+    name: Build and Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Get project version
+        id: version
+        run: echo "version=$(./gradlew properties -q | grep "^version:" | awk ''{print $2}'')" >> $GITHUB_OUTPUT
+
+      - name: Publish to Sonatype
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+          GPG_SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
+        run: |
+          if [[ "${{ steps.version.outputs.version }}" == *-SNAPSHOT ]]; then
+            echo "Publishing snapshot build..."
+            ./gradlew publish
+          else
+            echo "Publishing release build..."
+            ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
+          fi

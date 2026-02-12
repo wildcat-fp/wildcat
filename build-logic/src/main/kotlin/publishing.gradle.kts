@@ -2,6 +2,16 @@
 plugins {
   `maven-publish`
   signing
+  id("io.github.gradle-nexus.publish-plugin")
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
 }
 
 // Configure publishing for all sub-modules
@@ -19,6 +29,8 @@ publishing {
 
             // Add extra metadata to the POM
             pom {
+                name.set("Wildcat")
+                description.set("A functional programming library for Java")
                 url.set("https://github.com/wildcat-fp/wildcat")
 
                 // Configure licensing information
@@ -49,17 +61,6 @@ publishing {
         }
     }
     repositories {
-        // Publish to GitHub Packages for development snapshots
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/wildcat-fp/wildcat")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-
-        // Publish to Sonatype for releases to Maven Central
         val ossrhUsername = System.getenv("OSSRH_USERNAME")
         val ossrhToken = System.getenv("OSSRH_TOKEN")
         if (!ossrhUsername.isNullOrBlank()) {
