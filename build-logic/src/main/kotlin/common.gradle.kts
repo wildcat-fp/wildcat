@@ -9,6 +9,8 @@ plugins {
 
 val libs = the<LibrariesForLibs>()
 
+group = "io.github.wildcat-fp"
+
 repositories {
     mavenCentral()
 }
@@ -18,10 +20,6 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
-}
-
-dependencies {
-    
 }
 
 // Configure Javadoc generation
@@ -46,11 +44,5 @@ val sourcesJar = tasks.register<Jar>("sourcesJar") {
 // Configure javadoc jar generation
 val javadocJar = tasks.register<Jar>("javadocJar") {
     archiveClassifier.set("javadoc")
-    from(tasks.javadoc)
+    from(tasks.getByName("javadoc"))
 }
-
-// Assemble depends on sourcesJar and javadocJar.
-tasks.assemble.get().dependsOn(sourcesJar, javadocJar)
-
-// Publish depends on sourcesJar and javadocJar
-tasks.getByName("publish").dependsOn(sourcesJar, javadocJar)

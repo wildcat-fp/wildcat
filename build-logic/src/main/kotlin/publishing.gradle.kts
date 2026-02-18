@@ -2,16 +2,6 @@
 plugins {
   `maven-publish`
   signing
-  id("io.github.gradle-nexus.publish-plugin")
-}
-
-nexusPublishing {
-    repositories {
-        sonatype {
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-        }
-    }
 }
 
 // Configure publishing for all sub-modules
@@ -45,6 +35,7 @@ publishing {
                         id.set("SkittishSloth")
                         name.set("Matthew Cory")
                         email.set("matthewcory1@gmail.com")
+                        url.set("https://github.com/SkittishSloth")
                     }
                 }
 
@@ -63,12 +54,17 @@ publishing {
 }
 
 // Configure signing for all publications
-val gpgKey = System.getenv("GPG_SIGNING_KEY")
-val gpgPassword = System.getenv("GPG_SIGNING_PASSWORD")
+signing {
+    // Signing is required for release builds, but not for snapshots
+    isRequired = !(project.version as String).endsWith("-SNAPSHOT")
 
-if (!gpgKey.isNullOrBlank()) {
-    signing {
+    // If the GPG key is present, configure it for signing.
+    // The build will fail if isRequired=true and the key is not present.
+    val gpgKey = System.getenv("GPG_SIGNING_KEY")
+    val gpgPassword = System.getenv("GPG_SIGNING_PASSWORD")
+    if (gpgKey != null) {
         useInMemoryPgpKeys(gpgKey, gpgPassword)
-        sign(publishing.publications["mavenJava"])
     }
+
+    sign(publishing.publications)
 }

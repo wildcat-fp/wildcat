@@ -22,7 +22,7 @@ findsecbugs = { module = "com.h3xstream.findsecbugs:findsecbugs-plugin", version
 jqwik = { module = "net.jqwik:jqwik", version.ref = "jqwik" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
 
-nexus-publish-plugin-gradle = { group = "io.github.gradle-nexus", name = "io.github.gradle-nexus.gradle.plugin", version.ref = "nexus-publish-plugin" }
+nexus-publish-plugin-gradle = { group = "io.github.gradle-nexus", name = "publish-plugin", version.ref = "nexus-publish-plugin" }
 spotbugs-annotations = { module = "com.github.spotbugs:spotbugs-annotations", version.ref = "spotbugs" }
 
 [plugins]
