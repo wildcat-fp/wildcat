@@ -7,11 +7,9 @@ plugins {
 // apply(plugin = "info.solidsoft.pitest.aggregator")
 apply(plugin = "nl.littlerobots.version-catalog-update")
 
-afterEvaluate {
-    nexusPublishing {
-        repositories {
-            sonatype()
-        }
+nexusPublishing {
+    repositories {
+        sonatype()
     }
 }
 
