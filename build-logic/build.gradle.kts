@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-  implementation("io.github.gradle-nexus.publish-plugin:io.github.gradle-nexus.publish-plugin.gradle.plugin:${libs.versions.nexus.publish.plugin.get()}")
+  implementation("io.github.gradle-nexus.publish-plugin:io.github.gradle-nexus.publish-plugin.gradle.plugin:2.0.0")
   implementation("org.checkerframework:org.checkerframework.gradle.plugin:${libs.versions.checkerframework.plugin.get()}")
   implementation("com.github.spotbugs:com.github.spotbugs.gradle.plugin:${libs.versions.spotbugs.plugin.get()}")
   implementation("net.ltgt.errorprone:net.ltgt.errorprone.gradle.plugin:${libs.versions.errorprone.plugin.get()}")
