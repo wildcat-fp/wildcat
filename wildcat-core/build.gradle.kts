@@ -2,6 +2,7 @@ plugins {
   id("common")
   id("static-analysis")
   id("publishing")
+  id("github-packages")
 }
 
 testing {
