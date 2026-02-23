@@ -12,7 +12,7 @@ Expand the set of foundational, type-safe data structures available in `wildcat-
 *   **[ ]** Implement `State` for stateful computations.
 *   **[ ]** Implement `Reader` for dependency injection.
 *   **[ ]** Implement `Writer` for logging.
-*   **[ ]** Implement `IO` for representing side-effects.
+*   **[X]** Implement `IO` for representing side-effects.
 
 ## Type Class Instances
 
@@ -31,6 +31,7 @@ Improve the documentation to make the library more accessible to new users.
 
 ## Tooling and Developer Experience
 
+*   **[X]** Set up a CI/CD pipeline to automatically publish artifacts to a public repository.
 *   **[ ]** Investigate and potentially implement an annotation processor to reduce boilerplate for creating `Kinded` types and type class instances.
 
 ## Advanced Features

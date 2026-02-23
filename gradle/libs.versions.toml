@@ -7,7 +7,7 @@ errorprone-plugin = "4.4.0"
 findsecbugs = "1.14.0"
 jqwik = "1.9.3"
 junit-jupiter = "6.0.2"
-nexus-publish-plugin = "2.0.0"
+maven-publish = "0.30.0"
 openrewrite-plugin = "7.7.0"
 pitest-plugin = "1.19.0-rc.3"
 spotbugs = "4.9.8"
@@ -22,13 +22,12 @@ findsecbugs = { module = "com.h3xstream.findsecbugs:findsecbugs-plugin", version
 jqwik = { module = "net.jqwik:jqwik", version.ref = "jqwik" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
 
-nexus-publish-plugin-gradle = { group = "io.github.gradle-nexus", name = "publish-plugin", version.ref = "nexus-publish-plugin" }
 spotbugs-annotations = { module = "com.github.spotbugs:spotbugs-annotations", version.ref = "spotbugs" }
 
 [plugins]
 checkerframework = { id = "org.checkerframework", version.ref = "checkerframework-plugin" }
 errorprone-plugin = { id = "net.ltgt.errorprone", version.ref = "errorprone-plugin" }
-nexus-publish-plugin = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus-publish-plugin" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
 pitest-plugin = { id = "info.solidsoft.pitest", version.ref = "pitest-plugin" }
 spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs-plugin" }
 version-catalog-update-plugin = { id = "nl.littlerobots.version-catalog-update", version.ref = "version-catalog-update-plugin" }

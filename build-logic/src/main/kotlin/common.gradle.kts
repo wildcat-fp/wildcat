@@ -4,12 +4,12 @@ plugins {
   `java-library`
   id("static-analysis")
   id("testing")
-  id("publishing")
 }
 
 val libs = the<LibrariesForLibs>()
 
-group = "io.github.wildcat-fp"
+group = providers.gradleProperty("GROUP").getOrElse("io.github.wildcat-fp")
+version = providers.gradleProperty("VERSION_NAME").getOrElse("0.1.0-SNAPSHOT")
 
 repositories {
     mavenCentral()
@@ -33,16 +33,4 @@ tasks.withType<Javadoc> {
         "apiSpec:a:API Specification",
         "apiNote:a:API Note"
     )
-}
-
-// Configure source jar generation
-val sourcesJar = tasks.register<Jar>("sourcesJar") {
-    archiveClassifier.set("sources")
-    from(project.the<SourceSetContainer>()["main"].allSource)
-}
-
-// Configure javadoc jar generation
-val javadocJar = tasks.register<Jar>("javadocJar") {
-    archiveClassifier.set("javadoc")
-    from(tasks.getByName("javadoc"))
 }

@@ -26,7 +26,7 @@ This module focuses on providing testing infrastructure to ensure the correctnes
 - **Law Definitions:** Defines laws that type class instances must satisfy to be considered valid. For example, the `Monoid` laws ensure that the `combine` operation is associative and that there exists an identity element.
 - **Property-Based Testing:** Leverages property-based testing libraries to generate random test cases and verify that type class instances adhere to their laws. This helps to ensure that the library's core abstractions are robust and reliable.
 
-### wildcat-assert
+### wildcat-asserts
 This module provides AssertJ assertions to help with unit testing.
 
 ## Getting Started
@@ -37,33 +37,41 @@ To get started with Wildcat, follow these steps:
 
 Ensure you have the following installed:
 
-- Java JDK 17 or higher
+- Java JDK 21 or higher
 - Gradle (you can use the included Gradle wrapper)
 
 ### Building the Project
 
 To build the project, navigate to the root directory of the repository and run the following command:
 
+```bash
+./gradlew build
+```
 
+## Usage
 
-## Getting Started
-
-Wildcat isn't officially released yet, but you can use it by publishing it to your local maven
-repository and adding it as a dependency in your project. When the project is further along,
-this section will be much more useful.
-
-
-## Installation
-
-## Open in IDX
-
-[![Open in IDX](https://app.idx.dev/img/open_in_idx.svg)](https://app.idx.dev/new?url=https://github.com/william-candillon/wildcat)
-
-
-To use Wildcat in your project, you can add it as a dependency using Gradle or Maven.
-Replace `<version>` with the desired Wildcat version (currently 0.1.0).
+To use Wildcat in your project, you can add it as a dependency using Gradle or Maven. 
+Snapshots are published to Sonatype's snapshot repository, and releases are published to Maven Central.
 
 ### Gradle
+
+```kotlin
+repositories {
+    mavenCentral()
+    maven { url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots") }
+}
+
+dependencies {
+    implementation("io.github.wildcat.fp:wildcat-core:<version>")
+    testImplementation("io.github.wildcat.fp:wildcat-laws:<version>")
+    testImplementation("io.github.wildcat.fp:wildcat-asserts:<version>")
+}
+```
+
+## CI/CD
+
+This project uses GitHub Actions for CI/CD. The following workflows are defined:
+- **`publish.yml`**: This workflow is triggered on pushes to the `main` branch and publishes the artifacts to Sonatype.
 
 ## Contributing
 
