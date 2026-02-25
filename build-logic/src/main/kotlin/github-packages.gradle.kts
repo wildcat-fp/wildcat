@@ -11,7 +11,6 @@ publishing {
 
       groupId = "io.github.wildcat-fp"
       artifactId = project.name
-      version = properties["snapshotVersion"].toString()
 
       pom {
         name.set("Wildcat FP")
