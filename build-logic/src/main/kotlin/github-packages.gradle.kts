@@ -20,8 +20,8 @@ publishing {
 
         licenses {
           license {
-            name.set("The Unlicense")
-            url.set("https://unlicense.org/")
+            name.set("MIT")
+            url.set("https://opensource.org/licenses/MIT/")
             distribution.set("repo")
           }
         }
