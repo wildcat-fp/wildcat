@@ -9,7 +9,7 @@ publishing {
     create<MavenPublication>("snapshotPublication") {
       from(components["java"])
 
-      groupId = "io.github.wildcat-fp"
+      groupId = "wildcat-fp"
       artifactId = project.name
 
       pom {
