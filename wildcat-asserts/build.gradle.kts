@@ -1,7 +1,5 @@
 plugins {
   id("common")
-  id("publishing")
-  id("github-packages")
 }
 
 dependencies {
