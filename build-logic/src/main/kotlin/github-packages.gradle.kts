@@ -28,9 +28,9 @@ publishing {
 
         developers {
           developer {
-            id.set("wildcat-fp")
-            name.set("Wildcat FP")
-            email.set("wildcat.fp@example.com")
+            id.set("SkittishSloth")
+            name.set("Matthew Cory")
+            email.set("matthewcory1@gmail.com")
           }
         }
 
