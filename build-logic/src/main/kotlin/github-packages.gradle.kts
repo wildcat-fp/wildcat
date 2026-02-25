@@ -21,7 +21,7 @@ publishing {
         licenses {
           license {
             name.set("MIT")
-            url.set("https://opensource.org/licenses/MIT/")
+            url.set("https://opensource.org/licenses/MIT")
             distribution.set("repo")
           }
         }
@@ -46,10 +46,12 @@ publishing {
   repositories {
     maven {
       name = "GitHubPackages"
-      url = uri("https://maven.pkg.github.com/${System.getenv("GITHUB_REPOSITORY") ?: "wildcat-fp/wildcat"}")
+      val owner = project.findProperty("gpr.owner") as? String ?: "wildcat-fp"
+      val repo = project.findProperty("gpr.repo") as? String ?: "wildcat"
+      url = uri("https://maven.pkg.github.com/$owner/$repo")
       credentials {
         username = System.getenv("GITHUB_ACTOR")
-        password = System.getenv("GITHUB_TOKEN")
+        password = System.getenv("GPR_TOKEN") ?: System.getenv("GITHUB_TOKEN")
       }
     }
   }
